@@ -1,0 +1,194 @@
+============================================================
+  REPOSITORY STRUCTURE — Injury Prediction Platform
+  Mono-repo | 2026 FIFA World Cup Group C
+============================================================
+
+injury-prediction/                        # Mono-repo root
+│
+├── backend/                              # Python 3.11 FastAPI REST API and background services
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   │       ├── endpoints/
+│   │   │       │   ├── players.py        # CRUD endpoints for player management
+│   │   │       │   ├── coaches.py        # Coach management and assignment endpoints
+│   │   │       │   ├── daily_metrics.py  # Metric ingestion (manual + GPS device webhook)
+│   │   │       │   ├── wellness.py       # Hooper questionnaire submission and history
+│   │   │       │   ├── sessions.py       # Training session creation and conflict detection
+│   │   │       │   ├── predictions.py    # Injury risk score retrieval and alerts
+│   │   │       │   ├── teams.py          # Team management
+│   │   │       │   └── audit.py          # Audit log read-only access
+│   │   │       └── __init__.py
+│   │   ├── core/
+│   │   │   ├── config.py                 # Pydantic Settings (reads .env)
+│   │   │   ├── security.py               # JWT auth, role-based access control (coach specialty)
+│   │   │   └── dependencies.py           # FastAPI dependency injection (DB session, current user)
+│   │   ├── db/
+│   │   │   ├── session.py                # SQLAlchemy async engine + session factory (TimescaleDB)
+│   │   │   ├── migrations/               # Alembic migration scripts (schema versioning)
+│   │   │   │   ├── env.py
+│   │   │   │   ├── script.py.mako
+│   │   │   │   └── versions/             # Numbered migration files (e.g. 0001_initial_schema.py)
+│   │   │   └── repositories/
+│   │   │       ├── player_repo.py        # DB queries for players and baseline profiles
+│   │   │       ├── metrics_repo.py       # TimescaleDB time-range queries for daily_metrics
+│   │   │       ├── session_repo.py       # Training session conflict detection queries
+│   │   │       └── prediction_repo.py    # ACWR computation SQL and prediction read/write
+│   │   ├── models/                       # SQLAlchemy ORM models (mirrors schema.sql tables)
+│   │   │   ├── team.py
+│   │   │   ├── player.py
+│   │   │   ├── coach.py
+│   │   │   ├── daily_metric.py
+│   │   │   ├── injury.py
+│   │   │   └── prediction.py
+│   │   ├── schemas/                      # Pydantic request/response schemas (API contract)
+│   │   │   ├── player.py
+│   │   │   ├── metrics.py
+│   │   │   ├── wellness.py
+│   │   │   └── prediction.py
+│   │   ├── services/
+│   │   │   ├── acwr_service.py           # ACWR computation logic (Gabbett 2016)
+│   │   │   ├── notification_service.py   # Push notification dispatch for risk alerts
+│   │   │   └── audit_service.py          # Automatic audit log write on data mutation
+│   │   └── main.py                       # FastAPI app factory, middleware, router registration
+│   ├── tests/
+│   │   ├── unit/                         # Isolated unit tests (services, ACWR logic)
+│   │   ├── integration/                  # DB integration tests against test TimescaleDB instance
+│   │   └── conftest.py                   # Pytest fixtures (test DB, mock players, factory helpers)
+│   ├── Dockerfile                        # Multi-stage build: builder + slim runtime image
+│   ├── pyproject.toml                    # Project metadata and tool config (ruff, mypy, pytest)
+│   └── requirements.txt                  # Pinned production dependencies
+
+│
+├── web/                                  # Next.js 14 App Router frontend (coach dashboard)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx              # Coach login page
+│   │   │   └── layout.tsx
+│   │   ├── (dashboard)/
+│   │   │   ├── layout.tsx                # Authenticated shell with sidebar nav
+│   │   │   ├── players/
+│   │   │   │   ├── page.tsx              # Squad overview with ACWR risk badge per player
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx          # Individual player profile and metric timeline
+│   │   │   ├── sessions/
+│   │   │   │   └── page.tsx              # Weekly session planner with conflict detection
+│   │   │   ├── predictions/
+│   │   │   │   └── page.tsx              # Risk dashboard with ACWR + XGBoost score cards
+│   │   │   └── wellness/
+│   │   │       └── page.tsx              # Team wellness heatmap (Hooper index by player/day)
+│   │   └── layout.tsx                    # Root layout (fonts, theme provider, auth guard)
+│   ├── components/
+│   │   ├── ui/                           # Shadcn/ui base components (button, card, badge, table)
+│   │   ├── charts/                       # Recharts wrappers (ACWR timeline, HRV trend, wellness heatmap)
+│   │   ├── players/                      # Player-specific composite components
+│   │   └── sessions/                     # Session planner calendar and conflict warning UI
+│   ├── lib/
+│   │   ├── api.ts                        # Type-safe API client (fetch wrapper + React Query hooks)
+│   │   ├── auth.ts                       # NextAuth.js configuration (JWT + coach role claims)
+│   │   └── utils.ts                      # Shared helpers (date formatting, ACWR zone colour)
+│   ├── public/                           # Static assets (team crests, flag SVGs)
+│   ├── Dockerfile                        # Standalone Next.js build for Docker Compose
+│   ├── next.config.ts                    # Image domains, API rewrites, CSP headers
+│   ├── tailwind.config.ts                # Design tokens (team colours, risk category palette)
+│   └── package.json
+
+│
+├── mobile/                               # React Native Expo SDK 51 (athlete self-reporting app)
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   └── login.tsx                 # Athlete PIN/biometric login
+│   │   ├── (tabs)/
+│   │   │   ├── wellness.tsx              # Daily Hooper questionnaire entry form
+│   │   │   ├── metrics.tsx               # Personal metric dashboard (HRV, sleep trend)
+│   │   │   └── alerts.tsx                # Push notification inbox for coach-sent risk alerts
+│   │   └── _layout.tsx                   # Expo Router root layout with tab navigator
+│   ├── components/
+│   │   ├── WellnessSlider.tsx            # Custom 1-7 slider matching Hooper scale
+│   │   ├── RiskBadge.tsx                 # Colour-coded ACWR zone indicator
+│   │   └── MetricCard.tsx                # Daily metric summary card with trend arrow
+│   ├── hooks/
+│   │   ├── useWellness.ts                # React Query hook for questionnaire submit + history
+│   │   └── usePrediction.ts              # Hook for fetching today's personal risk score
+│   ├── lib/
+│   │   ├── api.ts                        # Axios instance pre-configured with JWT auth header
+│   │   └── notifications.ts             # Expo Notifications setup (push token registration)
+│   ├── app.json                          # Expo config (app name, icon, permissions, EAS build)
+│   └── package.json
+
+│
+├── ml/                                   # Machine learning pipeline (Python 3.11)
+│   ├── features/
+│   │   ├── acwr.py                       # ACWR computation (acute 7d / chronic 28d rolling sRPE)
+│   │   ├── hrv_features.py               # HRV deviation from baseline, 7-day trend
+│   │   ├── injury_history_features.py    # Recency and severity encoding of past injuries
+│   │   └── pipeline.py                   # scikit-learn ColumnTransformer feature pipeline
+│   ├── models/
+│   │   ├── train_xgboost.py              # XGBoost training script with hyperparameter tuning
+│   │   ├── evaluate.py                   # AUC-ROC, precision/recall, Brier score evaluation
+│   │   └── artifacts/                    # Serialised model binaries (.joblib) and feature list JSON
+│   ├── notebooks/
+│   │   ├── 01_eda.ipynb                  # Exploratory data analysis on synthetic fixtures
+│   │   ├── 02_feature_importance.ipynb   # SHAP-based feature importance analysis
+│   │   └── 03_acwr_validation.ipynb      # ACWR threshold validation against Gabbett 2016
+│   ├── pipelines/
+│   │   ├── daily_prediction.py           # Nightly batch: fetch metrics → compute features → infer → write to injury_predictions
+│   │   └── retrain.py                    # Weekly retraining pipeline with new labelled injury events
+│   └── requirements.txt                  # ML-specific dependencies (xgboost, shap, scikit-learn, pandas)
+
+│
+├── data/                                 # Data assets, fixtures, and generation scripts
+│   ├── fixtures/
+│   │   ├── teams.json                    # Seed data: Brazil, Morocco, Haiti, Scotland
+│   │   ├── players.json                  # 100 synthetic player records (25 per team)
+│   │   └── coaches.json                  # Coaching staff per team per specialty
+│   ├── generators/
+│   │   ├── generate_fixtures.py          # Main script: generates 135,000 daily_metric rows using scientific_tables.json
+│   │   ├── player_generator.py           # Realistic physiological baseline profile generation
+│   │   └── calendar_generator.py         # 90-day tournament calendar (matches, sessions, rest days)
+│   └── exports/                          # Generated CSV/Parquet snapshots for ML training
+
+│
+├── docs/                                 # Project documentation
+│   ├── api/
+│   │   └── openapi.yaml                  # Auto-generated OpenAPI 3.1 spec (exported from FastAPI)
+│   ├── architecture/
+│   │   ├── adr/                          # Architecture Decision Records (ADR-001 TimescaleDB, ADR-002 ACWR model)
+│   │   └── diagrams/                     # C4 context/container diagrams (PlantUML source)
+│   └── science/
+│       ├── acwr_methodology.md           # Implementation notes referencing Gabbett 2016
+│       ├── wellness_protocol.md          # Hooper questionnaire administration guidelines
+│       └── hrv_protocol.md               # Morning HRV measurement standardisation (Buchheit 2014)
+
+│
+├── scripts/                              # Operational and CI/CD utility scripts
+│   ├── seed_db.sh                        # Shell wrapper: apply schema.sql + load fixtures
+│   ├── backup_db.sh                      # pg_dump to encrypted S3 with 30-day retention
+│   ├── run_migrations.sh                 # Alembic upgrade head with pre-flight checks
+│   └── train_model.sh                    # End-to-end ML retraining trigger script
+
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                        # CI: lint (ruff, eslint), type-check (mypy, tsc), test (pytest, jest)
+│       └── deploy.yml                    # CD: build Docker images, push to registry, SSH deploy to VPS
+
+│
+├── docker-compose.yml                    # Production service definitions (backend, web, db, ml-worker)
+├── docker-compose.dev.yml                # Dev overrides: volume mounts, hot reload, pgAdmin
+├── .env.example                          # Template for required environment variables (no secrets)
+├── .gitignore                            # Python, Node, Docker, secrets, IDE, OS artifacts
+└── README.md                             # Project overview, quickstart, architecture summary
+
+============================================================
+  FOLDER ROLES SUMMARY
+============================================================
+
+  backend/       Python 3.11 FastAPI — REST API, DB access, ACWR service, auth
+  web/           Next.js 14 App Router — coach dashboard, session planner, risk UI
+  mobile/        React Native Expo SDK 51 — athlete wellness self-reporting app
+  ml/            XGBoost training + daily prediction pipeline + SHAP analysis
+  data/          Synthetic fixture generation and seed data for development/testing
+  docs/          Architecture decisions, OpenAPI spec, science methodology notes
+  scripts/       Operational scripts for DB seeding, backups, migrations, retraining

@@ -1,0 +1,582 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "generated_at": "2026-05-24",
+    "description": "Scientifically-sourced modulator tables for synthetic athlete data generation and ML feature engineering.",
+    "usage": "Consumed directly by the Python data generation script (data/generators/generate_fixtures.py). All numeric distributions assume Gaussian sampling clamped to [min, max].",
+    "sources": {
+      "Foster2001": {
+        "authors": "Foster C, Florhaug JA, Franklin J, Gottschall L, Hrovatin LA, Parker S, Doleshal P, Dodge C",
+        "year": 2001,
+        "title": "A new approach to monitoring exercise training",
+        "journal": "Journal of Strength and Conditioning Research",
+        "volume": "15(1)",
+        "pages": "109-115",
+        "doi": "10.1519/00124278-200102000-00019",
+        "key_finding": "Session RPE (CR-10) × duration (min) = training load in Arbitrary Units (AU). Collected 30 min post-session."
+      },
+      "Hooper1995": {
+        "authors": "Hooper SL, Mackinnon LT",
+        "year": 1995,
+        "title": "Monitoring overtraining in athletes: recommendations",
+        "journal": "Sports Medicine",
+        "volume": "20(5)",
+        "pages": "321-327",
+        "doi": "10.2165/00007256-199520050-00003",
+        "key_finding": "Four-item questionnaire (sleep quality, fatigue, soreness, stress) each scored 1-7. Hooper Index = sum (4-28). >20 signals overreaching."
+      },
+      "Gabbett2016": {
+        "authors": "Gabbett TJ",
+        "year": 2016,
+        "title": "The training-injury prevention paradox: should athletes be training smarter and harder?",
+        "journal": "British Journal of Sports Medicine",
+        "volume": "50(5)",
+        "pages": "273-280",
+        "doi": "10.1136/bjsports-2015-095788",
+        "key_finding": "ACWR > 1.5 associated with 2-4× increased injury risk. Sweet spot: 0.8-1.3."
+      },
+      "Buchheit2014": {
+        "authors": "Buchheit M",
+        "year": 2014,
+        "title": "Monitoring training status with HR measures: do all roads lead to Rome?",
+        "journal": "Frontiers in Physiology",
+        "volume": "5",
+        "pages": "73",
+        "doi": "10.3389/fphys.2014.00073",
+        "key_finding": "HRV (RMSSD) is sensitive to training-induced fatigue. Individual-referenced daily monitoring outperforms population norms."
+      },
+      "Dellal2010": {
+        "authors": "Dellal A, Chamari K, Wong DP, Ahmaidi S, Keller D, Barbe R, Carling C",
+        "year": 2010,
+        "title": "Comparison of physical and technical performance in European professional soccer match-play: FA Premier League and La Liga",
+        "journal": "European Journal of Sport Science",
+        "volume": "10(1)",
+        "pages": "51-60",
+        "doi": "10.1080/17461390903115271",
+        "key_finding": "GPS metrics by position in La Liga and EPL. Midfielders cover most total distance; wingers most high-intensity distance."
+      },
+      "Bradley2009": {
+        "authors": "Bradley PS, Sheldon W, Wooster B, Olsen P, Boanas P, Krustrup P",
+        "year": 2009,
+        "title": "High-intensity running in English FA Premier League soccer matches",
+        "journal": "Journal of Sports Sciences",
+        "volume": "27(2)",
+        "pages": "159-168",
+        "doi": "10.1080/02640410802512775",
+        "key_finding": "Position-specific GPS benchmarks in the EPL. Sprint threshold: 25.2 km/h. High-intensity threshold: 19.8 km/h."
+      },
+      "Armstrong1994": {
+        "authors": "Armstrong LE, Maresh CM, Castellani JW, et al.",
+        "year": 1994,
+        "title": "Urinary indices of hydration status",
+        "journal": "International Journal of Sport Nutrition",
+        "volume": "4(3)",
+        "pages": "265-279",
+        "doi": "10.1123/ijsn.4.3.265",
+        "key_finding": "Urine specific gravity (USG) benchmarks: <1.010 well-hydrated; 1.010-1.020 minimal dehydration; >1.030 serious dehydration."
+      }
+    }
+  },
+
+  "session_types": {
+    "_source": "Foster2001",
+    "_note": "RPE distributions collected 30 min post-session on modified Borg CR-10 scale (0-10). sRPE = RPE × duration_min in Arbitrary Units (AU). Use Gaussian sampling clamped to [min, max].",
+    "recovery": {
+      "rpe_mean": 2.5,
+      "rpe_std": 0.5,
+      "rpe_min": 1.0,
+      "rpe_max": 3.5,
+      "duration_min_mean": 30,
+      "duration_min_std": 8,
+      "duration_min_min": 15,
+      "duration_min_max": 45,
+      "srpe_typical_range_au": [20, 90],
+      "description": "Active recovery, pool hydrotherapy, light mobility and stretching"
+    },
+    "technical": {
+      "rpe_mean": 4.5,
+      "rpe_std": 0.8,
+      "rpe_min": 3.0,
+      "rpe_max": 6.0,
+      "duration_min_mean": 70,
+      "duration_min_std": 12,
+      "duration_min_min": 45,
+      "duration_min_max": 90,
+      "srpe_typical_range_au": [135, 540],
+      "description": "Ball mastery, passing combinations, set piece rehearsal"
+    },
+    "tactical": {
+      "rpe_mean": 5.5,
+      "rpe_std": 0.9,
+      "rpe_min": 4.0,
+      "rpe_max": 7.0,
+      "duration_min_mean": 80,
+      "duration_min_std": 15,
+      "duration_min_min": 60,
+      "duration_min_max": 110,
+      "srpe_typical_range_au": [240, 770],
+      "description": "Positional shape work, pressing triggers, defensive/offensive transitions"
+    },
+    "physical": {
+      "rpe_mean": 7.5,
+      "rpe_std": 1.0,
+      "rpe_min": 6.0,
+      "rpe_max": 9.5,
+      "duration_min_mean": 60,
+      "duration_min_std": 10,
+      "duration_min_min": 40,
+      "duration_min_max": 80,
+      "srpe_typical_range_au": [240, 760],
+      "description": "High-intensity running, intermittent sprint intervals, aerobic-anaerobic conditioning"
+    },
+    "match_prep": {
+      "rpe_mean": 5.0,
+      "rpe_std": 0.8,
+      "rpe_min": 3.5,
+      "rpe_max": 6.5,
+      "duration_min_mean": 65,
+      "duration_min_std": 10,
+      "duration_min_min": 45,
+      "duration_min_max": 80,
+      "srpe_typical_range_au": [158, 520],
+      "description": "Day-before activation session, final set piece walk-through"
+    },
+    "strength": {
+      "rpe_mean": 6.5,
+      "rpe_std": 1.0,
+      "rpe_min": 5.0,
+      "rpe_max": 8.5,
+      "duration_min_mean": 55,
+      "duration_min_std": 10,
+      "duration_min_min": 35,
+      "duration_min_max": 75,
+      "srpe_typical_range_au": [175, 638],
+      "description": "Gym-based resistance training, plyometrics, S&C"
+    },
+    "match_simulation": {
+      "rpe_mean": 8.0,
+      "rpe_std": 0.8,
+      "rpe_min": 6.5,
+      "rpe_max": 9.5,
+      "duration_min_mean": 90,
+      "duration_min_std": 5,
+      "duration_min_min": 80,
+      "duration_min_max": 95,
+      "srpe_typical_range_au": [520, 903],
+      "description": "Full 11v11 scrimmage under match conditions"
+    }
+  },
+
+  "wellness_modulators": {
+    "_source": "Hooper1995",
+    "_note": "Additive integer adjustments to Hooper scale values (1-7, 1=best, 7=worst). Applied based on calendar context. Values are clamped to [1, 7] after addition. Multiple contexts stack additively.",
+    "normal_training_day": {
+      "sleep_duration_h_delta": 0.0,
+      "sleep_quality_delta": 0,
+      "fatigue_delta": 0,
+      "soreness_delta": 0,
+      "stress_delta": 0,
+      "note": "Baseline reference. All other contexts are relative to this."
+    },
+    "match_day": {
+      "sleep_duration_h_delta": -0.5,
+      "sleep_quality_delta": 1,
+      "fatigue_delta": 0,
+      "soreness_delta": 0,
+      "stress_delta": 1,
+      "note": "Pre-match anxiety elevates stress and disrupts sleep quality. Effect observed from morning of match."
+    },
+    "day_1_post_match": {
+      "sleep_duration_h_delta": 0.5,
+      "sleep_quality_delta": 1,
+      "fatigue_delta": 2,
+      "soreness_delta": 2,
+      "stress_delta": 0,
+      "note": "Acute neuromuscular fatigue and muscle damage peaks at 24h post-match. Buchheit 2014: HRV suppressed ~16% at this timepoint."
+    },
+    "day_2_post_match": {
+      "sleep_duration_h_delta": 0.0,
+      "sleep_quality_delta": 0,
+      "fatigue_delta": 1,
+      "soreness_delta": 1,
+      "stress_delta": 0,
+      "note": "Delayed-onset muscle soreness (DOMS) continues into day 2."
+    },
+    "day_3_post_match": {
+      "sleep_duration_h_delta": 0.0,
+      "sleep_quality_delta": 0,
+      "fatigue_delta": 1,
+      "soreness_delta": 1,
+      "stress_delta": 0,
+      "note": "Partial recovery. Residual soreness for higher-minute players."
+    },
+    "travel_day": {
+      "sleep_duration_h_delta": -1.0,
+      "sleep_quality_delta": 1,
+      "fatigue_delta": 1,
+      "soreness_delta": 0,
+      "stress_delta": 2,
+      "note": "Long-haul travel disrupts circadian rhythm (sleep) and elevates psychological stress. Applicable to intercontinental fixtures."
+    },
+    "rest_day": {
+      "sleep_duration_h_delta": 0.5,
+      "sleep_quality_delta": -1,
+      "fatigue_delta": -1,
+      "soreness_delta": -1,
+      "stress_delta": -1,
+      "note": "Reduced training load promotes recovery. Clamped to minimum value of 1 on each dimension."
+    },
+    "consecutive_high_load_streak": {
+      "_trigger_condition": "3+ consecutive days with srpe > 300 AU",
+      "fatigue_delta": 1,
+      "soreness_delta": 1,
+      "note": "Cumulative fatigue accumulation. Applied in addition to day-specific modifiers."
+    }
+  },
+
+  "recovery_modulators": {
+    "_source": "Buchheit2014",
+    "_note": "Multipliers applied to individual hrv_baseline_ms from player_baseline_profiles. Additive adjustments to resting_hr_bpm_baseline. Applied post-match or post-high-load session.",
+    "post_match_recovery_timeline": {
+      "day_1": {
+        "hrv_multiplier": 0.84,
+        "resting_hr_delta_bpm": 8,
+        "note": "Acute sympathovagal imbalance. Buchheit 2014 meta-analysis: mean RMSSD suppression of ~16% at 24h post-match."
+      },
+      "day_2": {
+        "hrv_multiplier": 0.90,
+        "resting_hr_delta_bpm": 5,
+        "note": "Partial parasympathetic reactivation. ~10% HRV suppression persists at 48h."
+      },
+      "day_3": {
+        "hrv_multiplier": 0.95,
+        "resting_hr_delta_bpm": 2,
+        "note": "Near-baseline restoration for most players at 72h. Residual ~5% suppression."
+      },
+      "day_4_plus": {
+        "hrv_multiplier": 1.00,
+        "resting_hr_delta_bpm": 0,
+        "note": "Full recovery assumed by day 4 in absence of additional high-load stressors."
+      }
+    },
+    "high_load_training_day": {
+      "_trigger_condition": "srpe > 500 AU",
+      "hrv_multiplier": 0.93,
+      "resting_hr_delta_bpm": 4,
+      "note": "Non-match high-load session causes acute HRV suppression similar in magnitude to match but shorter duration."
+    },
+    "dehydration_penalty": {
+      "_trigger_condition": "hydration_usg > 1.025",
+      "hrv_multiplier_penalty": 0.05,
+      "resting_hr_delta_bpm_penalty": 3,
+      "note": "Dehydration independently elevates resting HR via plasma volume reduction and suppresses HRV. Armstrong 1994; indirect cardiac autonomic effect."
+    }
+  },
+
+  "gps_load_by_position": {
+    "_sources": ["Bradley2009", "Dellal2010"],
+    "_note": "Match-day GPS reference values per playing position. Training session values derived by applying training_load_multipliers below. Gaussian sampling recommended: mean ± std, clamped to [mean-2*std, mean+2*std].",
+    "_velocity_thresholds": {
+      "high_intensity_kmh": 19.8,
+      "sprint_kmh": 25.2,
+      "acceleration_threshold_ms2": 3.0,
+      "source": "Bradley2009 (EPL); Dellal2010 (La Liga/Serie A)"
+    },
+    "goalkeeper": {
+      "total_distance_km_mean": 5.8,
+      "total_distance_km_std": 1.2,
+      "high_intensity_distance_m_mean": 180,
+      "high_intensity_distance_m_std": 80,
+      "sprints_count_mean": 10,
+      "sprints_count_std": 5,
+      "accel_decel_count_mean": 60,
+      "accel_decel_count_std": 20,
+      "source_note": "GK-specific estimates; Dellal2010 and Bradley2009 excluded GKs from main analysis."
+    },
+    "center_back": {
+      "total_distance_km_mean": 10.2,
+      "total_distance_km_std": 0.7,
+      "high_intensity_distance_m_mean": 720,
+      "high_intensity_distance_m_std": 150,
+      "sprints_count_mean": 28,
+      "sprints_count_std": 8,
+      "accel_decel_count_mean": 130,
+      "accel_decel_count_std": 25,
+      "source_note": "Dellal2010 La Liga/Serie A data; lowest HID proportion of outfield positions."
+    },
+    "fullback": {
+      "total_distance_km_mean": 11.5,
+      "total_distance_km_std": 0.9,
+      "high_intensity_distance_m_mean": 1150,
+      "high_intensity_distance_m_std": 200,
+      "sprints_count_mean": 48,
+      "sprints_count_std": 12,
+      "accel_decel_count_mean": 165,
+      "accel_decel_count_std": 30,
+      "source_note": "Bradley2009 EPL: fullbacks show highest sprint counts among defenders due to wide overlap runs."
+    },
+    "wingback": {
+      "total_distance_km_mean": 11.8,
+      "total_distance_km_std": 1.0,
+      "high_intensity_distance_m_mean": 1300,
+      "high_intensity_distance_m_std": 220,
+      "sprints_count_mean": 55,
+      "sprints_count_std": 14,
+      "accel_decel_count_mean": 175,
+      "accel_decel_count_std": 35,
+      "source_note": "Estimated from fullback + winger averages in 3-5-2/3-4-3 systems; higher HID than fullback."
+    },
+    "defensive_midfielder": {
+      "total_distance_km_mean": 11.8,
+      "total_distance_km_std": 0.8,
+      "high_intensity_distance_m_mean": 850,
+      "high_intensity_distance_m_std": 160,
+      "sprints_count_mean": 35,
+      "sprints_count_std": 9,
+      "accel_decel_count_mean": 175,
+      "accel_decel_count_std": 30,
+      "source_note": "Dellal2010: DMs cover highest total distance of all positions, but lower sprint intensity than wider roles."
+    },
+    "central_midfielder": {
+      "total_distance_km_mean": 12.1,
+      "total_distance_km_std": 0.9,
+      "high_intensity_distance_m_mean": 900,
+      "high_intensity_distance_m_std": 175,
+      "sprints_count_mean": 38,
+      "sprints_count_std": 10,
+      "accel_decel_count_mean": 180,
+      "accel_decel_count_std": 35,
+      "source_note": "Bradley2009: CMs cover the most total distance per match of all positions in EPL study."
+    },
+    "attacking_midfielder": {
+      "total_distance_km_mean": 11.2,
+      "total_distance_km_std": 1.0,
+      "high_intensity_distance_m_mean": 1100,
+      "high_intensity_distance_m_std": 210,
+      "sprints_count_mean": 44,
+      "sprints_count_std": 12,
+      "accel_decel_count_mean": 170,
+      "accel_decel_count_std": 30,
+      "source_note": "Dellal2010: higher HID proportion vs box-to-box due to penetrating runs behind defensive line."
+    },
+    "winger": {
+      "total_distance_km_mean": 11.4,
+      "total_distance_km_std": 1.1,
+      "high_intensity_distance_m_mean": 1280,
+      "high_intensity_distance_m_std": 230,
+      "sprints_count_mean": 58,
+      "sprints_count_std": 14,
+      "accel_decel_count_mean": 175,
+      "accel_decel_count_std": 35,
+      "source_note": "Bradley2009: highest sprint counts of any position in EPL study. Wide attacking positions drive most high-velocity actions."
+    },
+    "second_striker": {
+      "total_distance_km_mean": 10.8,
+      "total_distance_km_std": 1.0,
+      "high_intensity_distance_m_mean": 1150,
+      "high_intensity_distance_m_std": 200,
+      "sprints_count_mean": 48,
+      "sprints_count_std": 12,
+      "accel_decel_count_mean": 160,
+      "accel_decel_count_std": 28,
+      "source_note": "Interpolated from Dellal2010 attacking positions. Similar to winger but more central movement."
+    },
+    "striker": {
+      "total_distance_km_mean": 10.5,
+      "total_distance_km_std": 0.9,
+      "high_intensity_distance_m_mean": 1050,
+      "high_intensity_distance_m_std": 190,
+      "sprints_count_mean": 50,
+      "sprints_count_std": 13,
+      "accel_decel_count_mean": 155,
+      "accel_decel_count_std": 28,
+      "source_note": "Dellal2010: lower total distance than midfielders due to positional holding play; high-intensity movement concentrated in sprint bursts."
+    },
+    "training_load_multipliers": {
+      "_note": "Applied to match-day values to estimate GPS output per session type. Based on typical training-to-match intensity ratios in elite football literature.",
+      "recovery": 0.25,
+      "technical": 0.45,
+      "tactical": 0.55,
+      "physical": 0.65,
+      "match_prep": 0.40,
+      "strength": 0.20,
+      "match_simulation": 0.85
+    }
+  },
+
+  "acwr_thresholds": {
+    "_source": "Gabbett2016",
+    "_calculation_formula": "ACWR = (7-day sRPE sum) / (28-day sRPE mean × 4). Denominator ×4 normalises the 28-day mean to a 4-week cycle for direct comparison with the 7-day acute window.",
+    "_note": "Risk multipliers are relative to the optimal zone (1.0 = reference injury rate). Values from Gabbett 2016 Figure 4.",
+    "zones": {
+      "undertraining": {
+        "acwr_max": 0.79,
+        "risk_category": "low",
+        "risk_multiplier": 1.2,
+        "alert_triggered": false,
+        "interpretation": "Monotony zone. Insufficient training stimulus may reduce fitness and paradoxically increase injury risk from deconditioning. Recommend progressive load increase."
+      },
+      "optimal": {
+        "acwr_min": 0.80,
+        "acwr_max": 1.29,
+        "risk_category": "low",
+        "risk_multiplier": 1.0,
+        "alert_triggered": false,
+        "interpretation": "Sweet spot (Gabbett 2016). Progressive overload within adaptive capacity. Target for weekly planning."
+      },
+      "caution": {
+        "acwr_min": 1.30,
+        "acwr_max": 1.49,
+        "risk_category": "moderate",
+        "risk_multiplier": 2.1,
+        "alert_triggered": false,
+        "interpretation": "Elevated risk. Reduce next session's planned RPE. Monitor wellness scores closely."
+      },
+      "danger": {
+        "acwr_min": 1.50,
+        "acwr_max": 1.99,
+        "risk_category": "high",
+        "risk_multiplier": 3.2,
+        "alert_triggered": true,
+        "interpretation": "Danger zone. Gabbett 2016: 2-4× injury risk increase vs optimal zone. Immediate load reduction recommended."
+      },
+      "critical": {
+        "acwr_min": 2.00,
+        "risk_category": "very_high",
+        "risk_multiplier": 5.0,
+        "alert_triggered": true,
+        "interpretation": "Critical spike. Strongly recommend modified training or rest. High probability of non-contact soft tissue injury within 7 days."
+      }
+    },
+    "xgboost_risk_thresholds": {
+      "_note": "Probability thresholds for risk_category assignment from XGBoost output. Calibrated on historical injury data.",
+      "low":       { "score_min": 0.00, "score_max": 0.35 },
+      "moderate":  { "score_min": 0.35, "score_max": 0.60 },
+      "high":      { "score_min": 0.60, "score_max": 0.80 },
+      "very_high": { "score_min": 0.80, "score_max": 1.00 }
+    }
+  },
+
+  "physiological_ranges": {
+    "_note": "Valid bounds for CHECK constraints (schema.sql) and synthetic data generation clamping. All values derived from cited literature and clinical standards.",
+    "sleep_duration_h": {
+      "db_min": 0.0,
+      "db_max": 24.0,
+      "generation_min": 4.0,
+      "generation_max": 11.0,
+      "elite_optimal_min": 7.5,
+      "elite_optimal_max": 9.0,
+      "unit": "hours",
+      "source": "Mah et al. 2011 (Sleep journal); general sports science consensus for elite athletes"
+    },
+    "sleep_quality": {
+      "db_min": 1,
+      "db_max": 7,
+      "optimal_max": 2,
+      "alert_threshold": 5,
+      "unit": "Hooper scale (1=very very good, 7=very very bad)",
+      "source": "Hooper1995"
+    },
+    "fatigue": {
+      "db_min": 1,
+      "db_max": 7,
+      "optimal_max": 2,
+      "alert_threshold": 5,
+      "unit": "Hooper scale (1=very very good, 7=very very bad)",
+      "source": "Hooper1995"
+    },
+    "soreness": {
+      "db_min": 1,
+      "db_max": 7,
+      "optimal_max": 2,
+      "alert_threshold": 5,
+      "unit": "Hooper scale (1=very very good, 7=very very bad)",
+      "source": "Hooper1995"
+    },
+    "stress": {
+      "db_min": 1,
+      "db_max": 7,
+      "optimal_max": 2,
+      "alert_threshold": 5,
+      "unit": "Hooper scale (1=very very good, 7=very very bad)",
+      "source": "Hooper1995"
+    },
+    "session_distance_km": {
+      "db_min": 0.0,
+      "db_max": 20.0,
+      "match_typical_min": 9.5,
+      "match_typical_max": 13.5,
+      "unit": "km",
+      "source": "Bradley2009, Dellal2010"
+    },
+    "high_intensity_distance_m": {
+      "db_min": 0,
+      "db_max": 10000,
+      "match_typical_min": 500,
+      "match_typical_max": 1800,
+      "velocity_threshold_kmh": 19.8,
+      "unit": "meters above 19.8 km/h",
+      "source": "Bradley2009"
+    },
+    "sprints_count": {
+      "db_min": 0,
+      "db_max": 150,
+      "match_typical_min": 20,
+      "match_typical_max": 80,
+      "velocity_threshold_kmh": 25.2,
+      "unit": "count of sprint efforts above 25.2 km/h",
+      "source": "Bradley2009"
+    },
+    "accel_decel_count": {
+      "db_min": 0,
+      "db_max": 500,
+      "match_typical_min": 100,
+      "match_typical_max": 250,
+      "threshold_ms2": 3.0,
+      "unit": "count of acceleration/deceleration events above ±3 m/s²",
+      "source": "Dellal2010"
+    },
+    "rpe": {
+      "db_min": 0.0,
+      "db_max": 10.0,
+      "unit": "Modified Borg CR-10 scale (0=nothing, 10=maximal)",
+      "source": "Foster2001"
+    },
+    "session_duration_min": {
+      "db_min": 0,
+      "db_max": 300,
+      "generation_min": 15,
+      "generation_max": 120,
+      "unit": "minutes",
+      "source": "Foster2001"
+    },
+    "hrv_ms": {
+      "db_min": 20.0,
+      "db_max": 150.0,
+      "elite_footballer_typical_min": 50.0,
+      "elite_footballer_typical_max": 100.0,
+      "recovery_alert_pct_drop": 10,
+      "unit": "RMSSD in milliseconds (morning supine measurement)",
+      "source": "Buchheit2014"
+    },
+    "resting_hr_bpm": {
+      "db_min": 30,
+      "db_max": 100,
+      "elite_footballer_typical_min": 38,
+      "elite_footballer_typical_max": 65,
+      "unit": "beats per minute (morning supine measurement)",
+      "source": "Buchheit2014"
+    },
+    "hydration_usg": {
+      "db_min": 1.001,
+      "db_max": 1.035,
+      "well_hydrated_max": 1.010,
+      "minimal_dehydration_max": 1.020,
+      "significant_dehydration_max": 1.030,
+      "severe_dehydration_min": 1.030,
+      "alert_threshold": 1.020,
+      "unit": "urine specific gravity (dimensionless ratio)",
+      "source": "Armstrong1994"
+    }
+  }
+}
