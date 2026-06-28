@@ -1,0 +1,26 @@
+# Keep the build context small and secrets out of the image
+.git
+.gitignore
+.env
+.env.*
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+.venv/
+venv/
+
+# Dev scratch / notes — not needed at runtime
+*.txt
+!backend/requirements.txt
+debug*.txt
+todo*.txt
+promt*.txt
+rapport.txt
+Nouveau*.txt
+heatmap_poc/
+*.png
+backend/*.png
+
+# Standalone HTML mockups (the served UI is web/index.html)
+athleteos_ai_landing_page.html
+wc2026_injury_platform.html

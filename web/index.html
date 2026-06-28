@@ -1,0 +1,3324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA 2026 — Injury Risk & Performance Monitor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ───────────────────────────────────────── */
+    :root {
+      --navy:      #050f1e;
+      --navy-2:    #0a1628;
+      --card:      #0e1d30;
+      --card-2:    #112035;
+      --green:     #1db954;
+      --green-dim: #17a349;
+      --gold:      #ffd700;
+      --red:       #ef4444;
+      --amber:     #f59e0b;
+      --border:    rgba(255,255,255,0.07);
+      --border-g:  rgba(29,185,84,0.25);
+      --text:      #d5e3ff;
+      --muted:     #5e7599;
+    }
+
+    * { font-family: 'Inter', sans-serif; }
+
+    /* ── Body & background ──────────────────────────────────── */
+    body {
+      background: var(--navy) !important;
+      background-image:
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(29,185,84,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 30% at 95% 90%, rgba(255,215,0,0.03) 0%, transparent 60%) !important;
+    }
+
+    /* ── Tailwind colour overrides ──────────────────────────── */
+    .bg-white                { background: var(--card) !important; }
+    .bg-slate-50             { background: rgba(255,255,255,0.03) !important; }
+    .bg-slate-100            { background: rgba(255,255,255,0.05) !important; }
+    .bg-slate-200            { background: rgba(255,255,255,0.07) !important; }
+    .bg-slate-800            { background: rgba(255,255,255,0.06) !important; }
+    .border-slate-200        { border-color: var(--border) !important; }
+    .border-slate-100        { border-color: rgba(255,255,255,0.04) !important; }
+    .border-slate-300        { border-color: rgba(255,255,255,0.1) !important; }
+    .border-red-200          { border-color: rgba(239,68,68,0.3) !important; }
+    .text-slate-900          { color: var(--text) !important; }
+    .text-slate-800          { color: var(--text) !important; }
+    .text-slate-700          { color: #bdd0ee !important; }
+    .text-slate-600          { color: #8fa8c8 !important; }
+    .text-slate-500          { color: var(--muted) !important; }
+    .text-slate-400          { color: #476080 !important; }
+    .text-slate-300          { color: #3a5070 !important; }
+    .text-blue-600           { color: var(--green) !important; }
+    .text-blue-700           { color: var(--green) !important; }
+    .text-blue-400           { color: #7bd0ff !important; }
+    .shadow-sm               { box-shadow: 0 2px 16px rgba(0,0,0,0.5) !important; }
+    .shadow-md               { box-shadow: 0 4px 24px rgba(0,0,0,0.6) !important; }
+    .shadow-lg               { box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important; }
+
+    /* Hover helpers used in static HTML */
+    .hover\:bg-white:hover   { background: rgba(255,255,255,0.08) !important; }
+    .hover\:bg-slate-50:hover{ background: rgba(255,255,255,0.05) !important; }
+    .hover\:shadow-md:hover  { box-shadow: 0 4px 24px rgba(0,0,0,0.6) !important; }
+    .hover\:text-slate-700:hover { color: var(--text) !important; }
+
+    /* Inputs & selects */
+    input, select, textarea {
+      background: rgba(255,255,255,0.04) !important;
+      color: var(--text) !important;
+      border-color: rgba(255,255,255,0.1) !important;
+    }
+    input::placeholder { color: var(--muted) !important; }
+    select option       { background: #0e1d30; color: var(--text); }
+    input[type=range]   { background: transparent !important; }
+
+    /* ── Animations ─────────────────────────────────────────── */
+    .bar-fill   { transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+    .card-enter { animation: fadeUp 0.35s ease forwards; opacity: 0; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes spin   { to { transform:rotate(360deg); } }
+
+    /* ── Range input ─────────────────────────────────────────── */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+      background: var(--green); cursor:pointer; box-shadow:0 0 0 3px rgba(29,185,84,.2);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height:5px; border-radius:3px; background:rgba(255,255,255,0.08);
+    }
+
+    /* ── Spinner ─────────────────────────────────────────────── */
+    .spinner {
+      border:3px solid rgba(255,255,255,0.06);
+      border-top-color: var(--green);
+      border-radius:50%; width:36px; height:36px;
+      animation: spin .8s linear infinite;
+    }
+
+    /* ── Scrollbar ───────────────────────────────────────────── */
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius:3px; }
+
+    /* ── Team tab buttons ────────────────────────────────────── */
+    .tab-active {
+      background: var(--green) !important;
+      color: #fff !important;
+      box-shadow: 0 0 14px rgba(29,185,84,0.4);
+    }
+
+    /* ── View tabs ───────────────────────────────────────────── */
+    .view-tab { color: var(--muted); }
+    .view-tab-active {
+      border-bottom: 3px solid var(--green) !important;
+      color: var(--green) !important;
+      font-weight: 700;
+    }
+
+    /* ── Position filter buttons ─────────────────────────────── */
+    .pos-filter-btn {
+      padding:4px 12px; border-radius:999px; font-size:11px; font-weight:600;
+      border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04);
+      color: var(--muted); cursor:pointer; transition:all .15s;
+    }
+    .pos-filter-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+    .pos-filter-btn.active {
+      background: var(--green); color:#fff; border-color: var(--green);
+      box-shadow: 0 0 10px rgba(29,185,84,0.35);
+    }
+
+    /* ── Heatmap ─────────────────────────────────────────────── */
+    .heatmap-cell { padding:6px 3px; min-width:52px; border-radius:5px; cursor:default; transition:opacity .15s; }
+    .heatmap-cell:hover { opacity:0.82; }
+    .heatmap-cell .score { font-size:11px; font-weight:700; line-height:1.1; }
+    .heatmap-cell .prob  { font-size:10px; opacity:.85; }
+    .heatmap-mls { outline:2px solid #fbbf24; outline-offset:-1px; }
+
+    /* ── Risk/readiness badge tones (JS-generated) ───────────── */
+    .bg-green-50   { background: rgba(34,197,94,0.12)  !important; }
+    .bg-amber-50   { background: rgba(245,158,11,0.12) !important; }
+    .bg-red-50     { background: rgba(239,68,68,0.12)  !important; }
+    .bg-purple-50  { background: rgba(124,58,237,0.12) !important; }
+    .bg-blue-50    { background: rgba(37,99,235,0.12)  !important; }
+    .bg-emerald-50 { background: rgba(16,185,129,0.12) !important; }
+    .bg-orange-50  { background: rgba(249,115,22,0.12) !important; }
+    .bg-indigo-50  { background: rgba(99,102,241,0.12) !important; }
+    .bg-red-100    { background: rgba(239,68,68,0.14)  !important; }
+    .bg-blue-100   { background: rgba(37,99,235,0.14)  !important; }
+
+    .border-green-200   { border-color: rgba(34,197,94,0.35)   !important; }
+    .border-amber-200   { border-color: rgba(245,158,11,0.35)  !important; }
+    .border-red-200     { border-color: rgba(239,68,68,0.35)   !important; }
+    .border-red-300     { border-color: rgba(239,68,68,0.45)   !important; }
+    .border-emerald-200 { border-color: rgba(16,185,129,0.35)  !important; }
+    .border-blue-200    { border-color: rgba(37,99,235,0.35)   !important; }
+    .border-orange-200  { border-color: rgba(249,115,22,0.35)  !important; }
+    .border-indigo-300  { border-color: rgba(99,102,241,0.45)  !important; }
+
+    /* ── Action buttons ──────────────────────────────────────── */
+    .bg-blue-600               { background: var(--green)     !important; }
+    .hover\:bg-blue-700:hover  { background: var(--green-dim) !important; }
+    .bg-blue-700               { background: var(--green-dim) !important; }
+    .bg-indigo-600             { background: #5046e4          !important; }
+    .hover\:bg-indigo-700:hover{ background: #4338ca          !important; }
+    .bg-orange-600             { background: #d97706          !important; }
+    .hover\:bg-orange-700:hover{ background: #b45309          !important; }
+    .bg-purple-600             { background: #7c3aed          !important; }
+    .hover\:bg-purple-700:hover{ background: #6d28d9          !important; }
+
+    /* ── Warnings / banners ──────────────────────────────────── */
+    #group-i-warning,
+    #scout-no-data {
+      background: rgba(245,158,11,0.07) !important;
+      border-color: rgba(245,158,11,0.25) !important;
+    }
+    .text-amber-800 { color: #fbbf24 !important; }
+    .text-amber-700 { color: #f5a623 !important; }
+    .text-amber-500 { color: #f5a623 !important; }
+    .bg-amber-50.border-amber-200 {
+      background: rgba(245,158,11,0.07) !important;
+      border-color: rgba(245,158,11,0.25) !important;
+    }
+
+    /* ── Result banners (Log Metrics) ───────────────────────── */
+    #result-banner.bg-green-50  { background: rgba(34,197,94,0.1)  !important; border-color:rgba(34,197,94,0.45)  !important; }
+    #result-banner.bg-amber-50  { background: rgba(245,158,11,0.1) !important; border-color:rgba(245,158,11,0.45) !important; }
+    #result-banner.bg-red-50    { background: rgba(239,68,68,0.1)  !important; border-color:rgba(239,68,68,0.45)  !important; }
+    #result-banner.bg-purple-50 { background: rgba(124,58,237,0.1) !important; border-color:rgba(124,58,237,0.45) !important; }
+
+    /* ── Live badge colors ───────────────────────────────────── */
+    .bg-red-100.text-red-700   { background: rgba(239,68,68,0.12)  !important; }
+    .bg-blue-100.text-blue-700 { background: rgba(37,99,235,0.12)  !important; }
+    .bg-slate-100.text-slate-600 { background: rgba(255,255,255,0.07) !important; }
+
+    /* ── Animate-pulse skeletons ─────────────────────────────── */
+    .animate-pulse .h-4,
+    .animate-pulse .h-8,
+    .animate-pulse .h-10,
+    .animate-pulse .h-8.bg-slate-100 { background: rgba(255,255,255,0.05) !important; }
+
+    /* ── Predictions match header ────────────────────────────── */
+    .from-slate-900 { --tw-gradient-from: #050f1e; }
+    .via-blue-950   { --tw-gradient-via:  #071526; }
+    .to-slate-900   { --tw-gradient-to:   #050f1e; }
+    .text-blue-400  { color: var(--green) !important; }
+    #pm-kickoff { background: rgba(255,255,255,0.08) !important; color: var(--muted) !important; }
+
+    /* ── Focus rings ─────────────────────────────────────────── */
+    .focus\:ring-blue-500:focus,
+    .focus\:ring-indigo-500:focus { --tw-ring-color: var(--green); }
+
+    /* ── Divider lines ───────────────────────────────────────── */
+    .h-px.flex-1.bg-slate-200 { background: rgba(255,255,255,0.06) !important; }
+    .w-px.h-4.bg-slate-200    { background: rgba(255,255,255,0.08) !important; }
+
+    /* ── Table text ──────────────────────────────────────────── */
+    th { color: var(--muted) !important; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- HEADER -->
+  <header class="text-white" style="background:linear-gradient(135deg,#050f1e 0%,#091c34 55%,#050f1e 100%);border-bottom:1px solid rgba(29,185,84,0.2);box-shadow:0 4px 30px rgba(0,0,0,0.6);">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div style="background:linear-gradient(135deg,#1db954,#0e7a36);border-radius:12px;padding:10px;box-shadow:0 0 20px rgba(29,185,84,0.45);">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0l2 5-2 2-2-2 2-5zm-8 8l5 2v3l-5-2V10zm16 0v3l-5 2v-3l5-2zm-8 9l-2-4h4l-2 4z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight" style="color:#e8f0fe;letter-spacing:-0.02em;">Injury Risk &amp; Performance Monitor</h1>
+          <p id="header-subtitle" style="color:#1db954;font-size:12px;font-weight:600;margin-top:3px;letter-spacing:0.02em;">FIFA World Cup 2026 · Group C &amp; I</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div style="background:linear-gradient(135deg,#ffd700,#d4a900);color:#000;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:0.06em;">⚽ WC 2026</div>
+        <div class="text-right hidden sm:block">
+          <p style="color:var(--muted);font-size:11px;">Last updated</p>
+          <p id="last-updated" style="color:#d5e3ff;font-size:13px;font-weight:600;">—</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+
+    <!-- CONTROLS -->
+    <div class="rounded-2xl p-4" style="background:var(--card);border:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,0.4);">
+      <div class="flex flex-wrap gap-3 items-center">
+        <!-- Group C -->
+        <div class="flex items-center gap-1 rounded-xl px-2 py-1.5" style="background:rgba(255,255,255,0.03);border:1px solid var(--border);">
+          <span class="text-xs font-bold px-1 border-r mr-1 pr-2" style="color:var(--muted);border-color:var(--border);">Group C</span>
+          <button onclick="selectTeam('BRA')" id="tab-BRA" class="team-tab tab-active flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all">
+            <img src="https://flagcdn.com/w20/br.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Brazil</span>
+          </button>
+          <button onclick="selectTeam('MAR')" id="tab-MAR" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/ma.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Morocco</span>
+          </button>
+          <button onclick="selectTeam('HAI')" id="tab-HAI" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/ht.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Haiti</span>
+          </button>
+          <button onclick="selectTeam('SCO')" id="tab-SCO" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/gb-sct.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Scotland</span>
+          </button>
+        </div>
+        <!-- Group I -->
+        <div class="flex items-center gap-1 rounded-xl px-2 py-1.5" style="background:rgba(255,255,255,0.03);border:1px solid var(--border);">
+          <span class="text-xs font-bold px-1 border-r mr-1 pr-2" style="color:var(--muted);border-color:var(--border);">Group I</span>
+          <button onclick="selectTeam('FRA')" id="tab-FRA" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/fr.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>France</span>
+          </button>
+          <button onclick="selectTeam('SEN')" id="tab-SEN" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/sn.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Senegal</span>
+          </button>
+          <button onclick="selectTeam('IRQ')" id="tab-IRQ" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/iq.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Iraq</span>
+          </button>
+          <button onclick="selectTeam('NOR')" id="tab-NOR" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
+            <img src="https://flagcdn.com/w20/no.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Norway</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW TABS -->
+    <div class="flex items-end px-4 pt-3 rounded-t-xl" style="background:var(--card);border:1px solid var(--border);border-bottom:1px solid rgba(29,185,84,0.15);">
+      <button onclick="switchView('injury')" id="view-injury"
+        class="view-tab view-tab-active px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        ⚠ Injury Risk
+      </button>
+      <button onclick="switchView('readiness')" id="view-readiness"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        ⚡ Readiness
+      </button>
+      <button onclick="switchView('live')" id="view-live"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block"></span>
+        Live Match
+      </button>
+      <button onclick="switchView('predictions')" id="view-predictions"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        📊 Predictions
+      </button>
+      <button onclick="switchView('compare')" id="view-compare"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        ⚔ Compare
+      </button>
+      <button onclick="switchView('scout')" id="view-scout"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        🗺 Scout
+      </button>
+      <button onclick="switchView('profiles')" id="view-profiles"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        👤 Profiles
+      </button>
+      <div class="flex-1"></div>
+      <button onclick="switchView('log')" id="view-log"
+        class="view-tab mb-1.5 px-3 py-1.5 text-xs font-semibold border rounded-lg transition-all whitespace-nowrap"
+        style="color:var(--muted);border-color:var(--border);">
+        ✚ Log Metrics
+      </button>
+    </div>
+
+    <!-- ══ INJURY RISK VIEW ══ -->
+    <div id="view-injury-content">
+      <!-- Stats -->
+      <div id="injury-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+      </div>
+      <!-- Next-match prediction preview (loaded inline with injury data) -->
+      <div id="match-pred-preview" class="mt-4"></div>
+
+      <!-- Squad header + position filter -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mt-4 mb-3">
+        <div>
+          <h2 id="squad-title" class="text-lg font-bold text-slate-800">Squad Overview</h2>
+          <p class="text-slate-500 text-sm">Ranked by injury risk · highest first</p>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button class="pos-filter-btn active" onclick="filterInjury('all',this)">All</button>
+          <button class="pos-filter-btn" onclick="filterInjury('gk',this)">GK</button>
+          <button class="pos-filter-btn" onclick="filterInjury('def',this)">DEF</button>
+          <button class="pos-filter-btn" onclick="filterInjury('mid',this)">MID</button>
+          <button class="pos-filter-btn" onclick="filterInjury('att',this)">ATT</button>
+          <span class="w-px h-4 bg-slate-200 mx-1"></span>
+          <span class="flex items-center gap-1 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-green-500"></span>Low</span>
+          <span class="flex items-center gap-1 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-amber-400"></span>Mod</span>
+          <span class="flex items-center gap-1 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-red-500"></span>High</span>
+          <span class="flex items-center gap-1 text-xs text-slate-400"><span class="w-2 h-2 rounded-full bg-purple-600"></span>V.High</span>
+        </div>
+      </div>
+      <div id="injury-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-8">
+        <div class="col-span-full flex justify-center py-16"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- ══ READINESS VIEW ══ -->
+    <div id="view-readiness-content" class="hidden">
+      <!-- Readiness stats -->
+      <div id="readiness-stats" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 animate-pulse"><div class="h-4 bg-slate-200 rounded w-3/4 mb-3"></div><div class="h-8 bg-slate-100 rounded w-1/2"></div></div>
+      </div>
+      <!-- Match countdown -->
+      <div id="match-banner" class="hidden mt-4"></div>
+      <!-- Readiness grid header -->
+      <div class="flex items-center justify-between mt-4 mb-3">
+        <div>
+          <h2 id="readiness-title" class="text-lg font-bold text-slate-800">Squad Readiness</h2>
+          <p class="text-slate-500 text-sm">Players ranked by readiness · highest first · with tomorrow's recommended load</p>
+        </div>
+        <div class="flex gap-3 text-xs">
+          <span class="flex items-center gap-1.5 text-slate-500"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>Peak</span>
+          <span class="flex items-center gap-1.5 text-slate-500"><span class="w-2.5 h-2.5 rounded-full bg-green-400 inline-block"></span>Ready</span>
+          <span class="flex items-center gap-1.5 text-slate-500"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>Moderate</span>
+          <span class="flex items-center gap-1.5 text-slate-500"><span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>Low/Rest</span>
+        </div>
+      </div>
+      <div id="readiness-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-8">
+        <div class="col-span-full flex justify-center py-16"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- ══ LOG METRICS VIEW ══ -->
+    <div id="view-log-content" class="hidden pb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- ── FORM ──────────────────────────────────────────────── -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <h2 class="text-lg font-bold text-slate-800 mb-1">Log Today's Metrics</h2>
+          <p class="text-slate-500 text-sm mb-4">Submit a player's daily data to get an instant injury risk prediction.</p>
+          <div id="group-i-warning" class="hidden mb-4 flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl p-3.5">
+            <span class="text-lg mt-0.5">⚠️</span>
+            <div>
+              <p class="text-xs font-bold text-amber-800">Group I teams use competition mode</p>
+              <p class="text-xs text-amber-700 mt-0.5">Training metrics and ML predictions are only available for Group C teams (BRA, MAR, HAI, SCO) which have database records. Group I injury data comes from WC match lineups.</p>
+            </div>
+          </div>
+
+          <form id="metric-form" onsubmit="submitMetric(event)" class="space-y-5">
+
+            <!-- Team + Player -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Team</label>
+                <select id="f-team" onchange="onFormTeamChange()"
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <optgroup label="Group C">
+                    <option value="BRA">Brazil</option>
+                    <option value="MAR">Morocco</option>
+                    <option value="HAI">Haiti</option>
+                    <option value="SCO">Scotland</option>
+                  </optgroup>
+                  <optgroup label="Group I">
+                    <option value="FRA">France</option>
+                    <option value="SEN">Senegal</option>
+                    <option value="IRQ">Iraq</option>
+                    <option value="NOR">Norway</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Player</label>
+                <select id="f-player" onchange="onPlayerChange()"
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="">Loading…</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Player baseline banner (shown after player selected) -->
+            <div id="log-baseline-banner" class="hidden rounded-xl p-3 space-y-2"
+              style="background:rgba(29,185,84,0.06);border:1px solid rgba(29,185,84,0.2);">
+              <div class="flex items-center justify-between">
+                <span style="color:var(--green);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Player Baseline Profile</span>
+                <span id="log-bl-name" style="color:var(--text);font-size:12px;font-weight:600;"></span>
+              </div>
+              <div class="grid grid-cols-4 gap-2 text-center" id="log-bl-stats"></div>
+            </div>
+
+            <!-- Date + Session Type -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Date</label>
+                <input id="f-date" type="date"
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Session Type</label>
+                <select id="f-session"
+                  class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="rest">😴 Rest</option>
+                  <option value="recovery">🔄 Recovery</option>
+                  <option value="technical" selected>⚽ Technical</option>
+                  <option value="tactical">🧠 Tactical</option>
+                  <option value="physical">💪 Physical</option>
+                  <option value="match_prep">🏟 Match Prep</option>
+                  <option value="match_simulation">🔴 Match Simulation</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- RPE + Duration -->
+            <div>
+              <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1.5">
+                <span>RPE (Perceived Exertion)</span>
+                <span id="f-rpe-val" class="text-blue-600 font-bold">6</span>
+              </div>
+              <input id="f-rpe" type="range" min="0" max="10" value="6" step="1"
+                oninput="document.getElementById('f-rpe-val').textContent=this.value"
+                class="w-full appearance-none cursor-pointer mb-1" />
+              <div class="flex justify-between text-xs text-slate-400">
+                <span>0 Rest</span><span>5 Moderate</span><span>10 Max</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5">Session Duration (minutes)</label>
+              <input id="f-duration" type="number" min="0" max="300" value="90" placeholder="e.g. 90"
+                class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- Wellness block -->
+            <div class="border border-slate-100 rounded-xl p-4 bg-slate-50 space-y-4">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hooper Wellness (1 = Best · 7 = Worst)</p>
+                <span class="text-xs text-slate-400" id="log-wellness-hint">Pre-filled with player baseline</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Sleep Quality -->
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <span>Sleep Quality</span>
+                    <div class="flex items-center gap-2">
+                      <span id="log-bl-slq" class="text-slate-400" style="font-size:10px;"></span>
+                      <span id="f-slq-val" class="text-blue-600">3</span>
+                    </div>
+                  </div>
+                  <input id="f-slq" type="range" min="1" max="7" value="3" step="0.5"
+                    oninput="document.getElementById('f-slq-val').textContent=this.value"
+                    class="w-full appearance-none cursor-pointer" />
+                </div>
+                <!-- Fatigue -->
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <span>Fatigue</span>
+                    <div class="flex items-center gap-2">
+                      <span id="log-bl-fat" class="text-slate-400" style="font-size:10px;"></span>
+                      <span id="f-fat-val" class="text-blue-600">3</span>
+                    </div>
+                  </div>
+                  <input id="f-fat" type="range" min="1" max="7" value="3" step="0.5"
+                    oninput="document.getElementById('f-fat-val').textContent=this.value"
+                    class="w-full appearance-none cursor-pointer" />
+                </div>
+                <!-- Soreness -->
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <span>Soreness</span>
+                    <div class="flex items-center gap-2">
+                      <span id="log-bl-sor" class="text-slate-400" style="font-size:10px;"></span>
+                      <span id="f-sor-val" class="text-blue-600">3</span>
+                    </div>
+                  </div>
+                  <input id="f-sor" type="range" min="1" max="7" value="3" step="0.5"
+                    oninput="document.getElementById('f-sor-val').textContent=this.value"
+                    class="w-full appearance-none cursor-pointer" />
+                </div>
+                <!-- Stress -->
+                <div>
+                  <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <span>Stress</span>
+                    <div class="flex items-center gap-2">
+                      <span id="log-bl-str" class="text-slate-400" style="font-size:10px;"></span>
+                      <span id="f-str-val" class="text-blue-600">3</span>
+                    </div>
+                  </div>
+                  <input id="f-str" type="range" min="1" max="7" value="3" step="0.5"
+                    oninput="document.getElementById('f-str-val').textContent=this.value"
+                    class="w-full appearance-none cursor-pointer" />
+                </div>
+              </div>
+
+              <!-- Sleep hours -->
+              <div>
+                <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                  <span>Sleep Duration</span>
+                  <div class="flex items-center gap-2">
+                    <span id="log-bl-slh" class="text-slate-400" style="font-size:10px;"></span>
+                    <span id="f-slh-val" class="text-blue-600">7.5h</span>
+                  </div>
+                </div>
+                <input id="f-slh" type="range" min="3" max="12" value="7.5" step="0.5"
+                  oninput="document.getElementById('f-slh-val').textContent=this.value+'h'"
+                  class="w-full appearance-none cursor-pointer" />
+              </div>
+            </div>
+
+            <!-- Optional biometrics -->
+            <div class="border border-slate-100 rounded-xl p-4 bg-slate-50">
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Biometrics (optional)</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1.5">
+                    HRV (ms) <span id="log-bl-hrv" class="text-slate-400 font-normal"></span>
+                  </label>
+                  <input id="f-hrv" type="number" min="10" max="200" placeholder="e.g. 68"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1.5">
+                    Resting HR (bpm) <span id="log-bl-hr" class="text-slate-400 font-normal"></span>
+                  </label>
+                  <input id="f-hr" type="number" min="30" max="100" placeholder="e.g. 58"
+                    class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" id="submit-btn"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+              <span id="submit-label">Run Prediction</span>
+            </button>
+            <p id="form-error" class="hidden text-red-600 text-sm text-center font-medium"></p>
+          </form>
+        </div>
+
+        <!-- ── RESULT PANEL ──────────────────────────────────────── -->
+        <div id="result-panel" class="flex flex-col gap-4">
+
+          <!-- Empty state -->
+          <div id="result-empty" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 flex flex-col items-center justify-center text-center h-full">
+            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4 text-3xl">🧠</div>
+            <p class="text-slate-700 font-semibold">No prediction yet</p>
+            <p class="text-slate-400 text-sm mt-1">Fill in the form and hit <strong>Run Prediction</strong>.</p>
+          </div>
+
+          <!-- Result card (hidden until submission) -->
+          <div id="result-card" class="hidden space-y-4">
+
+            <!-- Risk banner -->
+            <div id="result-banner" class="rounded-2xl p-6 border-2 text-center">
+              <p class="text-xs font-bold uppercase tracking-widest mb-1 opacity-70" id="result-player-name"></p>
+              <p class="text-5xl font-black mb-2" id="result-pct"></p>
+              <p class="text-lg font-bold" id="result-cat"></p>
+              <p class="text-sm opacity-70 mt-1" id="result-acwr"></p>
+            </div>
+
+            <!-- Confidence -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Model Confidence</p>
+              <div class="space-y-3" id="result-confidence"></div>
+            </div>
+
+            <!-- Top features -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Top Risk Drivers</p>
+              <div class="space-y-2" id="result-features"></div>
+            </div>
+
+            <!-- Latency -->
+            <p id="result-latency" class="text-xs text-slate-400 text-center"></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ LIVE MATCH VIEW ══ -->
+    <div id="view-live-content" class="hidden space-y-4">
+
+      <!-- Fixture selector -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-5 py-4 flex flex-wrap items-center gap-3">
+        <label class="text-sm font-semibold text-slate-700 whitespace-nowrap">Fixture</label>
+        <select id="live-fixture-select" onchange="onLiveFixtureSelect(this.value)"
+          class="flex-1 min-w-0 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </select>
+        <button onclick="loadLive()"
+          class="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+          Refresh
+        </button>
+        <span id="live-data-note" class="text-xs text-slate-400 whitespace-nowrap"></span>
+        <span id="live-countdown" class="text-xs text-slate-300 whitespace-nowrap ml-auto"></span>
+      </div>
+
+      <!-- Real score card -->
+      <div id="live-score-card" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div id="live-score-skeleton" class="flex items-center justify-center gap-8">
+          <div class="animate-pulse h-10 w-32 bg-slate-100 rounded-lg"></div>
+          <div class="animate-pulse h-10 w-20 bg-slate-100 rounded-lg"></div>
+          <div class="animate-pulse h-10 w-32 bg-slate-100 rounded-lg"></div>
+        </div>
+        <div id="live-score-body" class="hidden">
+          <div class="flex items-center justify-between gap-4">
+            <div class="text-center flex-1">
+              <p id="live-home-flag" class="mb-1 flex justify-center items-center h-9"></p>
+              <p id="live-home-name" class="text-lg font-bold text-slate-800"></p>
+              <p id="live-home-score" class="text-6xl font-black text-slate-900 mt-2 tabular-nums"></p>
+            </div>
+            <div class="text-center">
+              <div id="live-status-badge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold mb-2">
+                <span class="w-2 h-2 rounded-full"></span>
+                <span id="live-status-text"></span>
+              </div>
+              <p id="live-minute" class="text-2xl font-black text-blue-600"></p>
+              <p class="text-xs text-slate-400 mt-1">BSD Bzzoiro</p>
+            </div>
+            <div class="text-center flex-1">
+              <p id="live-away-flag" class="mb-1 flex justify-center items-center h-9"></p>
+              <p id="live-away-name" class="text-lg font-bold text-slate-800"></p>
+              <p id="live-away-score" class="text-6xl font-black text-slate-900 mt-2 tabular-nums"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unified match probabilities card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Match Probabilities</h3>
+          <span id="live-prob-mode" class="text-xs text-slate-400 ml-auto">Dixon-Coles model</span>
+        </div>
+        <!-- outcome bars (pre-match, always shown) -->
+        <div id="pre-match-content" class="space-y-3">
+          <div class="animate-pulse space-y-2">
+            <div class="h-4 bg-slate-100 rounded w-full"></div>
+            <div class="h-4 bg-slate-100 rounded w-5/6"></div>
+            <div class="h-4 bg-slate-100 rounded w-4/6"></div>
+          </div>
+        </div>
+        <!-- live probability comparison (appears once match starts) -->
+        <div id="live-win-prob-content" class="hidden mt-4 pt-4 border-t border-slate-100"></div>
+      </div>
+
+      <!-- Key Goal Threats -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-2 h-2 rounded-full bg-red-500"></div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Key Goal Threats</h3>
+          <span class="ml-auto text-xs text-slate-400">P(scores in this match)</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span id="live-sc-home-flag" class="text-xl"></span>
+              <span id="live-sc-home-name" class="text-sm font-bold text-slate-700"></span>
+            </div>
+            <div id="live-home-scorers" class="space-y-2">
+              <div class="animate-pulse h-8 bg-slate-100 rounded w-full"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span id="live-sc-away-flag" class="text-xl"></span>
+              <span id="live-sc-away-name" class="text-sm font-bold text-slate-700"></span>
+            </div>
+            <div id="live-away-scorers" class="space-y-2">
+              <div class="animate-pulse h-8 bg-slate-100 rounded w-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p id="live-poll-note" class="text-xs text-slate-400 text-center"></p>
+    </div>
+
+    <!-- ══ PREDICTIONS VIEW ══ -->
+    <div id="view-predictions-content" class="hidden space-y-5">
+
+      <!-- Fixture selector bar -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-5 py-4 flex flex-wrap items-center gap-3">
+        <label class="text-sm font-semibold text-slate-700 whitespace-nowrap">Fixture</label>
+        <select id="pm-fixture-select" onchange="onPrematchSelect(this.value)"
+          class="flex-1 min-w-0 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </select>
+        <button onclick="loadPrematch(_currentPrematchId)"
+          class="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+          Refresh
+        </button>
+      </div>
+
+      <!-- Fixture header — match poster -->
+      <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-2xl shadow-lg overflow-hidden">
+        <div class="px-6 pt-4 pb-2 text-center">
+          <p id="pm-group-label" class="text-xs font-bold text-blue-400 uppercase tracking-widest">World Cup 2026</p>
+        </div>
+        <div class="flex items-center justify-center gap-3 px-6 pb-5">
+          <div class="text-center flex-1 min-w-0">
+            <p id="pm-home-flag" class="mb-2 flex justify-center drop-shadow-lg"></p>
+            <p id="pm-home-name" class="text-lg font-black text-white">Home</p>
+          </div>
+          <div class="text-center px-4 flex flex-col items-center gap-1">
+            <p class="text-4xl font-black text-slate-500">vs</p>
+            <p id="pm-kickoff" class="text-xs text-slate-400 whitespace-nowrap bg-slate-800 px-3 py-1 rounded-full mt-1"></p>
+          </div>
+          <div class="text-center flex-1 min-w-0">
+            <p id="pm-away-flag" class="mb-2 flex justify-center drop-shadow-lg"></p>
+            <p id="pm-away-name" class="text-lg font-black text-white">Away</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outcome probabilities -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-5">
+          <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Match Outcome</h3>
+          <span id="pm-market-badge" class="ml-auto text-xs text-slate-400"></span>
+        </div>
+        <div id="pm-outcome-bars" class="space-y-4">
+          <div class="animate-pulse space-y-3">
+            <div class="h-10 bg-slate-100 rounded-xl w-full"></div>
+            <div class="h-10 bg-slate-100 rounded-xl w-full"></div>
+            <div class="h-10 bg-slate-100 rounded-xl w-full"></div>
+          </div>
+        </div>
+        <div class="mt-6 pt-5 border-t border-slate-100 flex items-end justify-between gap-4">
+          <div>
+            <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Most Likely Score</p>
+            <p id="pm-mls" class="text-4xl font-black text-slate-900">—</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Probability</p>
+            <p id="pm-mls-prob" class="text-2xl font-bold text-blue-600">—</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Scorer Probabilities -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-5">
+          <div class="w-2 h-2 rounded-full bg-red-500"></div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Top Scorer Probabilities</h3>
+          <span class="ml-auto text-xs text-slate-400">P(scores ≥ 1 goal)</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span id="pm-sc-home-flag" class="text-xl"></span>
+              <span id="pm-sc-home-name" class="text-sm font-bold text-slate-700"></span>
+            </div>
+            <div id="pm-home-scorers" class="space-y-3">
+              <div class="animate-pulse space-y-2">
+                <div class="h-8 bg-slate-100 rounded w-full"></div>
+                <div class="h-8 bg-slate-100 rounded w-full"></div>
+                <div class="h-8 bg-slate-100 rounded w-full"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span id="pm-sc-away-flag" class="text-xl"></span>
+              <span id="pm-sc-away-name" class="text-sm font-bold text-slate-700"></span>
+            </div>
+            <div id="pm-away-scorers" class="space-y-3">
+              <div class="animate-pulse space-y-2">
+                <div class="h-8 bg-slate-100 rounded w-full"></div>
+                <div class="h-8 bg-slate-100 rounded w-full"></div>
+                <div class="h-8 bg-slate-100 rounded w-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scoreline Heatmap -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-5">
+          <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Scoreline Probability Matrix</h3>
+          <span class="ml-auto text-xs text-slate-400">Home goals ↓ · Away goals →</span>
+        </div>
+        <div id="pm-heatmap" class="overflow-x-auto">
+          <div class="animate-pulse space-y-2">
+            <div class="h-8 bg-slate-100 rounded w-full"></div>
+            <div class="h-8 bg-slate-100 rounded w-full"></div>
+            <div class="h-8 bg-slate-100 rounded w-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team stat profile -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-5">
+          <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Team Stat Profile</h3>
+          <span class="ml-auto text-xs text-slate-400">Expected per match</span>
+        </div>
+        <div id="pm-stat-table" class="space-y-1">
+          <div class="animate-pulse space-y-2">
+            <div class="h-8 bg-slate-100 rounded w-full"></div>
+            <div class="h-8 bg-slate-100 rounded w-full"></div>
+            <div class="h-8 bg-slate-100 rounded w-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data coverage badges -->
+      <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Data Coverage</p>
+        <div id="pm-coverage-note" class="flex flex-wrap gap-2">
+          <span class="text-slate-400 italic text-xs">Select a fixture to see coverage details.</span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <p class="text-center text-xs text-slate-400 pb-4">
+        <span class="font-semibold text-slate-500">Model estimate</span> — outcomes shown as probabilities, not facts.
+        Dixon-Coles Poisson · BSD Bzzoiro data · WC 2026 neutral venues.
+      </p>
+    </div>
+
+    <!-- ══ COMPARE VIEW ══ -->
+    <div id="view-compare-content" class="hidden space-y-5 pb-8">
+
+      <!-- Fixture picker -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 px-5 py-4 flex flex-wrap items-center gap-3">
+        <label class="text-sm font-semibold text-slate-700 whitespace-nowrap">⚔ Fixture</label>
+        <select id="cmp-fixture-select" onchange="onCompareSelect(this.value)"
+          class="flex-1 min-w-0 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </select>
+        <button onclick="loadCompare()"
+          class="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+          Refresh
+        </button>
+      </div>
+
+      <!-- Dynamic content rendered by loadCompare() -->
+      <div id="cmp-content">
+        <div class="flex justify-center py-20"><div class="spinner"></div></div>
+      </div>
+
+    </div>
+
+    <!-- ══ SCOUT VIEW ══ -->
+    <div id="view-scout-content" class="hidden space-y-5 pb-8">
+
+      <!-- Shown only when a team has no finished matches yet -->
+      <div id="scout-no-data" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-3">
+        <span class="text-2xl">⏳</span>
+        <div>
+          <p class="font-bold text-amber-800 text-sm">No finished matches yet</p>
+          <p class="text-amber-700 text-xs mt-1">
+            <span id="scout-no-data-team"></span> hasn't played a finished WC 2026 match yet.
+            Check back after their first group stage game.
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div id="scout-controls" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-800">Player Touch Heatmap</h2>
+          <p class="text-slate-500 text-xs mt-0.5">WC 2026 + Club Matches · SofaScore · Attacks left → right</p>
+        </div>
+
+        <!-- Row 1: WC match + player -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1.5">WC 2026 Match</label>
+            <select id="scout-match-select" onchange="loadScoutPlayers(this.value)"
+              class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+              <option value="">Select a match…</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Player</label>
+            <select id="scout-player-select" onchange="loadPlayerHistory(this.value)"
+              class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+              <option value="">Select a match first…</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 2: Club history (appears after player selected) -->
+        <div id="scout-history-row" class="hidden space-y-2">
+          <div class="flex items-center gap-2">
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Recent Club &amp; National Team Matches</span>
+            <div class="h-px flex-1 bg-slate-200"></div>
+          </div>
+          <div id="scout-history-status" class="text-xs text-slate-400 italic">Loading recent matches…</div>
+          <select id="scout-history-select"
+            class="hidden w-full border border-indigo-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-indigo-50">
+          </select>
+        </div>
+
+        <!-- Generate buttons -->
+        <div class="flex flex-wrap gap-3">
+          <button onclick="generateHeatmap('wc')"
+            class="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+            Heatmap from WC Match
+          </button>
+          <button id="scout-club-btn" onclick="generateHeatmap('club')"
+            class="hidden px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors">
+            Heatmap from Club Match
+          </button>
+          <button id="scout-player-dz-btn" onclick="generatePlayerDangerZones()"
+            class="hidden px-5 py-2.5 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
+            Shot Profile (last 10)
+          </button>
+        </div>
+      </div>
+
+      <!-- Heatmap display -->
+      <div id="scout-heatmap-area" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 min-h-[200px] flex items-center justify-center">
+        <p class="text-slate-400 text-sm">Choose a match and player, then click Generate Heatmap.</p>
+      </div>
+
+      <!-- ── Danger Zones ── -->
+      <div id="scout-danger-card" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-800">Team Danger Zones</h2>
+            <p class="text-slate-500 text-xs mt-0.5">Shot origins · xG by zone · last 10 matches (WC + all competitions) · SofaScore</p>
+          </div>
+          <button onclick="generateTeamAggregateDangerZones()"
+            class="shrink-0 px-5 py-2.5 bg-orange-600 text-white rounded-lg text-sm font-semibold hover:bg-orange-700 transition-colors whitespace-nowrap">
+            Generate Danger Zones
+          </button>
+        </div>
+        <div id="scout-danger-area" class="min-h-[120px] flex items-center justify-center">
+          <p class="text-slate-400 text-sm">Click Generate to build the team's danger-zone map from their last 10 matches.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ PROFILES VIEW ══════════════════════════════════════════ -->
+    <div id="view-profiles-content" class="hidden space-y-5 pb-8">
+
+      <!-- Squad selector bar -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <div style="flex:1;min-width:160px;">
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Team</label>
+            <select id="profile-team-select" onchange="loadSquadProfiles(this.value)"
+              class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium">
+              <option value="BRA">&#x1F1E7;&#x1F1F7; Brazil</option>
+              <option value="MAR">&#x1F1F2;&#x1F1E6; Morocco</option>
+              <option value="HAI">&#x1F1ED;&#x1F1F9; Haiti</option>
+              <option value="SCO">Scotland</option>
+              <option value="FRA">&#x1F1EB;&#x1F1F7; France</option>
+              <option value="SEN">&#x1F1F8;&#x1F1F3; Senegal</option>
+              <option value="IRQ">&#x1F1EE;&#x1F1F6; Iraq</option>
+              <option value="NOR">&#x1F1F3;&#x1F1F4; Norway</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:200px;">
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Player</label>
+            <select id="profile-player-select"
+              class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium">
+              <option value="">&#x2014; select team first &#x2014;</option>
+            </select>
+          </div>
+          <div style="padding-top:20px;">
+            <button onclick="loadPlayerProfile()"
+              class="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+              Load Profile
+            </button>
+          </div>
+        </div>
+        <!-- Quick squad strip -->
+        <div id="profile-squad-strip" class="flex flex-wrap gap-2 min-h-[36px]">
+          <p class="text-slate-400 text-xs self-center">Select a team to view the squad</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="profile-empty" class="bg-white rounded-2xl p-10 shadow-sm border border-slate-200 text-center">
+        <div style="font-size:48px;margin-bottom:12px;">&#x1F464;</div>
+        <p class="text-slate-600 font-semibold text-lg">Select a player to view their profile</p>
+        <p class="text-slate-400 text-sm mt-1">Choose a team and player above, then click Load Profile</p>
+      </div>
+
+      <!-- Profile content (shown after successful load) -->
+      <div id="profile-content" class="hidden space-y-5">
+
+        <!-- Loading state -->
+        <div id="profile-loading" class="hidden bg-white rounded-2xl p-10 shadow-sm border border-slate-200 text-center">
+          <div class="spinner mx-auto mb-4"></div>
+          <p class="text-slate-400 text-sm">Fetching profile from Transfermarkt&#x2026;</p>
+          <p class="text-slate-400 text-xs mt-1">First load may take ~5 seconds</p>
+        </div>
+
+        <!-- Hero card -->
+        <div id="profile-hero" class="rounded-2xl overflow-hidden shadow-lg border"
+          style="background:linear-gradient(135deg,#050f1e 0%,#0a1e36 60%,#071c30 100%);border-color:rgba(29,185,84,0.2);">
+        </div>
+
+        <!-- 3-column: Physical · Traits · Injury Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div id="profile-physical"   class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200"></div>
+          <div id="profile-traits"     class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200"></div>
+          <div id="profile-injsummary" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200"></div>
+        </div>
+
+        <!-- Career stats table -->
+        <div id="profile-stats"    class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200"></div>
+
+        <!-- Full injury history -->
+        <div id="profile-injuries" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200"></div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const API = window.location.origin + '/api/v1';
+    let currentTeam = 'BRA', currentDay = 70, currentView = 'injury';
+    let debounce = null;
+
+    /* ── COLOUR HELPERS ─────────────────────────────────────────── */
+    const RISK_COLOR  = { low:'#22c55e', moderate:'#f59e0b', high:'#ef4444', very_high:'#7c3aed' };
+    const RISK_BG     = { low:'bg-green-50 text-green-700 border-green-200', moderate:'bg-amber-50 text-amber-700 border-amber-200', high:'bg-red-50 text-red-700 border-red-200', very_high:'bg-purple-50 text-purple-700 border-purple-200' };
+    const RISK_LABEL  = { low:'Low', moderate:'Moderate', high:'High', very_high:'Very High' };
+    const READ_COLOR  = { peak:'#10b981', ready:'#4ade80', moderate:'#fbbf24', low:'#f87171', rest:'#ef4444' };
+    const READ_BG     = { peak:'bg-emerald-50 text-emerald-700 border-emerald-200', ready:'bg-green-50 text-green-700 border-green-200', moderate:'bg-amber-50 text-amber-700 border-amber-200', low:'bg-red-50 text-red-600 border-red-200', rest:'bg-red-100 text-red-700 border-red-300' };
+    const READ_LABEL  = { peak:'Peak', ready:'Ready', moderate:'Moderate', low:'Low', rest:'Rest' };
+    const SESSION_ICON = { rest:'😴', recovery:'🔄', technical:'⚽', tactical:'🧠', physical:'💪', match_prep:'🏟️' };
+    const SESSION_COLOR = { rest:'text-slate-400', recovery:'text-blue-500', technical:'text-green-600', tactical:'text-purple-600', physical:'text-red-600', match_prep:'text-orange-600' };
+    const _FLAG_CODES = { BRA:'br', MAR:'ma', HAI:'ht', SCO:'gb-sct', FRA:'fr', SEN:'sn', IRQ:'iq', NOR:'no' };
+    const NAMES = { BRA:'Brazil', MAR:'Morocco', HAI:'Haiti', SCO:'Scotland', FRA:'France', SEN:'Senegal', IRQ:'Iraq', NOR:'Norway' };
+    function flagImg(tla, w) {
+      w = w || 20;
+      const code = _FLAG_CODES[tla];
+      if (!code) return '';
+      const h = Math.round(w * 0.7);
+      return `<img src="https://flagcdn.com/w${w}/${code}.png" style="width:${w}px;height:${h}px;display:inline-block;vertical-align:middle;border-radius:3px;object-fit:cover" alt="" />`;
+    }
+
+    function riskColor(c)  { return RISK_COLOR[c]  ?? '#94a3b8'; }
+    function riskBg(c)     { return RISK_BG[c]     ?? 'bg-slate-50 text-slate-600 border-slate-200'; }
+    function riskLabel(c)  { return RISK_LABEL[c]  ?? c; }
+    function readColor(c)  { return READ_COLOR[c]  ?? '#94a3b8'; }
+    function readBg(c)     { return READ_BG[c]     ?? 'bg-slate-50 text-slate-600 border-slate-200'; }
+    function readLabel(c)  { return READ_LABEL[c]  ?? c; }
+
+    function acwrZone(v) {
+      if (v == null) return { label:'No data', color:'text-slate-400' };
+      if (v < 0.80)  return { label:'Under-training', color:'text-blue-500' };
+      if (v < 1.30)  return { label:'Optimal ✓',      color:'text-green-600' };
+      if (v < 1.50)  return { label:'Caution',         color:'text-amber-600' };
+      if (v < 2.00)  return { label:'Danger!',         color:'text-red-600' };
+      return               { label:'Critical ‼',       color:'text-purple-600' };
+    }
+    function phase(d) {
+      const w = Math.ceil(d / 7);
+      return w <= 4 ? 'Foundation' : w <= 8 ? 'Build' : w <= 11 ? 'Intensification' : 'Taper';
+    }
+    function posLabel(p) { return (p ?? '').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
+    function posIcon(p) {
+      return ({goalkeeper:'🧤',center_back:'🛡',fullback:'🛡',wingback:'⚡',
+               defensive_midfielder:'⚙',central_midfielder:'⚙',attacking_midfielder:'🎯',
+               winger:'⚡',second_striker:'🎯',striker:'⚽'})[p] ?? '⚽';
+    }
+
+    /* ── INJURY RISK CARDS ─────────────────────────────────────── */
+    function renderInjuryStats(d) {
+      const pct = Math.round(d.mean_risk_score * 100);
+      const col = d.mean_risk_score < .35 ? 'text-green-600' : d.mean_risk_score < .60 ? 'text-amber-600' : 'text-red-600';
+      const injured = d.players.filter(p => p.participation === 'injured').length;
+      const nxt = d.days_to_next_match;
+      const nxtLabel = nxt != null ? `${nxt} day${nxt===1?'':'s'}` : 'TBD';
+      const nxtColor = nxt != null && nxt <= 4 ? 'text-red-600' : nxt != null && nxt <= 6 ? 'text-amber-600' : 'text-blue-700';
+      document.getElementById('injury-stats').innerHTML = `
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Squad</p>
+          <p class="text-3xl font-black text-slate-800">${d.total_players}</p>
+          <p class="text-xs text-slate-400 mt-1">${d.team_name}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Mean Injury Risk</p>
+          <p class="text-3xl font-black ${col}">${pct}<span class="text-lg font-semibold">%</span></p>
+          <div class="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full bar-fill" style="width:${pct}%;background:${riskColor(pct<35?'low':pct<60?'moderate':'high')}"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Risk Distribution</p>
+          <div class="flex items-end gap-1.5 h-8">
+            ${[{l:'L',n:d.low_count,c:'#22c55e'},{l:'M',n:d.moderate_count,c:'#f59e0b'},{l:'H',n:d.high_count,c:'#ef4444'},{l:'V',n:d.very_high_count,c:'#7c3aed'}].map(b=>{
+              const h = d.total_players > 0 ? Math.max(4,Math.round(b.n/d.total_players*32)) : 4;
+              return `<div class="flex flex-col items-center gap-0.5 flex-1">
+                <span class="text-xs font-bold" style="color:${b.c}">${b.n}</span>
+                <div class="w-full rounded-t" style="height:${h}px;background:${b.c};opacity:.85"></div>
+                <span class="text-xs text-slate-400">${b.l}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Next Match</p>
+          <p class="text-2xl font-black ${nxtColor}">${nxtLabel}</p>
+          <p class="text-xs text-slate-400 mt-1">${injured} confirmed injur${injured===1?'y':'ies'} · WC 2026</p>
+        </div>`;
+    }
+
+    const _PARTICIPATION_LABEL = {
+      injured:      ['🚑 Injured',         'bg-red-50 text-red-700 border-red-200'],
+      unavailable:  ['⛔ Unavailable',     'bg-orange-50 text-orange-700 border-orange-200'],
+      not_in_squad: ['❓ Not Selected',    'bg-slate-100 text-slate-600 border-slate-300'],
+      benched:      ['🪑 Bench',           'bg-blue-50 text-blue-600 border-blue-200'],
+      starter:      ['✅ Started',         'bg-green-50 text-green-700 border-green-200'],
+      no_match_yet: ['📅 Pre-Match',       'bg-indigo-50 text-indigo-600 border-indigo-200'],
+    };
+
+    function injuryCard(p, i) {
+      const adjScore = p.adjusted_risk_score ?? p.risk_score;
+      const adjCat   = p.adjusted_risk_category ?? p.risk_category;
+      const basePct  = Math.round(p.risk_score * 100);
+      const adjPct   = Math.round(adjScore * 100);
+      const bar      = riskColor(adjCat);
+      const alert    = p.alert;
+      const [partLabel, partCls] = _PARTICIPATION_LABEL[p.participation] || ['—', ''];
+      const isInjured = p.participation === 'injured' || p.participation === 'unavailable';
+
+      const adjDelta = p.risk_adjustment ?? 0;
+      const factors  = p.risk_factors   ?? {};
+      const topFactors = Object.values(factors)
+        .sort((a,b) => Math.abs(b.delta) - Math.abs(a.delta))
+        .slice(0, 2);
+
+      const factorTags = topFactors.map(f => {
+        const isUp = f.direction === 'up';
+        const col  = isUp ? 'rgba(239,68,68,0.12)' : 'rgba(34,197,94,0.12)';
+        const tc   = isUp ? '#ef4444' : '#22c55e';
+        const bc   = isUp ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)';
+        const sign = isUp ? '▲' : '▼';
+        const liveBadge = f.live ? `<span style="background:#f59e0b;color:#fff;border-radius:4px;font-size:8px;font-weight:700;padding:1px 4px;margin-right:3px;vertical-align:middle;">LIVE</span>` : '';
+        return `<span style="background:${col};color:${tc};border:1px solid ${bc};padding:2px 7px;border-radius:6px;font-size:10px;font-weight:600;" title="${f.label}">
+          ${liveBadge}${sign} ${f.label.length > 30 ? f.label.slice(0,28)+'…' : f.label}
+        </span>`;
+      }).join('');
+
+      const deltaStr = adjDelta > 0.005 ? `<span style="color:#ef4444;font-size:10px;font-weight:700;">+${Math.round(adjDelta*100)}% adj</span>`
+                     : adjDelta < -0.005 ? `<span style="color:#22c55e;font-size:10px;font-weight:700;">${Math.round(adjDelta*100)}% adj</span>`
+                     : '';
+
+      const isML     = p.score_source === 'xgboost_ml';
+      const daysAgo  = p.wellness_days_ago;
+      const mlBadge  = isML
+        ? `<span style="background:#6366f1;color:#fff;border-radius:5px;font-size:8px;font-weight:700;padding:1px 5px;" title="Base risk from XGBoost (R²=0.964) on logged wellness data${daysAgo!=null?' · data '+daysAgo+'d ago':''}">XGB</span>`
+        : `<span style="background:#94a3b8;color:#fff;border-radius:5px;font-size:8px;font-weight:700;padding:1px 5px;" title="Rule-based formula (no recent wellness data logged)">RULE</span>`;
+
+      return `
+      <div class="card-enter bg-white rounded-xl shadow-sm border ${alert?'border-red-200':'border-slate-200'} p-4 hover:shadow-md transition-all"
+           style="animation-delay:${Math.min(i*25,400)}ms">
+        ${isInjured?`<div class="flex items-center gap-1.5 mb-2">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping absolute"></span>
+          <span class="w-2 h-2 rounded-full bg-red-500 relative"></span>
+          <span class="text-xs font-semibold text-red-600">${p.injury_reason||'Injured'}</span></div>`:''}
+        <div class="flex items-start justify-between gap-2 mb-3">
+          <div class="min-w-0">
+            <p class="font-bold text-slate-800 text-sm truncate">${p.full_name}</p>
+            <p class="text-xs text-slate-400 mt-0.5">${posIcon(p.position)} ${posLabel(p.position)} · ${p.age??''}y</p>
+          </div>
+          <span class="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full border ${riskBg(adjCat)}">${riskLabel(adjCat)}</span>
+        </div>
+        <div class="mb-2">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-500">Adjusted Risk</span>
+            <div class="flex items-center gap-1.5">
+              ${mlBadge}
+              ${deltaStr}
+              <span class="font-bold" style="color:${bar}">${adjPct}%</span>
+            </div>
+          </div>
+          <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full bar-fill" style="width:${adjPct}%;background:${bar}"></div>
+          </div>
+          ${adjDelta !== 0 ? `<p class="text-slate-400 mt-0.5" style="font-size:10px;">Model base: ${basePct}%</p>` : ''}
+        </div>
+        ${factorTags ? `<div class="flex flex-wrap gap-1 mb-2">${factorTags}</div>` : ''}
+        <div class="flex items-center justify-between pt-2.5 border-t border-slate-100">
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full border ${partCls}">${partLabel}</span>
+          <div class="text-right"><p class="text-xs text-slate-400">Caps</p><p class="text-sm font-bold text-slate-700">${p.caps??'—'}</p></div>
+        </div>
+      </div>`;
+    }
+
+    function alertCard(p) { return wcAlertCard(p); } /* legacy alias */
+
+    function wcAlertCard(p) {
+      const adjScore = p.adjusted_risk_score ?? p.risk_score;
+      const adjCat   = p.adjusted_risk_category ?? p.risk_category;
+      const pct      = Math.round(adjScore * 100);
+      const bar      = riskColor(adjCat);
+      const [partLabel] = _PARTICIPATION_LABEL[p.participation] || ['—', ''];
+      const isInjured = p.participation === 'injured' || p.participation === 'unavailable';
+
+      const factors   = p.risk_factors ?? {};
+      const topFactor = Object.values(factors).sort((a,b) => Math.abs(b.delta)-Math.abs(a.delta))[0];
+
+      return `
+      <div class="bg-white rounded-xl border border-red-200 p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <p class="font-bold text-slate-800 text-sm">${p.full_name}</p>
+            <p class="text-xs text-slate-400">${posLabel(p.position)} · ${p.age??''}y</p>
+          </div>
+          <div class="text-right"><p class="text-xs text-slate-400">Adj. Risk</p><p class="font-black text-lg" style="color:${bar}">${pct}%</p></div>
+        </div>
+        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden mb-2">
+          <div class="h-full rounded-full" style="width:${pct}%;background:${bar}"></div>
+        </div>
+        <p class="text-xs font-semibold ${isInjured?'text-red-600':'text-slate-600'}">${partLabel}${isInjured&&p.injury_reason?' · '+p.injury_reason:''}</p>
+        ${topFactor ? `<p class="text-xs mt-1" style="color:#f59e0b;">${topFactor.live?'<span style="background:#f59e0b;color:#fff;border-radius:4px;font-size:8px;font-weight:700;padding:1px 4px;margin-right:3px;">LIVE</span>':''}▲ ${topFactor.label.length>45?topFactor.label.slice(0,43)+'…':topFactor.label}</p>` : ''}
+      </div>`;
+    }
+
+    /* ── READINESS CARDS ──────────────────────────────────────────*/
+    function renderReadinessStats(d) {
+      const score = d.overall_readiness;
+      const col = score >= 80 ? 'text-emerald-600' : score >= 65 ? 'text-green-600' : score >= 45 ? 'text-amber-600' : 'text-red-600';
+      document.getElementById('readiness-stats').innerHTML = `
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Team Readiness</p>
+          <p class="text-3xl font-black ${col}">${score}<span class="text-lg font-semibold">/100</span></p>
+          <div class="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full bar-fill" style="width:${score}%;background:${score>=80?'#10b981':score>=65?'#4ade80':score>=45?'#fbbf24':'#f87171'}"></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Readiness Breakdown</p>
+          <div class="flex items-end gap-1.5 h-8">
+            ${[{l:'Peak',n:d.peak_count,c:'#10b981'},{l:'Ready',n:d.ready_count,c:'#4ade80'},{l:'Mod',n:d.moderate_count,c:'#fbbf24'},{l:'Low',n:d.low_count,c:'#f87171'},{l:'Rest',n:d.rest_count,c:'#ef4444'}].map(b=>{
+              const total = d.players.length || 1;
+              const h = Math.max(4, Math.round(b.n/total*32));
+              return `<div class="flex flex-col items-center gap-0.5 flex-1">
+                <span class="text-xs font-bold" style="color:${b.c}">${b.n}</span>
+                <div class="w-full rounded-t" style="height:${h}px;background:${b.c};opacity:.85"></div>
+                <span class="text-xs text-slate-400">${b.l}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Ready to Play</p>
+          <p class="text-3xl font-black text-slate-800">${d.peak_count + d.ready_count}</p>
+          <p class="text-xs text-slate-400 mt-1">of ${d.players.length} players</p>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">${d.competition_mode ? 'Mode' : 'Training Phase'}</p>
+          <p class="text-2xl font-black text-blue-700">${d.competition_mode ? 'Competition' : phase(currentDay)}</p>
+          <p class="text-xs text-slate-400 mt-1">${d.competition_mode ? 'WC 2026 · Group Stage' : `Day ${currentDay} of 90`}</p>
+        </div>`;
+
+      // Match countdown banner
+      const nextMatch = d.players[0]?.days_to_next_match;
+      const banner = document.getElementById('match-banner');
+      if (nextMatch != null && nextMatch <= 7) {
+        const urgent = nextMatch <= 2;
+        banner.className = `rounded-xl p-4 flex items-center gap-3 ${urgent?'bg-red-50 border border-red-200':'bg-amber-50 border border-amber-200'}`;
+        banner.innerHTML = `
+          <span class="text-2xl">${urgent?'🚨':'⏰'}</span>
+          <div>
+            <p class="font-bold ${urgent?'text-red-700':'text-amber-700'}">${nextMatch === 0 ? 'Match Day!' : nextMatch === 1 ? 'Match Tomorrow!' : `${nextMatch} Days to Next Match`}</p>
+            <p class="text-xs ${urgent?'text-red-500':'text-amber-600'} mt-0.5">${nextMatch <= 2 ? 'Reduce load — recovery sessions only' : 'Begin taper — maintain fitness, reduce volume'}</p>
+          </div>`;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function scoreBar(score, color) {
+      return `
+        <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+          <div class="h-full rounded-full bar-fill" style="width:${score}%;background:${color}"></div>
+        </div>`;
+    }
+
+    function readinessCard(p, i) {
+      const score = p.readiness_score;
+      const color = readColor(p.readiness_category);
+      const session = p.recommended_session;
+      const loadRange = p.recommended_load_max === 0
+        ? 'Rest' : `${p.recommended_load_min}–${p.recommended_load_max} AU`;
+      return `
+      <div class="card-enter bg-white rounded-xl shadow-sm border border-slate-200 p-4 hover:shadow-md transition-all"
+           style="animation-delay:${Math.min(i*25,400)}ms">
+        <div class="flex items-start justify-between gap-2 mb-3">
+          <div class="min-w-0">
+            <p class="font-bold text-slate-800 text-sm truncate">${p.full_name}</p>
+            <p class="text-xs text-slate-400 mt-0.5">${posIcon(p.position)} ${posLabel(p.position)}</p>
+          </div>
+          <span class="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full border ${readBg(p.readiness_category)}">${readLabel(p.readiness_category)}</span>
+        </div>
+
+        <!-- Readiness score bar -->
+        <div class="mb-3">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-500">Readiness</span>
+            <span class="font-bold" style="color:${color}">${score}/100</span>
+          </div>
+          ${scoreBar(score, color)}
+        </div>
+
+        <!-- Component scores: training mode vs competition mode -->
+        ${p.participation != null ? `
+        <div class="grid grid-cols-2 gap-1.5 mb-3 text-xs">
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">Last Match</p>
+            <p class="font-semibold text-slate-700">${(_PARTICIPATION_LABEL[p.participation]||['—'])[0]}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">Next Match</p>
+            <p class="font-semibold ${p.days_to_next_match<=3?'text-red-600':'text-slate-700'}">${p.days_to_next_match!=null ? p.days_to_next_match+'d':' TBD'}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">Age</p>
+            <p class="font-semibold text-slate-700">${p.age ?? '—'}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">Caps</p>
+            <p class="font-semibold text-slate-700">${p.caps ?? '—'}</p>
+          </div>
+        </div>` : `
+        <div class="grid grid-cols-2 gap-1.5 mb-3 text-xs">
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">ACWR</p>
+            <p class="font-semibold text-slate-700">${p.acwr != null ? (+p.acwr).toFixed(2) : '—'}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">HRV score</p>
+            <p class="font-semibold text-slate-700">${p.hrv_score != null ? p.hrv_score+'/100' : '—'}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">Wellness</p>
+            <p class="font-semibold text-slate-700">${p.wellness_score != null ? p.wellness_score+'/100' : '—'}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-2">
+            <p class="text-slate-400 mb-0.5">Fitness trend</p>
+            <p class="font-semibold text-slate-700">${p.fitness_trend_score != null ? p.fitness_trend_score+'/100' : '—'}</p>
+          </div>
+        </div>`}
+
+        <!-- Protocol -->
+        <div class="border-t border-slate-100 pt-2.5">
+          <p class="text-xs text-slate-400 mb-1">${p.participation != null ? 'Match Protocol' : "Tomorrow's Session"}</p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-bold ${SESSION_COLOR[session]||'text-slate-600'}">${SESSION_ICON[session]||'📋'} ${session.charAt(0).toUpperCase()+session.slice(1).replace(/_/g,' ')}</span>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">${loadRange}</span>
+          </div>
+        </div>
+
+        <!-- Flags -->
+        ${p.flags && p.flags.length > 0 ? `
+        <div class="mt-2 pt-2 border-t border-slate-100 space-y-1">
+          ${p.flags.slice(0,2).map(f=>`<p class="text-xs text-slate-500">• ${f}</p>`).join('')}
+        </div>` : ''}
+      </div>`;
+    }
+
+    /* ── DATA LOADING ─────────────────────────────────────────────*/
+    let _allInjuryPlayers = [];
+
+    const _POS_GROUP = {
+      goalkeeper: 'gk', center_back: 'def', fullback: 'def', wingback: 'def',
+      defensive_midfielder: 'mid', central_midfielder: 'mid', attacking_midfielder: 'mid',
+      winger: 'att', second_striker: 'att', striker: 'att',
+    };
+    function _posGroup(pos) {
+      if (!pos) return 'mid';
+      const p = pos.toLowerCase().replace(/ /g,'_');
+      return _POS_GROUP[p] ?? (p.includes('goal') ? 'gk' : p.includes('back') || p.includes('def') ? 'def' : p.includes('mid') ? 'mid' : 'att');
+    }
+
+    function filterInjury(pos, btn) {
+      document.querySelectorAll('.pos-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const filtered = pos === 'all' ? _allInjuryPlayers : _allInjuryPlayers.filter(p => _posGroup(p.position) === pos);
+      const grid = document.getElementById('injury-grid');
+      grid.innerHTML = filtered.length === 0
+        ? `<div class="col-span-full text-center py-16 text-slate-400">No players in this position group.</div>`
+        : filtered.map((p,i) => injuryCard(p,i)).join('');
+    }
+
+    async function loadInjury() {
+      const grid = document.getElementById('injury-grid');
+      grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-16 gap-3"><div class="spinner"></div><p class="text-slate-400 text-sm">Loading WC 2026 injury data…</p></div>`;
+      // reset filter to All
+      document.querySelectorAll('.pos-filter-btn').forEach((b,i) => { if(i===0) b.classList.add('active'); else b.classList.remove('active'); });
+      try {
+        const res = await fetch(`${API}/predictions/wc-team/${currentTeam}`);
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        const team = await res.json();
+
+        renderInjuryStats(team);
+        document.getElementById('squad-title').innerHTML = `${flagImg(currentTeam)} ${team.team_name} — Squad`;
+
+        _allInjuryPlayers = team.players;
+        grid.innerHTML = team.players.length === 0
+          ? `<div class="col-span-full text-center py-16 text-slate-400">No player data.</div>`
+          : team.players.map((p,i) => injuryCard(p,i)).join('');
+
+        loadMatchPredictionPreview(_currentPrematchId);
+        stamp();
+      } catch(e) { grid.innerHTML = errMsg(e); }
+    }
+
+    const _GROUP_I = new Set(['FRA','SEN','IRQ','NOR']);
+
+    async function loadReadiness() {
+      const grid = document.getElementById('readiness-grid');
+      grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-16 gap-3"><div class="spinner"></div><p class="text-slate-400 text-sm">Computing readiness scores…</p></div>`;
+      try {
+        const url = _GROUP_I.has(currentTeam)
+          ? `${API}/readiness/wc-team/${currentTeam}`
+          : `${API}/readiness/team/${currentTeam}?day_number=${currentDay}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        const data = await res.json();
+
+        renderReadinessStats(data);
+        document.getElementById('readiness-title').innerHTML = `${flagImg(currentTeam)} ${data.team_name} — Readiness`;
+
+        grid.innerHTML = data.players.length === 0
+          ? `<div class="col-span-full text-center py-16 text-slate-400">No player data.</div>`
+          : data.players.map((p,i) => readinessCard(p,i)).join('');
+
+        stamp();
+      } catch(e) { grid.innerHTML = errMsg(e); }
+    }
+
+    function loadCurrent() {
+      if (currentView === 'injury') loadInjury();
+      else loadReadiness();
+    }
+
+    function errMsg(e) {
+      return `<div class="col-span-full text-center py-16">
+        <p class="text-red-500 font-semibold mb-1">Could not load data</p>
+        <p class="text-slate-400 text-sm">${e.message}</p>
+        <p class="text-slate-400 text-xs mt-2">Make sure the backend is running on port 8000</p>
+      </div>`;
+    }
+
+    function stamp() {
+      document.getElementById('last-updated').textContent =
+        new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    }
+
+    /* ── CONTROLS ─────────────────────────────────────────────────*/
+    function selectTeam(code) {
+      currentTeam = code;
+      document.querySelectorAll('.team-tab').forEach(b => {
+        b.classList.remove('tab-active','text-white');
+        b.classList.add('text-slate-600');
+      });
+      const btn = document.getElementById(`tab-${code}`);
+      btn.classList.add('tab-active');
+      btn.classList.remove('text-slate-600');
+      const sub = document.getElementById('header-subtitle');
+      if (sub) sub.textContent = `FIFA World Cup 2026 · Group ${_GROUP_I.has(code) ? 'I' : 'C'}`;
+      _populateLiveFixtures(code);
+      _populatePrematchFixtures(code);
+      if (currentView === 'scout') loadScoutMatches(code);
+      else loadCurrent();
+    }
+
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('view-tab-active','text-blue-700'));
+      document.getElementById(`view-${view}`).classList.add('view-tab-active');
+
+      document.getElementById('view-injury-content').classList.toggle('hidden',      view !== 'injury');
+      document.getElementById('view-readiness-content').classList.toggle('hidden',   view !== 'readiness');
+      document.getElementById('view-log-content').classList.toggle('hidden',         view !== 'log');
+      document.getElementById('view-live-content').classList.toggle('hidden',        view !== 'live');
+      document.getElementById('view-predictions-content').classList.toggle('hidden', view !== 'predictions');
+      document.getElementById('view-scout-content').classList.toggle('hidden',       view !== 'scout');
+      document.getElementById('view-profiles-content').classList.toggle('hidden',    view !== 'profiles');
+      document.getElementById('view-compare-content').classList.toggle('hidden',     view !== 'compare');
+
+      if (view === 'live') { loadLive(); startLivePolling(); }
+      else if (view === 'predictions') { stopLivePolling(); if (_currentPrematchId) loadPrematch(_currentPrematchId); }
+      else if (view === 'scout') { stopLivePolling(); loadScoutMatches(currentTeam); }
+      else if (view === 'profiles') { stopLivePolling(); loadSquadProfiles(document.getElementById('profile-team-select').value || currentTeam); }
+      else if (view === 'compare') { stopLivePolling(); initCompareFixtures(currentTeam); loadCompare(); }
+      else { stopLivePolling(); if (view !== 'log') loadCurrent(); }
+    }
+
+    /* ── LOG METRICS ──────────────────────────────────────────────*/
+    let formPlayers = {};  // { teamCode: [{id, name}, ...] }
+
+    async function loadFormPlayers() {
+      try {
+        const res = await fetch(`${API}/players`);
+        if (!res.ok) return;
+        const players = await res.json();
+        formPlayers = {};
+        players.forEach(p => {
+          // group by team — we don't have team_code on PlayerOut so we load per team
+        });
+        // fallback: load per team
+        await refreshPlayerDropdown(document.getElementById('f-team').value);
+      } catch(_) {}
+    }
+
+    /* ── LOG METRICS BASELINE PRE-FILL ──────────────────────────────────── */
+    let _logBaselinesByTeam = {}; // teamCode -> array of baseline players
+
+    async function refreshPlayerDropdown(teamCode) {
+      const sel = document.getElementById('f-player');
+      sel.innerHTML = '<option value="">Loading…</option>';
+      try {
+        const res = await fetch(`${API}/players?team_code=${teamCode}`);
+        const players = await res.json();
+        formPlayers[teamCode] = players;
+        sel.innerHTML = players.length
+          ? players.map(p => `<option value="${p.id}">${p.last_name}, ${p.first_name} · #${p.jersey_number ?? '—'} · ${posLabel(p.position)}</option>`).join('')
+          : '<option value="">No players found</option>';
+      } catch(_) {
+        sel.innerHTML = '<option value="">Error loading players</option>';
+      }
+      // Also load baseline data for pre-fill (background, non-blocking)
+      fetch(`${API}/player-profile/squad/${teamCode}`)
+        .then(r => r.json())
+        .then(squad => { _logBaselinesByTeam[teamCode] = squad; })
+        .catch(() => {});
+    }
+
+    function onFormTeamChange() {
+      const code = document.getElementById('f-team').value;
+      const warn = document.getElementById('group-i-warning');
+      if (warn) warn.classList.toggle('hidden', !_GROUP_I.has(code));
+      // Reset baseline banner when team changes
+      const banner = document.getElementById('log-baseline-banner');
+      if (banner) banner.classList.add('hidden');
+      refreshPlayerDropdown(code);
+    }
+
+    function onPlayerChange() {
+      const sel      = document.getElementById('f-player');
+      const teamCode = document.getElementById('f-team').value;
+      const optText  = sel.options[sel.selectedIndex]?.text ?? '';
+      if (!optText || optText.startsWith('Loading') || optText.startsWith('No ') || optText.startsWith('Error')) return;
+      const squad    = _logBaselinesByTeam[teamCode] || [];
+      // Match by last name (option text is "LastName, FirstName · ...")
+      const lastName = optText.split(',')[0].trim().toLowerCase();
+      const bl = squad.find(p =>
+        p.name.toLowerCase().split(' ').some(w => w === lastName)
+      );
+      if (bl) {
+        prefillFromBaseline(bl);
+      } else {
+        const banner = document.getElementById('log-baseline-banner');
+        if (banner) banner.classList.add('hidden');
+      }
+    }
+
+    function prefillFromBaseline(bl) {
+      const w  = bl.wellness    || {};
+      const ph = bl.physiology  || {};
+
+      const setSlider = (sliderId, valId, v, suffix = '') => {
+        const el = document.getElementById(sliderId);
+        const vEl = document.getElementById(valId);
+        if (!el || !vEl) return;
+        el.value = v;
+        vEl.textContent = v + suffix;
+      };
+
+      // Wellness sliders
+      if (w.fatigue_baseline       != null) setSlider('f-fat', 'f-fat-val', +w.fatigue_baseline.toFixed(1));
+      if (w.soreness_baseline      != null) setSlider('f-sor', 'f-sor-val', +w.soreness_baseline.toFixed(1));
+      if (w.stress_baseline        != null) setSlider('f-str', 'f-str-val', +w.stress_baseline.toFixed(1));
+      if (w.sleep_quality_baseline != null) setSlider('f-slq', 'f-slq-val', +w.sleep_quality_baseline.toFixed(1));
+      if (w.sleep_duration_baseline_h != null) setSlider('f-slh', 'f-slh-val', w.sleep_duration_baseline_h, 'h');
+
+      // Biometrics
+      if (ph.hrv_baseline_ms != null) {
+        const hrvEl = document.getElementById('f-hrv');
+        if (hrvEl) hrvEl.value = Math.round(ph.hrv_baseline_ms);
+      }
+      if (ph.resting_hr_bpm != null) {
+        const hrEl = document.getElementById('f-hr');
+        if (hrEl) hrEl.value = ph.resting_hr_bpm;
+      }
+
+      // Baseline reference labels next to each slider
+      const blLabel = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v ? `BL: ${v}` : ''; };
+      blLabel('log-bl-fat', w.fatigue_baseline       != null ? w.fatigue_baseline.toFixed(1) : null);
+      blLabel('log-bl-sor', w.soreness_baseline      != null ? w.soreness_baseline.toFixed(1) : null);
+      blLabel('log-bl-str', w.stress_baseline        != null ? w.stress_baseline.toFixed(1) : null);
+      blLabel('log-bl-slq', w.sleep_quality_baseline != null ? w.sleep_quality_baseline.toFixed(1) : null);
+      blLabel('log-bl-slh', w.sleep_duration_baseline_h != null ? `${w.sleep_duration_baseline_h}h` : null);
+      blLabel('log-bl-hrv', ph.hrv_baseline_ms != null ? `${Math.round(ph.hrv_baseline_ms)} ms` : null);
+      blLabel('log-bl-hr',  ph.resting_hr_bpm  != null ? `${ph.resting_hr_bpm} bpm` : null);
+
+      // Baseline banner
+      const banner = document.getElementById('log-baseline-banner');
+      const blName = document.getElementById('log-bl-name');
+      const blStats = document.getElementById('log-bl-stats');
+      if (!banner || !blName || !blStats) return;
+      blName.textContent = bl.name;
+      blStats.innerHTML = [
+        ['HRV',      ph.hrv_baseline_ms          ? Math.round(ph.hrv_baseline_ms) + ' ms' : '—'],
+        ['Sprint',   ph.sprint_speed_max_kmh      ? ph.sprint_speed_max_kmh + ' km/h'      : '—'],
+        ['Sleep',    w.sleep_duration_baseline_h  ? w.sleep_duration_baseline_h + 'h'       : '—'],
+        ['Fatigue BL', w.fatigue_baseline         ? w.fatigue_baseline.toFixed(1)            : '—'],
+      ].map(([k, v]) => `
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:6px;">
+          <div style="color:var(--green);font-size:18px;font-weight:800;">${v}</div>
+          <div style="color:var(--muted);font-size:9px;text-transform:uppercase;">${k}</div>
+        </div>`).join('');
+      banner.classList.remove('hidden');
+    }
+
+    async function submitMetric(e) {
+      e.preventDefault();
+      const playerId = document.getElementById('f-player').value;
+      if (!playerId) { showFormError('Select a player first.'); return; }
+
+      const btn   = document.getElementById('submit-btn');
+      const label = document.getElementById('submit-label');
+      btn.disabled = true;
+      label.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px"></div> Running…';
+      hideFormError();
+
+      const body = {
+        player_id:           playerId,
+        metric_date:         document.getElementById('f-date').value,
+        session_type:        document.getElementById('f-session').value,
+        rpe:                 +document.getElementById('f-rpe').value,
+        session_duration_min:+document.getElementById('f-duration').value || null,
+        sleep_quality:       +document.getElementById('f-slq').value,
+        fatigue:             +document.getElementById('f-fat').value,
+        soreness:            +document.getElementById('f-sor').value,
+        stress:              +document.getElementById('f-str').value,
+        sleep_duration_h:    +document.getElementById('f-slh').value,
+        hrv_ms:              document.getElementById('f-hrv').value ? +document.getElementById('f-hrv').value : null,
+        resting_hr_bpm:      document.getElementById('f-hr').value  ? +document.getElementById('f-hr').value  : null,
+        data_source:         'manual',
+      };
+
+      const t0 = performance.now();
+      try {
+        const res = await fetch(`${API}/metrics/submit-and-predict`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const latency = Math.round(performance.now() - t0);
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail ?? `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        renderResult(data, latency);
+      } catch(err) {
+        showFormError(err.message);
+      } finally {
+        btn.disabled = false;
+        label.textContent = 'Run Prediction';
+      }
+    }
+
+    function renderResult(data, latency) {
+      // Colours
+      const BANNER_CLASSES = {
+        low:       'bg-green-50 border-green-400 text-green-700',
+        moderate:  'bg-amber-50 border-amber-400 text-amber-700',
+        high:      'bg-red-50 border-red-500 text-red-700',
+        very_high: 'bg-purple-50 border-purple-500 text-purple-700',
+      };
+      const BAR_COLORS = { low: '#22c55e', moderate: '#f59e0b', high: '#ef4444', very_high: '#7c3aed' };
+      const cat = data.risk_category;
+      const pct = Math.round(data.risk_score * 100);
+
+      // Banner
+      const banner = document.getElementById('result-banner');
+      banner.className = `rounded-2xl p-6 border-2 text-center ${BANNER_CLASSES[cat] ?? 'bg-slate-50 border-slate-300 text-slate-700'}`;
+      document.getElementById('result-pct').textContent = `${pct}%`;
+      document.getElementById('result-cat').textContent = riskLabel(cat) + ' Risk';
+      document.getElementById('result-acwr').textContent = data.acwr != null ? `ACWR ${(+data.acwr).toFixed(2)}` : 'ACWR unavailable (insufficient history)';
+
+      // Player name from dropdown
+      const playerSel = document.getElementById('f-player');
+      document.getElementById('result-player-name').textContent =
+        playerSel.options[playerSel.selectedIndex]?.text?.split('·')[0]?.trim() ?? '';
+
+      // Confidence bars
+      const confEntries = Object.entries(data.confidence).sort((a,b) => b[1]-a[1]);
+      document.getElementById('result-confidence').innerHTML = confEntries.map(([name, prob]) => {
+        const p = Math.round(prob * 100);
+        const color = BAR_COLORS[name] ?? '#94a3b8';
+        return `
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-600 capitalize">${name}</span>
+              <span class="font-bold" style="color:${color}">${p}%</span>
+            </div>
+            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full bar-fill" style="width:${p}%;background:${color}"></div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // Top features
+      const featEntries = Object.entries(data.top_features).slice(0, 5);
+      const maxFeat = Math.max(...featEntries.map(([,v]) => v), 1);
+      const FEAT_LABELS = {
+        acwr: 'ACWR', fatigue: 'Fatigue', acute_load_7d: 'Acute Load (7d)',
+        chronic_load_28d: 'Chronic Load (28d)', stress: 'Stress',
+        soreness: 'Soreness', hrv_baseline_ms: 'HRV Baseline',
+        srpe_14d_mean: 'sRPE 14d Avg', age: 'Age', hrv_vs_baseline: 'HRV vs Baseline',
+      };
+      document.getElementById('result-features').innerHTML = featEntries.map(([feat, val]) => {
+        const w = Math.round((val / maxFeat) * 100);
+        return `
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-600 w-36 shrink-0">${FEAT_LABELS[feat] ?? feat}</span>
+            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full bg-blue-400 bar-fill" style="width:${w}%"></div>
+            </div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('result-latency').textContent =
+        `Prediction returned in ${latency}ms · Model ${data.model_version}`;
+
+      document.getElementById('result-empty').classList.add('hidden');
+      document.getElementById('result-card').classList.remove('hidden');
+    }
+
+    function showFormError(msg) {
+      const el = document.getElementById('form-error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function hideFormError() {
+      document.getElementById('form-error').classList.add('hidden');
+    }
+
+    /* ── LIVE TAB ─────────────────────────────────────────────────*/
+    let _liveTimer = null;
+    let _currentMatchId = null;
+
+    function _teamFixtures(tla) {
+      return PM_FIXTURES.filter(f => f.home === tla || f.away === tla);
+    }
+
+    function _optLabel(f) {
+      return `${f.date}  ·  ${NAMES[f.home]||f.home} vs ${NAMES[f.away]||f.away}`;
+    }
+
+    function _populateLiveFixtures(tla) {
+      const sel = document.getElementById('live-fixture-select');
+      if (!sel) return;
+      sel.innerHTML = '';
+      _teamFixtures(tla).forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.match_id;
+        opt.textContent = _optLabel(f);
+        sel.appendChild(opt);
+      });
+      _currentMatchId = null;  // force auto-select on next loadLive
+    }
+
+    function initLiveFixtures() {
+      _populateLiveFixtures(currentTeam);
+    }
+
+    function onLiveFixtureSelect(matchId) {
+      _currentMatchId = matchId;
+      loadLive();
+    }
+
+    async function loadLive() {
+      document.getElementById('live-score-skeleton').classList.remove('hidden');
+      document.getElementById('live-score-body').classList.add('hidden');
+      try {
+        // 1. Real scores from BSD
+        const scoresRes = await fetch(`${API}/predictions/match/live-scores`);
+        const scoresData = await scoresRes.json();
+        const matches = scoresData.matches || [];
+
+        // Build a map: match_id → live data (all matches from API)
+        const matchMap = {};
+        matches.forEach(m => { matchMap[m.match_id] = m; });
+
+        // Only operate on this team's fixtures
+        const teamFix = _teamFixtures(currentTeam);
+        const teamMatchIds = new Set(teamFix.map(f => f.match_id));
+        const teamMatches = matches.filter(m => teamMatchIds.has(m.match_id));
+
+        // Update dropdown options with live/finished markers
+        const sel = document.getElementById('live-fixture-select');
+        Array.from(sel.options).forEach(opt => {
+          const m = matchMap[opt.value];
+          const f = teamFix.find(x => x.match_id === opt.value) || {};
+          if (!m) return;
+          const icon = m.is_live ? '🔴 ' : (m.is_finished ? '✅ ' : '⏰ ');
+          const score = m.home_score !== null ? `  ${m.home_score}–${m.away_score}` : '';
+          opt.textContent = `${icon}${f.date||''}  ·  ${NAMES[f.home]||f.home||''} vs ${NAMES[f.away]||f.away||''}${score}`;
+        });
+
+        // Auto-select from this team's matches: live → most-recent finished → first upcoming
+        if (!_currentMatchId) {
+          const live     = teamMatches.find(m => m.is_live);
+          const finished = [...teamMatches].filter(m => m.is_finished).pop();
+          const upcoming = teamMatches.find(m => !m.is_finished && !m.is_live);
+          const fallback = teamFix[0];
+          _currentMatchId = (live || finished || upcoming || fallback)?.match_id || teamFix[0]?.match_id;
+          if (_currentMatchId) sel.value = _currentMatchId;
+        }
+
+        // 2. Show real score
+        const matchData = matchMap[_currentMatchId];
+        if (matchData) _renderLiveScore(matchData);
+
+        // 3. Pre-match prediction from model
+        const pmRes = await fetch(`${API}/predictions/match/${_currentMatchId}/prematch`);
+        const pmData = await pmRes.json();
+        _renderLivePreMatch(pmData);
+
+        // 4. Live win probability comparison (if match started)
+        if (matchData && (matchData.is_live || matchData.is_finished)) {
+          const lamH = pmData.expected_goals.home.lambda_eff;
+          const lamA = pmData.expected_goals.away.lambda_eff;
+          const liveProb = _computeLiveOutcome(
+            lamH, lamA,
+            matchData.home_score || 0,
+            matchData.away_score || 0,
+            matchData.current_minute || 90
+          );
+          _renderLiveWinProb(pmData.outcome_probabilities, liveProb,
+            pmData.home_team, pmData.away_team, matchData.is_finished);
+        } else {
+          document.getElementById('live-win-prob-content').classList.add('hidden');
+          document.getElementById('live-prob-mode').textContent = 'Dixon-Coles model';
+        }
+
+        document.getElementById('live-data-note').textContent =
+          `Updated ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+
+      } catch (e) {
+        document.getElementById('live-score-skeleton').innerHTML =
+          `<p class="text-sm text-red-500 py-6 text-center">Could not load: ${e.message}</p>`;
+      }
+    }
+
+    function _renderLiveScore(m) {
+      document.getElementById('live-score-skeleton').classList.add('hidden');
+      document.getElementById('live-score-body').classList.remove('hidden');
+      document.getElementById('live-home-flag').innerHTML   = flagImg(m.home_tla, 48) || m.home_tla;
+      document.getElementById('live-home-name').textContent = NAMES[m.home_tla] || m.home_tla;
+      document.getElementById('live-home-score').textContent = m.home_score !== null ? m.home_score : '–';
+      document.getElementById('live-away-flag').innerHTML   = flagImg(m.away_tla, 48) || m.away_tla;
+      document.getElementById('live-away-name').textContent = NAMES[m.away_tla] || m.away_tla;
+      document.getElementById('live-away-score').textContent = m.away_score !== null ? m.away_score : '–';
+      const badge = document.getElementById('live-status-badge');
+      const dot = badge.querySelector('span:first-child');
+      if (m.is_live) {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold mb-2 bg-red-100 text-red-700';
+        dot.className = 'w-2 h-2 rounded-full bg-red-500 animate-pulse';
+        document.getElementById('live-status-text').textContent = 'LIVE';
+        document.getElementById('live-minute').textContent = m.current_minute ? `${m.current_minute}'` : '';
+      } else if (m.is_finished) {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold mb-2 bg-slate-100 text-slate-600';
+        dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        document.getElementById('live-status-text').textContent = 'FULL TIME';
+        document.getElementById('live-minute').textContent = 'FT';
+      } else {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold mb-2 bg-blue-100 text-blue-700';
+        dot.className = 'w-2 h-2 rounded-full bg-blue-500';
+        document.getElementById('live-status-text').textContent = 'UPCOMING';
+        document.getElementById('live-minute').textContent = (m.event_date || '').slice(0, 10);
+      }
+    }
+
+    function _computeLiveOutcome(lamH, lamA, scoreH, scoreA, minute) {
+      const remaining = Math.max(0, 90 - minute) / 90;
+      const lhRem = Math.max(lamH * remaining, 0.001);
+      const laRem = Math.max(lamA * remaining, 0.001);
+      function poisson(k, lam) {
+        let p = Math.exp(-lam);
+        for (let i = 1; i <= k; i++) p *= lam / i;
+        return p;
+      }
+      let pHW = 0, pDR = 0, pAW = 0;
+      for (let i = 0; i <= 7; i++) for (let j = 0; j <= 7; j++) {
+        const p = poisson(i, lhRem) * poisson(j, laRem);
+        const fh = scoreH + i, fa = scoreA + j;
+        if (fh > fa) pHW += p; else if (fh === fa) pDR += p; else pAW += p;
+      }
+      const tot = pHW + pDR + pAW;
+      return { home_win: pHW/tot, draw: pDR/tot, away_win: pAW/tot };
+    }
+
+    function _renderLiveWinProb(prematch, live, ht, at, isFinished) {
+      const rows = [
+        { key:'home_win', label:`${flagImg(ht)} ${NAMES[ht]||ht}` },
+        { key:'draw',     label:'Draw' },
+        { key:'away_win', label:`${flagImg(at)} ${NAMES[at]||at}` },
+      ];
+      const label = isFinished ? 'Final' : 'Live now';
+      document.getElementById('live-prob-mode').textContent = isFinished ? 'Full time · model vs result' : 'Pre-match vs live update';
+      const el = document.getElementById('live-win-prob-content');
+      el.classList.remove('hidden');
+      el.innerHTML =
+        `<div class="grid grid-cols-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
+          <span>Outcome</span><span class="text-center">Pre-match</span>
+          <span class="text-right">${label}</span>
+        </div>` +
+        rows.map(r => {
+          const pre = prematch[r.key] || 0, now = live[r.key] || 0;
+          const arrow = now > pre + 0.03 ? '↑' : now < pre - 0.03 ? '↓' : '→';
+          const arrowCls = now > pre + 0.03 ? 'text-green-600 font-bold' : now < pre - 0.03 ? 'text-red-500 font-bold' : 'text-slate-400';
+          return `<div class="grid grid-cols-3 items-center py-2.5 border-b border-slate-50 last:border-0">
+            <span class="text-sm font-semibold text-slate-700">${r.label}</span>
+            <span class="text-center text-sm text-slate-400 tabular-nums">${(pre*100).toFixed(1)}%</span>
+            <div class="flex items-center justify-end gap-1">
+              <span class="text-sm font-bold text-slate-900 tabular-nums">${(now*100).toFixed(1)}%</span>
+              <span class="${arrowCls} text-xs">${arrow}</span>
+            </div>
+          </div>`;
+        }).join('');
+    }
+
+    function _renderLivePreMatch(pm) {
+      const ht = pm.home_team, at = pm.away_team;
+      const op = pm.outcome_probabilities;
+      const mo = pm.market_odds;
+      const eg = pm.expected_goals;
+      const mls = pm.most_likely_score;
+      const fair = mo && mo['1x2'] ? mo['1x2'].fair : null;
+      const opRows = [
+        { key:'home_win', label:`${flagImg(ht)} ${NAMES[ht]||ht}` },
+        { key:'draw',     label:'Draw' },
+        { key:'away_win', label:`${flagImg(at)} ${NAMES[at]||at}` },
+      ];
+      document.getElementById('pre-match-content').innerHTML =
+        opRows.map((r, i) => {
+          const p = op[r.key] || 0;
+          const mktP = fair ? (fair[r.key] || 0) : null;
+          const col = i === 1 ? 'bg-slate-400' : 'bg-blue-600';
+          const mkt = mktP !== null ? `<span class="text-xs text-slate-400 ml-2">mkt ${(mktP*100).toFixed(1)}%</span>` : '';
+          return `<div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-slate-700 w-36 truncate">${r.label}</span>
+              <span class="text-lg font-black text-slate-900 tabular-nums">${(p*100).toFixed(1)}%</span>${mkt}
+            </div>
+            <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full rounded-full ${col}" style="width:${Math.round(p*100)}%"></div>
+            </div>
+          </div>`;
+        }).join('') +
+        `<div class="mt-4 pt-4 border-t border-slate-100 flex items-end justify-between">
+          <div>
+            <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Most Likely Score</p>
+            <p class="text-3xl font-black text-slate-900">${mls.home}–${mls.away}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">xG</p>
+            <p class="text-sm font-bold text-slate-700">${flagImg(ht)} ${eg.home.mean.toFixed(2)} · ${eg.away.mean.toFixed(2)} ${flagImg(at)}</p>
+          </div>
+        </div>`;
+      // Danger men
+      document.getElementById('live-sc-home-flag').innerHTML = flagImg(ht);
+      document.getElementById('live-sc-home-name').textContent = NAMES[ht] || ht;
+      document.getElementById('live-sc-away-flag').innerHTML = flagImg(at);
+      document.getElementById('live-sc-away-name').textContent = NAMES[at] || at;
+      document.getElementById('live-home-scorers').innerHTML = _renderScorers((pm.top_scorers||{}).home);
+      document.getElementById('live-away-scorers').innerHTML = _renderScorers((pm.top_scorers||{}).away);
+    }
+
+    let _countdownTimer = null;
+    let _countdownSecs = 60;
+
+    function _tickCountdown() {
+      _countdownSecs--;
+      const el = document.getElementById('live-countdown');
+      if (el) el.textContent = _countdownSecs > 0 ? `Auto-refresh in ${_countdownSecs}s` : '';
+      if (_countdownSecs <= 0) _countdownSecs = 60;
+    }
+
+    function startLivePolling() {
+      if (_liveTimer) return;
+      _countdownSecs = 60;
+      _liveTimer = setInterval(() => { loadLive(); _countdownSecs = 60; }, 60000);
+      _countdownTimer = setInterval(_tickCountdown, 1000);
+      document.getElementById('live-poll-note').textContent = 'Scores: BSD Bzzoiro · Probabilities: Dixon-Coles';
+    }
+
+    function stopLivePolling() {
+      if (_liveTimer) { clearInterval(_liveTimer); _liveTimer = null; }
+      if (_countdownTimer) { clearInterval(_countdownTimer); _countdownTimer = null; }
+      const el = document.getElementById('live-poll-note');
+      if (el) el.textContent = '';
+      const cd = document.getElementById('live-countdown');
+      if (cd) cd.textContent = '';
+    }
+
+    function renderPreMatch(pre) {
+      /* legacy stub — kept so old references don't throw */
+    }
+    function renderCoverage() {}   /* legacy stub */
+    function renderScheduled() {}  /* legacy stub */
+    function toggleGameState() {}  /* legacy stub */
+
+    /* ── PREMATCH PREDICTION ──────────────────────────────────────────*/
+    const PM_FIXTURES = [
+      // Group C — real BSD Bzzoiro schedule
+      { match_id:'2026-06-13_BRA_MAR', home:'BRA', away:'MAR', date:'2026-06-13', group:'C' },
+      { match_id:'2026-06-14_HAI_SCO', home:'HAI', away:'SCO', date:'2026-06-14', group:'C' },
+      { match_id:'2026-06-19_SCO_MAR', home:'SCO', away:'MAR', date:'2026-06-19', group:'C' },
+      { match_id:'2026-06-20_BRA_HAI', home:'BRA', away:'HAI', date:'2026-06-20', group:'C' },
+      { match_id:'2026-06-24_MAR_HAI', home:'MAR', away:'HAI', date:'2026-06-24', group:'C' },
+      { match_id:'2026-06-24_SCO_BRA', home:'SCO', away:'BRA', date:'2026-06-24', group:'C' },
+      // Group I — real BSD Bzzoiro schedule
+      { match_id:'2026-06-16_FRA_SEN', home:'FRA', away:'SEN', date:'2026-06-16', group:'I' },
+      { match_id:'2026-06-16_IRQ_NOR', home:'IRQ', away:'NOR', date:'2026-06-16', group:'I' },
+      { match_id:'2026-06-22_FRA_IRQ', home:'FRA', away:'IRQ', date:'2026-06-22', group:'I' },
+      { match_id:'2026-06-23_NOR_SEN', home:'NOR', away:'SEN', date:'2026-06-23', group:'I' },
+      { match_id:'2026-06-26_NOR_FRA', home:'NOR', away:'FRA', date:'2026-06-26', group:'I' },
+      { match_id:'2026-06-26_SEN_IRQ', home:'SEN', away:'IRQ', date:'2026-06-26', group:'I' },
+    ];
+
+    let _currentPrematchId = PM_FIXTURES[0].match_id;
+
+    function _populatePrematchFixtures(tla) {
+      const sel = document.getElementById('pm-fixture-select');
+      if (!sel) return;
+      sel.innerHTML = '';
+      const today = new Date().toISOString().slice(0, 10);
+      const fixtures = _teamFixtures(tla);
+      let defaultIdx = 0;
+      let foundUpcoming = false;
+      fixtures.forEach((f, i) => {
+        const opt = document.createElement('option');
+        opt.value = f.match_id;
+        opt.textContent = _optLabel(f);
+        sel.appendChild(opt);
+        if (!foundUpcoming && f.date >= today) { defaultIdx = i; foundUpcoming = true; }
+      });
+      if (fixtures.length) {
+        sel.selectedIndex = defaultIdx;
+        _currentPrematchId = fixtures[defaultIdx].match_id;
+      }
+    }
+
+    function initPrematchFixtures() {
+      _populatePrematchFixtures(currentTeam);
+    }
+
+    async function loadMatchPredictionPreview(matchId) {
+      const el = document.getElementById('match-pred-preview');
+      if (!el) return;
+      if (!matchId) { el.innerHTML = ''; return; }
+
+      const fixture = PM_FIXTURES.find(f => f.match_id === matchId);
+      if (!fixture) { el.innerHTML = ''; return; }
+
+      el.innerHTML = `<div class="bg-slate-900 rounded-xl p-4 animate-pulse">
+        <div class="h-3 bg-slate-700 rounded w-1/3 mb-3"></div>
+        <div class="flex justify-between gap-3">
+          <div class="h-8 bg-slate-800 rounded flex-1"></div>
+          <div class="h-8 bg-slate-800 rounded flex-1"></div>
+          <div class="h-8 bg-slate-800 rounded flex-1"></div>
+        </div>
+      </div>`;
+
+      try {
+        const res = await fetch(`${API}/predictions/match/${matchId}/prematch`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const d = await res.json();
+
+        const op  = d.outcome_probabilities || {};
+        const mls = d.most_likely_score;
+        const ht = fixture.home, at = fixture.away;
+        const hw = +(op.home_win || 0), dr = +(op.draw || 0), aw = +(op.away_win || 0);
+
+        const probBar = (prob, col, label) => `
+          <div class="flex-1 text-center">
+            <div class="text-xs text-slate-400 mb-1 truncate" title="${label}">${label.length > 9 ? label.slice(0,8)+'…' : label}</div>
+            <div class="text-lg font-black tabular-nums" style="color:${col}">${(prob*100).toFixed(0)}%</div>
+            <div class="h-1 rounded-full mt-1.5 bg-slate-700 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width:${(prob*100).toFixed(0)}%;background:${col}"></div>
+            </div>
+          </div>`;
+
+        el.innerHTML = `
+        <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl overflow-hidden border border-slate-700/50">
+          <div class="px-4 pt-3 pb-1 flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Next Match · Group ${fixture.group}</span>
+            <span class="text-xs text-slate-500">${fixture.date}</span>
+          </div>
+          <div class="px-4 pb-4">
+            <div class="flex items-center justify-between gap-3 mb-4">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="text-xl flex-shrink-0">${flagImg(ht, 28)}</span>
+                <span class="text-white font-bold text-sm truncate">${NAMES[ht]||ht}</span>
+              </div>
+              <div class="text-center flex-shrink-0">
+                ${mls
+                  ? `<span class="text-2xl font-black text-white tabular-nums">${mls.home}–${mls.away}</span>
+                     <p class="text-xs text-slate-500 mt-0.5">most likely · ${(mls.probability*100).toFixed(1)}%</p>`
+                  : `<span class="text-slate-600 text-lg font-bold">vs</span>`}
+              </div>
+              <div class="flex items-center gap-2 min-w-0 flex-row-reverse">
+                <span class="text-xl flex-shrink-0">${flagImg(at, 28)}</span>
+                <span class="text-white font-bold text-sm truncate">${NAMES[at]||at}</span>
+              </div>
+            </div>
+            <div class="flex gap-3 mb-3">
+              ${probBar(hw, '#3b82f6', NAMES[ht]||ht)}
+              ${probBar(dr, '#94a3b8', 'Draw')}
+              ${probBar(aw, '#8b5cf6', NAMES[at]||at)}
+            </div>
+            <button onclick="switchView('predictions')"
+              class="w-full text-center text-xs text-blue-400 hover:text-blue-300 transition-colors pt-1 border-t border-slate-700/50">
+              Full analysis — scoreline matrix, scorer probabilities →
+            </button>
+          </div>
+        </div>`;
+      } catch(e) {
+        el.innerHTML = `<div class="bg-slate-900 rounded-xl border border-slate-700/50 p-4">
+          <p class="text-xs text-slate-500">Match prediction unavailable: ${e.message}</p>
+        </div>`;
+      }
+    }
+
+    function onPrematchSelect(matchId) {
+      _currentPrematchId = matchId;
+      loadPrematch(matchId);
+    }
+
+    function _pct(v) { return (v * 100).toFixed(1) + '%'; }
+
+    function _renderOutcomeBars(op, mo, ht, at) {
+      const hasMarket = mo && mo.status !== 'unavailable' && mo['1x2'];
+      const fair = hasMarket ? mo['1x2'].fair : null;
+      const rows = [
+        { key:'home_win', label:`${flagImg(ht)} ${NAMES[ht]||ht}` },
+        { key:'draw',     label:'Draw' },
+        { key:'away_win', label:`${flagImg(at)} ${NAMES[at]||at}` },
+      ];
+      return rows.map((r, i) => {
+        const modelP = op[r.key] || 0;
+        const mktP   = fair ? (fair[r.key] || 0) : null;
+        const barW   = Math.round(modelP * 100);
+        const barCol  = i === 1 ? 'bg-slate-400' : 'bg-blue-600';
+        const mktStr  = mktP !== null
+          ? `<span class="text-xs text-slate-400 whitespace-nowrap ml-2">mkt ${_pct(mktP)}</span>` : '';
+        return `
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-slate-700 w-36 truncate">${r.label}</span>
+              <span class="text-xl font-black text-slate-900 tabular-nums">${_pct(modelP)}</span>
+              ${mktStr}
+            </div>
+            <div class="h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full rounded-full ${barCol} transition-all duration-500" style="width:${barW}%"></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function _posBadge(pos) {
+      if (!pos) return '';
+      const p = pos.toLowerCase();
+      const cls = (p.includes('forward') || p.includes('striker') || p.includes('attack'))
+        ? 'bg-red-50 text-red-600'
+        : p.includes('mid')
+        ? 'bg-amber-50 text-amber-700'
+        : (p.includes('def') || p.includes('back') || p.includes('guard'))
+        ? 'bg-blue-50 text-blue-700'
+        : 'bg-slate-100 text-slate-500';
+      const short = pos.length > 12 ? pos.slice(0, 12) + '…' : pos;
+      return `<span class="px-1.5 py-0.5 rounded text-xs font-medium ${cls} flex-shrink-0">${short}</span>`;
+    }
+
+    function _renderScorers(scorers) {
+      if (!scorers || !scorers.length)
+        return '<p class="text-xs text-slate-400 py-2">No data</p>';
+      return scorers.slice(0, 4).map((s, i) => {
+        const p = Math.round((s.p_scores_one_or_more || 0) * 100);
+        const nameClass = i === 0 ? 'text-slate-900 font-bold' : 'text-slate-700 font-semibold';
+        const barCol    = i === 0 ? 'bg-red-500' : 'bg-blue-400';
+        return `
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-sm ${nameClass} truncate flex-1">${s.name || '—'}</span>
+              ${_posBadge(s.position)}
+              <span class="text-sm font-bold text-blue-600 tabular-nums ml-auto flex-shrink-0">${p}%</span>
+            </div>
+            <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full rounded-full ${barCol} transition-all duration-500" style="width:${Math.min(p,100)}%"></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function _renderStatProfile(hStat, aStat, ht, at) {
+      const stats = [
+        { key:'shots_on_target', label:'Shots on Target' },
+        { key:'corners',         label:'Corners' },
+        { key:'fouls',           label:'Fouls' },
+      ];
+      const hdr = `
+        <div class="grid grid-cols-3 text-xs font-semibold text-slate-400 uppercase tracking-wider pb-2 border-b border-slate-100 mb-1">
+          <span>${flagImg(ht)} ${NAMES[ht]||ht}</span>
+          <span class="text-center">Stat</span>
+          <span class="text-right">${flagImg(at)} ${NAMES[at]||at}</span>
+        </div>`;
+      const rows = stats.map(s => {
+        const h = hStat[s.key] || {}, a = aStat[s.key] || {};
+        const hAvail = h.status === 'available' && h.expected != null;
+        const aAvail = a.status === 'available' && a.expected != null;
+        const hEl = hAvail
+          ? `<span class="text-sm font-bold text-slate-800">${Number(h.expected).toFixed(1)}</span>`
+          : `<span class="text-sm text-slate-300 italic">unavail.</span>`;
+        const aEl = aAvail
+          ? `<span class="text-sm font-bold text-slate-800">${Number(a.expected).toFixed(1)}</span>`
+          : `<span class="text-sm text-slate-300 italic">unavail.</span>`;
+        return `
+          <div class="grid grid-cols-3 items-center py-2.5 border-b border-slate-50 last:border-0">
+            ${hEl}
+            <span class="text-xs text-slate-500 text-center font-medium">${s.label}</span>
+            <div class="text-right">${aEl}</div>
+          </div>`;
+      }).join('');
+      return hdr + rows;
+    }
+
+    function _renderCoverageNote(hCov, aCov, lineupMeta) {
+      if (!hCov && !aCov) return '<span class="text-slate-400 italic text-xs">Coverage data unavailable.</span>';
+      const lu = lineupMeta || {};
+      const srcMap = { home: lu.home_lineup_src, away: lu.away_lineup_src };
+      const fmtMap = { home: lu.home_formation, away: lu.away_formation };
+      return [['home', hCov], ['away', aCov]].filter(([,c]) => c).map(([side, c]) => {
+        const srcOk = c.rating_source === 'bsd_bzzoiro' || (c.rating_source||'').includes('bsd');
+        const scoreOk = c.player_stat_source === 'bsd_bzzoiro';
+        const dot = srcOk ? '🟢' : '🟡';
+        const scorerDot = scoreOk ? '🟢' : '🟡';
+        const lSrc = srcMap[side];
+        const lFmt = fmtMap[side];
+        const lineupBadge = lSrc
+          ? `<span class="px-2 py-0.5 rounded-full text-xs font-medium border ${lSrc==='confirmed'?'bg-green-50 text-green-700 border-green-200':'bg-amber-50 text-amber-700 border-amber-200'}">${lSrc==='confirmed'?'✅':'📋'} ${lFmt||''} (${lSrc})</span>`
+          : '';
+        return `<div class="flex flex-wrap gap-1.5 items-center">
+          <span class="font-bold text-slate-600 text-xs">${flagImg(c.team)} ${NAMES[c.team]||c.team}</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-medium border bg-slate-100 text-slate-600 border-slate-200">${dot} ${c.results_history||'—'}</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-medium border bg-slate-100 text-slate-600 border-slate-200">${scorerDot} Goals: ${scoreOk?'BSD':'baseline'}</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-medium border bg-slate-100 text-slate-600 border-slate-200">Conf: ${c.confederation||'?'}</span>
+          ${lineupBadge}
+        </div>`;
+      }).join('');
+    }
+
+    function _renderHeatmap(matrix, ht, at, mlsHome, mlsAway) {
+      const N = 6;
+      let maxP = 0;
+      for (let h = 0; h < N; h++)
+        for (let a = 0; a < N; a++)
+          maxP = Math.max(maxP, (matrix[String(h)]||{})[String(a)] || 0);
+
+      const hFlag = flagImg(ht), aFlag = flagImg(at);
+      let html = `<table style="border-collapse:separate;border-spacing:3px;width:100%">
+        <thead><tr>
+          <th style="padding:4px;font-size:10px;color:#94a3b8;font-weight:600;text-align:left">⬇ Home / Away ➡</th>`;
+      for (let a = 0; a < N; a++)
+        html += `<th style="padding:4px 2px;font-size:11px;color:#64748b;font-weight:700;text-align:center">${aFlag} ${a}</th>`;
+      html += '</tr></thead><tbody>';
+
+      for (let h = 0; h < N; h++) {
+        html += `<tr><td style="padding:4px 6px;font-size:11px;color:#64748b;font-weight:700;white-space:nowrap">${hFlag} ${h}</td>`;
+        for (let a = 0; a < N; a++) {
+          const p = (matrix[String(h)]||{})[String(a)] || 0;
+          const pct = (p * 100).toFixed(1);
+          const t = maxP > 0 ? p / maxP : 0;
+          const isMLS = h === mlsHome && a === mlsAway;
+          let bg, textColor;
+          if (h > a)      { bg = `rgba(37,99,235,${(t*0.75).toFixed(2)})`; textColor = t > 0.45 ? '#fff' : '#1e3a8a'; }
+          else if (h===a) { bg = `rgba(100,116,139,${(t*0.65).toFixed(2)})`; textColor = t > 0.45 ? '#fff' : '#334155'; }
+          else            { bg = `rgba(220,38,38,${(t*0.75).toFixed(2)})`; textColor = t > 0.45 ? '#fff' : '#7f1d1d'; }
+          const outline = isMLS ? 'outline:2px solid #fbbf24;outline-offset:-1px;' : '';
+          html += `<td class="heatmap-cell" style="background:${bg};color:${textColor};${outline}text-align:center;border-radius:5px;padding:5px 3px">
+            <div class="score">${h}–${a}</div>
+            <div class="prob">${pct}%</div>
+          </td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      const legend = `<div style="display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:10px;color:#94a3b8">
+        <span><span style="display:inline-block;width:10px;height:10px;background:rgba(37,99,235,0.7);border-radius:2px;vertical-align:middle;margin-right:3px"></span>Home win</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:rgba(100,116,139,0.6);border-radius:2px;vertical-align:middle;margin-right:3px"></span>Draw</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:rgba(220,38,38,0.7);border-radius:2px;vertical-align:middle;margin-right:3px"></span>Away win</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border:2px solid #fbbf24;border-radius:2px;vertical-align:middle;margin-right:3px"></span>Most likely</span>
+      </div>`;
+      return html + legend;
+    }
+
+    async function loadPrematch(matchId) {
+      if (!matchId) return;
+      _currentPrematchId = matchId;
+
+      const skeleton = `<div class="animate-pulse space-y-3">
+        <div class="h-10 bg-slate-100 rounded-xl w-full"></div>
+        <div class="h-10 bg-slate-100 rounded-xl w-full"></div>
+        <div class="h-10 bg-slate-100 rounded-xl w-full"></div>
+      </div>`;
+      document.getElementById('pm-outcome-bars').innerHTML = skeleton;
+      document.getElementById('pm-mls').textContent = '—';
+      document.getElementById('pm-mls-prob').textContent = '—';
+
+      const fixture = PM_FIXTURES.find(f => f.match_id === matchId) || {};
+      document.getElementById('pm-group-label').textContent =
+        fixture.group ? `World Cup 2026 · Group ${fixture.group}` : 'World Cup 2026';
+      document.getElementById('pm-home-flag').innerHTML   = flagImg(fixture.home, 80);
+      document.getElementById('pm-home-name').textContent = NAMES[fixture.home] || fixture.home || '';
+      document.getElementById('pm-away-flag').innerHTML   = flagImg(fixture.away, 80);
+      document.getElementById('pm-away-name').textContent = NAMES[fixture.away] || fixture.away || '';
+      document.getElementById('pm-kickoff').textContent    = fixture.date || '';
+      document.getElementById('pm-sc-home-flag').innerHTML = flagImg(fixture.home);
+      document.getElementById('pm-sc-home-name').textContent = NAMES[fixture.home] || fixture.home || '';
+      document.getElementById('pm-sc-away-flag').innerHTML = flagImg(fixture.away);
+      document.getElementById('pm-sc-away-name').textContent = NAMES[fixture.away] || fixture.away || '';
+
+      try {
+        const res = await fetch(`${API}/predictions/match/${matchId}/prematch`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const d = await res.json();
+
+        const ht = d.home_team, at = d.away_team;
+        const op = d.outcome_probabilities;
+        const mo = d.market_odds;
+        const mls = d.most_likely_score;
+
+        const hasMarket = mo && mo.status !== 'unavailable' && mo['1x2'];
+        document.getElementById('pm-market-badge').textContent =
+          hasMarket ? '60% market · 40% model blend' : 'Market unavailable — model only';
+
+        document.getElementById('pm-outcome-bars').innerHTML = _renderOutcomeBars(op, mo, ht, at);
+
+        if (mls) {
+          document.getElementById('pm-mls').textContent = `${mls.home}–${mls.away}`;
+          document.getElementById('pm-mls-prob').textContent = _pct(mls.probability);
+        }
+
+        const ts = d.top_scorers || {};
+        document.getElementById('pm-home-scorers').innerHTML = _renderScorers(ts.home);
+        document.getElementById('pm-away-scorers').innerHTML = _renderScorers(ts.away);
+
+        const sp = d.team_stat_profile || {};
+        document.getElementById('pm-stat-table').innerHTML =
+          _renderStatProfile(sp.home || {}, sp.away || {}, ht, at);
+
+        const sm = d.scoreline_matrix;
+        if (sm && sm.probabilities) {
+          document.getElementById('pm-heatmap').innerHTML =
+            _renderHeatmap(sm.probabilities, ht, at, mls ? mls.home : -1, mls ? mls.away : -1);
+        }
+
+        const cov = d.data_coverage || {};
+        document.getElementById('pm-coverage-note').innerHTML =
+          _renderCoverageNote(cov.home, cov.away, (d.top_scorers||{}).lineup);
+
+      } catch (e) {
+        document.getElementById('pm-outcome-bars').innerHTML =
+          `<p class="text-sm text-red-500 py-2">Could not load prediction: ${e.message}</p>`;
+      }
+    }
+
+    /* ── SCOUT (heatmap — WC 2026 via SofaScore) ─────────────────*/
+
+    // Stores match status keyed by event_id so generateHeatmap() can check it
+    const _scoutMatchStatus = {};
+
+    async function loadScoutMatches(tla) {
+      const noData   = document.getElementById('scout-no-data');
+      const controls = document.getElementById('scout-controls');
+      const area     = document.getElementById('scout-heatmap-area');
+
+      noData.classList.add('hidden');
+      controls.classList.remove('hidden');
+
+      const matchSel  = document.getElementById('scout-match-select');
+      const playerSel = document.getElementById('scout-player-select');
+      matchSel.innerHTML  = '<option value="">Loading matches…</option>';
+      playerSel.innerHTML = '<option value="">Select a match first…</option>';
+      area.innerHTML = '<p class="text-slate-400 text-sm">Choose a match and player, then click Generate Heatmap.</p>';
+
+      try {
+        const res  = await fetch(`${API}/heatmap/2026/matches/${tla}`);
+        const data = await res.json();
+        if (!data.has_data || !data.matches.length) {
+          matchSel.innerHTML = '<option value="">No schedule found for this team</option>';
+          return;
+        }
+
+        // Build option list — finished matches show score, upcoming show date+teams
+        matchSel.innerHTML = data.matches.map(m => {
+          _scoutMatchStatus[m.event_id] = m.status;
+          const label = m.status === 'finished'
+            ? `${m.date}  ${m.home_team} ${m.home_score}–${m.away_score} ${m.away_team}`
+            : `${m.date}  ${m.home_team} vs ${m.away_team}  ⏳ upcoming`;
+          return `<option value="${m.event_id}" data-status="${m.status}">${label}</option>`;
+        }).join('');
+
+        // Auto-load players for the first finished match only
+        const firstFinished = data.matches.find(m => m.status === 'finished');
+        if (firstFinished) {
+          await loadScoutPlayers(firstFinished.event_id);
+          matchSel.value = firstFinished.event_id;
+        } else {
+          // All upcoming — show informational state
+          const next = data.matches[0];
+          playerSel.innerHTML = '<option value="">Match not played yet</option>';
+          area.innerHTML = `<p class="text-amber-500 text-sm p-4">
+            ${next.home_team} vs ${next.away_team} on ${next.date} hasn't kicked off yet.
+            Heatmaps will be available after the final whistle.
+          </p>`;
+        }
+      } catch (e) {
+        matchSel.innerHTML = '<option value="">Error loading matches</option>';
+      }
+    }
+
+    async function loadScoutPlayers(eventId) {
+      if (!eventId) return;
+      const playerSel  = document.getElementById('scout-player-select');
+      const area       = document.getElementById('scout-heatmap-area');
+      const historyRow = document.getElementById('scout-history-row');
+      const histSel    = document.getElementById('scout-history-select');
+      const clubBtn    = document.getElementById('scout-club-btn');
+
+      // Reset history panel
+      historyRow.classList.add('hidden');
+      histSel.classList.add('hidden');
+      clubBtn.classList.add('hidden');
+
+      if (_scoutMatchStatus[eventId] === 'upcoming') {
+        playerSel.innerHTML = '<option value="">Match not played yet</option>';
+        area.innerHTML = `<p class="text-amber-500 text-sm p-4">
+          This match hasn't kicked off yet. Heatmaps will be available after the final whistle.</p>`;
+        return;
+      }
+
+      playerSel.innerHTML = '<option value="">Loading players…</option>';
+      try {
+        const res  = await fetch(`${API}/heatmap/2026/players/${eventId}`);
+        const data = await res.json();
+        if (!data.players || !data.players.length) {
+          playerSel.innerHTML = '<option value="">No players found</option>';
+          return;
+        }
+        let lastTeam = '', html = '';
+        for (const p of data.players) {
+          if (p.team_name !== lastTeam) {
+            if (lastTeam) html += '</optgroup>';
+            html += `<optgroup label="${p.team_name}">`;
+            lastTeam = p.team_name;
+          }
+          html += `<option value="${p.player_id}|${p.player_name}">${p.player_name}</option>`;
+        }
+        if (lastTeam) html += '</optgroup>';
+        playerSel.innerHTML = html;
+        area.innerHTML = '<p class="text-slate-400 text-sm">Select a player and click Generate Heatmap.</p>';
+        // Auto-load history for first player
+        await loadPlayerHistory(playerSel.value);
+      } catch (e) {
+        playerSel.innerHTML = '<option value="">Error loading players</option>';
+      }
+    }
+
+    async function loadPlayerHistory(playerVal) {
+      if (!playerVal) return;
+      const [playerId] = playerVal.split('|');
+      const historyRow = document.getElementById('scout-history-row');
+      const histStatus = document.getElementById('scout-history-status');
+      const histSel    = document.getElementById('scout-history-select');
+      const clubBtn    = document.getElementById('scout-club-btn');
+      const dzBtn      = document.getElementById('scout-player-dz-btn');
+
+      historyRow.classList.remove('hidden');
+      histSel.classList.add('hidden');
+      clubBtn.classList.add('hidden');
+      dzBtn.classList.add('hidden');
+      histStatus.textContent = 'Loading recent club & national team matches…';
+
+      try {
+        const res  = await fetch(`${API}/heatmap/player-matches/${playerId}`);
+        const data = await res.json();
+        if (!data.matches || !data.matches.length) {
+          histStatus.textContent = 'No recent matches found for this player.';
+          return;
+        }
+        histStatus.textContent = `${data.matches.length} recent matches found:`;
+        histSel.innerHTML = data.matches.map(m =>
+          `<option value="${m.event_id}">${m.date}  ${m.home_team} ${m.home_score}–${m.away_score} ${m.away_team}  ·  ${m.competition}</option>`
+        ).join('');
+        histSel.classList.remove('hidden');
+        clubBtn.classList.remove('hidden');
+        dzBtn.classList.remove('hidden');
+      } catch (e) {
+        histStatus.textContent = 'Could not load club history.';
+      }
+    }
+
+    async function generateHeatmap(source) {
+      const matchSel  = document.getElementById('scout-match-select');
+      const playerVal = document.getElementById('scout-player-select').value;
+      const histSel   = document.getElementById('scout-history-select');
+      const area      = document.getElementById('scout-heatmap-area');
+
+      const eventId = (source === 'club') ? histSel.value : matchSel.value;
+
+      if (_scoutMatchStatus[eventId] === 'upcoming') {
+        area.innerHTML = `<p class="text-amber-500 text-sm p-4">
+          This match hasn't been played yet. Heatmaps will be available after the final whistle.</p>`;
+        return;
+      }
+      if (!eventId || !playerVal) {
+        area.innerHTML = '<p class="text-red-400 text-sm p-4">Please select a match and a player first.</p>';
+        return;
+      }
+
+      const [playerId, ...nameParts] = playerVal.split('|');
+      const playerName = nameParts.join('|');
+
+      area.innerHTML = `
+        <div class="text-center space-y-3 py-10">
+          <div class="spinner mx-auto"></div>
+          <p class="text-slate-400 text-sm">Generating heatmap — first run ~20 s, cached after that…</p>
+        </div>`;
+
+      try {
+        const url = `${API}/heatmap/2026/image`
+          + `?player_name=${encodeURIComponent(playerName)}`
+          + `&player_id=${playerId}&event_id=${eventId}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          area.innerHTML = `<p class="text-red-400 text-sm p-4">${err.detail || 'Error generating heatmap.'}</p>`;
+          return;
+        }
+        const blob   = await res.blob();
+        const objUrl = URL.createObjectURL(blob);
+        const matchLabel = (source === 'club')
+          ? histSel.options[histSel.selectedIndex]?.text
+          : matchSel.options[matchSel.selectedIndex]?.text;
+        area.innerHTML = `
+          <div class="space-y-2">
+            <p class="text-xs text-slate-400 text-center">${matchLabel || ''}</p>
+            <img src="${objUrl}" alt="Heatmap for ${playerName}"
+                 class="w-full rounded-xl shadow-lg" style="max-height:620px;object-fit:contain;" />
+          </div>`;
+      } catch (e) {
+        area.innerHTML = `<p class="text-red-400 text-sm p-4">${e.message}</p>`;
+      }
+    }
+
+    async function generateDangerZones() {
+      const dangerSel = document.getElementById('danger-match-select');
+      const area      = document.getElementById('scout-danger-area');
+      const eventId   = dangerSel.value;
+      if (!eventId) {
+        area.innerHTML = '<p class="text-red-400 text-sm p-4">Please select a finished match first.</p>';
+        return;
+      }
+      const tla = currentTeam;
+      area.innerHTML = `
+        <div class="text-center space-y-3 py-10">
+          <div class="spinner mx-auto"></div>
+          <p class="text-slate-400 text-sm">Building danger zones — intercepting SofaScore shotmap…<br>
+          First run ~25 s, cached afterwards.</p>
+        </div>`;
+      try {
+        const url = `${API}/heatmap/2026/danger-zones?event_id=${eventId}&tla=${tla}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          area.innerHTML = `<p class="text-red-400 text-sm p-4">${err.detail || 'Error generating danger zones.'}</p>`;
+          return;
+        }
+        const blob   = await res.blob();
+        const objUrl = URL.createObjectURL(blob);
+        const label  = dangerSel.options[dangerSel.selectedIndex]?.text || '';
+        area.innerHTML = `
+          <div class="space-y-2 w-full">
+            <p class="text-xs text-slate-400 text-center">${label}</p>
+            <img src="${objUrl}" alt="Danger zones for ${tla}"
+                 class="w-full rounded-xl shadow-lg" style="max-height:680px;object-fit:contain;" />
+          </div>`;
+      } catch (e) {
+        area.innerHTML = `<p class="text-red-400 text-sm p-4">${e.message}</p>`;
+      }
+    }
+
+    async function generatePlayerDangerZones() {
+      const playerVal = document.getElementById('scout-player-select').value;
+      const area      = document.getElementById('scout-heatmap-area');
+      if (!playerVal) {
+        area.innerHTML = '<p class="text-red-400 text-sm p-4">Please select a player first.</p>';
+        return;
+      }
+      const [playerId, ...nameParts] = playerVal.split('|');
+      const playerName = nameParts.join('|');
+      area.innerHTML = `
+        <div class="text-center space-y-3 py-10">
+          <div class="spinner mx-auto"></div>
+          <p class="text-slate-400 text-sm">Building shot profile — fetching last 10 matches from SofaScore…<br>
+          First run ~60 s, cached afterwards.</p>
+        </div>`;
+      try {
+        const url = `${API}/heatmap/2026/player-danger-zones?player_id=${playerId}&player_name=${encodeURIComponent(playerName)}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          area.innerHTML = `<p class="text-red-400 text-sm p-4">${err.detail || 'Error generating shot profile.'}</p>`;
+          return;
+        }
+        const blob   = await res.blob();
+        const objUrl = URL.createObjectURL(blob);
+        area.innerHTML = `
+          <div class="space-y-2 w-full">
+            <p class="text-xs text-slate-400 text-center">${playerName} — Shot Profile (last 10 matches, all competitions)</p>
+            <img src="${objUrl}" alt="Shot profile for ${playerName}"
+                 class="w-full rounded-xl shadow-lg" style="max-height:680px;object-fit:contain;" />
+          </div>`;
+      } catch (e) {
+        area.innerHTML = `<p class="text-red-400 text-sm p-4">${e.message}</p>`;
+      }
+    }
+
+    async function generateTeamAggregateDangerZones() {
+      const team = currentTeam;
+      const area = document.getElementById('scout-danger-area');
+      area.innerHTML = `
+        <div class="text-center space-y-3 py-10">
+          <div class="spinner mx-auto"></div>
+          <p class="text-slate-400 text-sm">Building danger zones — fetching last 10 matches from SofaScore…<br>
+          First run ~90 s, cached afterwards.</p>
+        </div>`;
+      try {
+        const url = `${API}/heatmap/2026/team-aggregate-danger-zones/${team}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          area.innerHTML = `<p class="text-red-400 text-sm p-4">${err.detail || 'Error generating danger zones.'}</p>`;
+          return;
+        }
+        const blob   = await res.blob();
+        const objUrl = URL.createObjectURL(blob);
+        area.innerHTML = `
+          <div class="space-y-2 w-full">
+            <p class="text-xs text-slate-400 text-center">${team} — Danger Zones · last 10 matches (all competitions)</p>
+            <img src="${objUrl}" alt="Danger zones for ${team}"
+                 class="w-full rounded-xl shadow-lg" style="max-height:680px;object-fit:contain;" />
+          </div>`;
+      } catch (e) {
+        area.innerHTML = `<p class="text-red-400 text-sm p-4">${e.message}</p>`;
+      }
+    }
+
+    /* ── PLAYER PROFILES ─────────────────────────────────────────*/
+    let _profileSquad = [];
+
+    async function loadSquadProfiles(teamCode) {
+      if (!teamCode) return;
+      // Sync team select
+      const tSel = document.getElementById('profile-team-select');
+      if (tSel.value !== teamCode) tSel.value = teamCode;
+
+      const strip = document.getElementById('profile-squad-strip');
+      strip.innerHTML = '<div class="spinner" style="width:24px;height:24px;border-width:2px;"></div>';
+
+      try {
+        const res = await fetch(`${API}/player-profile/squad/${teamCode}`);
+        if (!res.ok) throw new Error(await res.text());
+        _profileSquad = await res.json();
+      } catch (e) {
+        strip.innerHTML = `<p class="text-red-400 text-xs">${e.message}</p>`;
+        return;
+      }
+
+      // Populate player dropdown
+      const pSel = document.getElementById('profile-player-select');
+      pSel.innerHTML = '<option value="">— choose a player —</option>';
+      _profileSquad.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.player_id;
+        opt.textContent = `${p.is_captain ? '(C) ' : ''}${p.name} · ${p.position_detail || p.position}`;
+        pSel.appendChild(opt);
+      });
+
+      // Squad strip chips
+      const POS_ORDER = ['GK','CB','LB','RB','CDM','CM','CAM','LW','RW','CF','ST'];
+      const sorted = [..._profileSquad].sort((a,b) => {
+        const ai = POS_ORDER.indexOf(a.position_detail) === -1 ? 99 : POS_ORDER.indexOf(a.position_detail);
+        const bi = POS_ORDER.indexOf(b.position_detail) === -1 ? 99 : POS_ORDER.indexOf(b.position_detail);
+        return ai - bi;
+      });
+      strip.innerHTML = sorted.map(p => `
+        <button onclick="selectProfilePlayer('${p.player_id}')"
+          class="text-xs px-3 py-1 rounded-full border transition-all hover:opacity-90"
+          style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:var(--text);"
+          title="${p.club}">
+          ${p.is_captain ? '&#x1F451; ' : ''}${p.name}
+          <span style="color:var(--muted);margin-left:4px;">${p.position_detail || p.position}</span>
+        </button>`).join('');
+    }
+
+    function selectProfilePlayer(playerId) {
+      const pSel = document.getElementById('profile-player-select');
+      pSel.value = playerId;
+      loadPlayerProfile();
+    }
+
+    async function loadPlayerProfile() {
+      const playerId = document.getElementById('profile-player-select').value;
+      if (!playerId) return;
+
+      document.getElementById('profile-empty').classList.add('hidden');
+      document.getElementById('profile-content').classList.remove('hidden');
+      document.getElementById('profile-loading').classList.remove('hidden');
+      ['profile-hero','profile-physical','profile-traits','profile-injsummary','profile-stats','profile-injuries']
+        .forEach(id => { document.getElementById(id).innerHTML = ''; });
+
+      try {
+        const res = await fetch(`${API}/player-profile/${playerId}`);
+        if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
+        const data = await res.json();
+        document.getElementById('profile-loading').classList.add('hidden');
+        renderProfileHero(data);
+        renderProfilePhysical(data);
+        renderProfileTraits(data);
+        renderProfileInjSummary(data);
+        renderProfileStats(data);
+        renderProfileInjuries(data);
+      } catch (e) {
+        document.getElementById('profile-loading').classList.add('hidden');
+        document.getElementById('profile-hero').innerHTML =
+          `<div class="p-6 text-red-400 text-sm">&#x26A0;&#xFE0F; ${e.message}</div>`;
+      }
+    }
+
+    function renderProfileHero(d) {
+      const prof   = d.profile || {};
+      const imgUrl = prof.image_url || '';
+      const flag   = _FLAG_CODES[d.team_code] ? `https://flagcdn.com/28x21/${_FLAG_CODES[d.team_code]}.png` : '';
+      const cs     = d.career_summary || {};
+
+      document.getElementById('profile-hero').innerHTML = `
+        <div class="flex flex-wrap items-center gap-6 p-6">
+          <!-- Avatar -->
+          <div style="flex-shrink:0;">
+            ${imgUrl
+              ? `<img src="${imgUrl}" alt="${d.name}" class="rounded-xl object-cover shadow-lg"
+                   style="width:100px;height:120px;object-fit:cover;border:2px solid rgba(29,185,84,0.3);"
+                   onerror="this.outerHTML='<div style=\'width:100px;height:120px;border-radius:12px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:40px;\'>&#x1F464;</div>'">`
+              : `<div style="width:100px;height:120px;border-radius:12px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:40px;">&#x1F464;</div>`
+            }
+          </div>
+          <!-- Identity -->
+          <div style="flex:1;min-width:200px;">
+            <div class="flex items-center gap-2 mb-1">
+              ${flag ? `<img src="${flag}" alt="${d.team_code}" style="height:16px;border-radius:2px;">` : ''}
+              ${d.is_captain ? '<span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;">CAPTAIN</span>' : ''}
+              <span style="color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">${d.team}</span>
+            </div>
+            <h2 style="color:#e8f0fe;font-size:26px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;">${d.name}</h2>
+            <div class="flex flex-wrap items-center gap-3 mt-2">
+              <span style="background:rgba(29,185,84,0.15);color:var(--green);border:1px solid rgba(29,185,84,0.3);padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700;">${d.position_detail || d.position}</span>
+              <span style="color:var(--muted);font-size:13px;">&#x1F3DB; ${prof.current_club || d.club || '—'}</span>
+            </div>
+          </div>
+          <!-- Quick stats -->
+          <div class="flex gap-5 flex-wrap" style="flex-shrink:0;">
+            ${_heroStat('Age', d.age ? d.age + ' yrs' : '—')}
+            ${_heroStat('Int\'l Caps', d.caps ?? '—')}
+            ${_heroStat('Int\'l Goals', d.goals ?? '0')}
+            ${d.physiology ? _heroStat('Sprint', (d.physiology.sprint_speed_max_kmh ?? '—') + ' km/h') : ''}
+            ${d.physiology ? _heroStat('Km/Match', d.physiology.distance_per_match_km ?? '—') : ''}
+          </div>
+        </div>`;
+    }
+
+    function _heroStat(label, val) {
+      return `<div class="text-center" style="min-width:60px;">
+        <div style="font-size:22px;font-weight:800;color:#e8f0fe;">${val}</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:600;">${label}</div>
+      </div>`;
+    }
+
+    function renderProfilePhysical(d) {
+      const prof = d.profile || {};
+      const rows = [
+        ['Date of Birth', d.date_of_birth || '—'],
+        ['Height', prof.height_cm ? prof.height_cm + ' cm' : '—'],
+        ['Preferred Foot', prof.foot ? (prof.foot.charAt(0).toUpperCase() + prof.foot.slice(1)) : '—'],
+        ['Place of Birth', prof.place_of_birth || '—'],
+        ['Club', prof.current_club || d.club || '—'],
+        ['League', d.league || '—'],
+        ['Agent', prof.agent || '—'],
+      ];
+      document.getElementById('profile-physical').innerHTML = `
+        <h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;">
+          &#x1F4CC; Physical Profile
+        </h3>
+        <dl class="space-y-2.5">
+          ${rows.map(([k,v]) => `
+            <div class="flex justify-between gap-3">
+              <dt style="color:var(--muted);font-size:12px;">${k}</dt>
+              <dd style="color:var(--text);font-size:12px;font-weight:600;text-align:right;">${v}</dd>
+            </div>`).join('')}
+        </dl>`;
+    }
+
+    function renderProfileTraits(d) {
+      const t = d.traits || {};
+      const TRAIT_ICONS = {
+        age_category: '&#x1F4C5;',
+        experience_level: '&#x2B50;',
+        recovery_speed: '&#x26A1;',
+        mental_resilience: '&#x1F9E0;',
+        injury_proneness: '&#x1F915;',
+      };
+      const TRAIT_COLORS = {
+        low: '#22c55e', medium: '#f59e0b', high: '#ef4444',
+        young: '#7bd0ff', senior: '#ffd700', veteran: '#c084fc',
+        fast: '#22c55e', slow: '#ef4444', average: '#f59e0b',
+        elite: '#ffd700', strong: '#22c55e', fragile: '#ef4444',
+        experienced: '#c084fc',
+      };
+      document.getElementById('profile-traits').innerHTML = `
+        <h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;">
+          &#x1F3AF; Player Traits
+        </h3>
+        <div class="space-y-3">
+          ${Object.entries(t).map(([k,v]) => {
+            const label = k.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+            const color = TRAIT_COLORS[v] || 'var(--text)';
+            const icon  = TRAIT_ICONS[k] || '&#x25CF;';
+            return `
+              <div class="flex items-center justify-between gap-2">
+                <span style="color:var(--muted);font-size:12px;">${icon} ${label}</span>
+                <span style="background:${color}22;color:${color};border:1px solid ${color}44;padding:2px 9px;border-radius:8px;font-size:11px;font-weight:700;">
+                  ${v.charAt(0).toUpperCase()+v.slice(1)}
+                </span>
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function renderProfileInjSummary(d) {
+      const s = d.injury_summary || {};
+      const mr = s.most_recent;
+      const types = (s.injury_types || []).slice(0,4);
+
+      document.getElementById('profile-injsummary').innerHTML = `
+        <h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;">
+          &#x1F915; Injury Summary
+        </h3>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:10px;text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:#ef4444;">${s.total_injuries ?? 0}</div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;">Total Injuries</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:10px;text-align:center;">
+            <div style="font-size:24px;font-weight:800;color:#f59e0b;">${s.total_days_missed ?? 0}</div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;">Days Missed</div>
+          </div>
+        </div>
+        ${types.length ? `
+          <p style="color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:6px;">Common Injuries</p>
+          <div class="flex flex-wrap gap-1.5 mb-3">
+            ${types.map(t => `<span style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.25);padding:2px 8px;border-radius:6px;font-size:11px;">${t}</span>`).join('')}
+          </div>` : ''}
+        ${mr ? `
+          <p style="color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:600;margin-bottom:4px;">Most Recent</p>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:8px 10px;">
+            <p style="color:var(--text);font-size:12px;font-weight:600;">${mr.injury || '—'}</p>
+            <p style="color:var(--muted);font-size:11px;">${mr.from_date || ''} · ${mr.days_missed ? mr.days_missed + ' days' : ''}</p>
+          </div>` : ''}
+        ${!types.length && !mr ? '<p style="color:var(--muted);font-size:13px;">No injury data available from Transfermarkt</p>' : ''}`;
+    }
+
+    function renderProfileStats(d) {
+      const ph = d.physiology || {};
+      const wl = d.wellness   || {};
+      const el = document.getElementById('profile-stats');
+
+      const phRows = [
+        ['Sprint Speed (max)', ph.sprint_speed_max_kmh != null ? ph.sprint_speed_max_kmh + ' km/h' : null, '#1db954'],
+        ['VO₂ Max', ph.vo2_max_ml_kg_min != null ? ph.vo2_max_ml_kg_min + ' ml/kg/min' : null, '#7bd0ff'],
+        ['Distance / Match', ph.distance_per_match_km != null ? ph.distance_per_match_km + ' km' : null, '#c084fc'],
+        ['High-Intensity Dist.', ph.hi_distance_per_match_m != null ? ph.hi_distance_per_match_m + ' m' : null, '#ffd700'],
+        ['Sprints / Match', ph.sprints_per_match != null ? ph.sprints_per_match : null, '#f59e0b'],
+        ['Accel/Decel / Match', ph.accel_decel_per_match != null ? ph.accel_decel_per_match : null, '#ef4444'],
+        ['Resting HR', ph.resting_hr_bpm != null ? ph.resting_hr_bpm + ' bpm' : null, '#22c55e'],
+        ['HRV Baseline', ph.hrv_baseline_ms != null ? ph.hrv_baseline_ms + ' ms' : null, '#10b981'],
+      ].filter(r => r[1] != null);
+
+      const wlRows = [
+        ['Sleep Duration', wl.sleep_duration_baseline_h != null ? wl.sleep_duration_baseline_h + ' h' : null],
+        ['Sleep Quality', wl.sleep_quality_baseline != null ? wl.sleep_quality_baseline + ' / 5' : null],
+        ['Fatigue Level', wl.fatigue_baseline != null ? wl.fatigue_baseline + ' / 5' : null],
+        ['Soreness Level', wl.soreness_baseline != null ? wl.soreness_baseline + ' / 5' : null],
+        ['Stress Level', wl.stress_baseline != null ? wl.stress_baseline + ' / 5' : null],
+      ].filter(r => r[1] != null);
+
+      if (!phRows.length && !wlRows.length) {
+        el.innerHTML = `<h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#x26A1; Performance Data</h3>
+          <p style="color:var(--muted);font-size:13px;">No performance data available</p>`;
+        return;
+      }
+
+      el.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;">&#x26A1; Physical Performance</h3>
+            <div class="space-y-2.5">
+              ${phRows.map(([label, val, color]) => `
+                <div class="flex justify-between items-center gap-3">
+                  <span style="color:var(--muted);font-size:12px;">${label}</span>
+                  <span style="color:${color || 'var(--text)'};font-size:13px;font-weight:700;">${val}</span>
+                </div>`).join('')}
+            </div>
+          </div>
+          ${wlRows.length ? `
+          <div>
+            <h3 style="color:#7bd0ff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;">&#x1F4A4; Wellness Baseline</h3>
+            <div class="space-y-2.5">
+              ${wlRows.map(([label, val]) => `
+                <div class="flex justify-between items-center gap-3">
+                  <span style="color:var(--muted);font-size:12px;">${label}</span>
+                  <span style="color:var(--text);font-size:13px;font-weight:700;">${val}</span>
+                </div>`).join('')}
+            </div>
+          </div>` : ''}
+        </div>`;
+    }
+
+    function renderProfileInjuries(d) {
+      const injuries = d.injuries || [];
+      const el = document.getElementById('profile-injuries');
+      if (!injuries.length) {
+        el.innerHTML = `<h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#x1F4CB; Injury History</h3>
+          <p style="color:var(--muted);font-size:13px;">No injury records available from Transfermarkt</p>`;
+        return;
+      }
+      el.innerHTML = `
+        <h3 style="color:var(--green);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;">
+          &#x1F4CB; Injury History (${injuries.length} records)
+        </h3>
+        <div class="space-y-2.5">
+          ${injuries.slice(0,25).map(inj => `
+            <div class="flex flex-wrap items-start justify-between gap-3 p-3 rounded-xl"
+              style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);">
+              <div style="flex:1;min-width:160px;">
+                <p style="color:var(--text);font-size:13px;font-weight:600;">${inj.injury||'Unknown'}</p>
+                <p style="color:var(--muted);font-size:11px;margin-top:2px;">${inj.club||''}</p>
+              </div>
+              <div class="flex gap-4 text-center flex-shrink-0">
+                <div>
+                  <p style="color:var(--muted);font-size:10px;text-transform:uppercase;">Season</p>
+                  <p style="color:#bdd0ee;font-size:12px;font-weight:600;">${inj.season||'—'}</p>
+                </div>
+                <div>
+                  <p style="color:var(--muted);font-size:10px;text-transform:uppercase;">From</p>
+                  <p style="color:#bdd0ee;font-size:12px;font-weight:600;">${inj.from_date||'—'}</p>
+                </div>
+                <div>
+                  <p style="color:var(--muted);font-size:10px;text-transform:uppercase;">Until</p>
+                  <p style="color:#bdd0ee;font-size:12px;font-weight:600;">${inj.until_date||'—'}</p>
+                </div>
+                <div>
+                  <p style="color:var(--muted);font-size:10px;text-transform:uppercase;">Days</p>
+                  <p style="color:#ef4444;font-size:14px;font-weight:700;">${inj.days_missed??'—'}</p>
+                </div>
+                <div>
+                  <p style="color:var(--muted);font-size:10px;text-transform:uppercase;">Games</p>
+                  <p style="color:#f59e0b;font-size:14px;font-weight:700;">${inj.games_missed??'—'}</p>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    /* ── COMPARE VIEW ────────────────────────────────────────────*/
+    let _currentCompareId = null;
+
+    function initCompareFixtures(preferTeam) {
+      const sel = document.getElementById('cmp-fixture-select');
+      if (!sel) return;
+      sel.innerHTML = '';
+      const today = new Date().toISOString().slice(0, 10);
+
+      // Pre-select: next upcoming fixture for preferTeam, or overall next upcoming
+      let defaultId = null;
+      if (preferTeam) {
+        const tf = PM_FIXTURES.filter(f => f.home === preferTeam || f.away === preferTeam);
+        const uf = tf.find(f => f.date >= today);
+        if (uf) defaultId = uf.match_id;
+      }
+      if (!defaultId) {
+        const nxt = PM_FIXTURES.find(f => f.date >= today);
+        defaultId = (nxt || PM_FIXTURES[0]).match_id;
+      }
+
+      // Build grouped options
+      const groups = {};
+      PM_FIXTURES.forEach(f => { (groups[f.group] = groups[f.group] || []).push(f); });
+      Object.entries(groups).forEach(([grp, fixtures]) => {
+        const og = document.createElement('optgroup');
+        og.label = `Group ${grp}`;
+        fixtures.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.match_id;
+          opt.textContent = `${f.date}  ·  ${NAMES[f.home]||f.home} vs ${NAMES[f.away]||f.away}`;
+          if (f.match_id === defaultId) opt.selected = true;
+          og.appendChild(opt);
+        });
+        sel.appendChild(og);
+      });
+
+      _currentCompareId = defaultId;
+    }
+
+    function onCompareSelect(matchId) {
+      _currentCompareId = matchId;
+      loadCompare();
+    }
+
+    async function loadCompare() {
+      const matchId = _currentCompareId;
+      if (!matchId) return;
+      const el = document.getElementById('cmp-content');
+      if (!el) return;
+      el.innerHTML = '<div class="flex justify-center py-20"><div class="spinner"></div></div>';
+      try {
+        const res = await fetch(`${API}/predictions/compare/${matchId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const d = await res.json();
+        el.innerHTML = _renderCompareView(d);
+      } catch(e) {
+        el.innerHTML = `<div class="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-sm">
+          <p class="text-red-500 font-semibold mb-1">Could not load comparison</p>
+          <p class="text-slate-400 text-sm">${e.message}</p>
+        </div>`;
+      }
+    }
+
+    function _cmpPosGroup(pos) {
+      const p = (pos || '').toLowerCase();
+      if (!p || p.includes('goalkeeper')) return 'GK';
+      if (p.includes('back') || p.includes('defender') || p.includes('centre') || p.includes('center')) return 'DEF';
+      if (p.includes('mid')) return 'MID';
+      return 'ATT';
+    }
+
+    const _CMP_PART_ORDER = { starter:0, benched:1, no_match_yet:2, not_in_squad:3, unavailable:4, injured:5 };
+    const _CMP_PART_ICON  = { starter:'✅', benched:'🪑', no_match_yet:'📅', not_in_squad:'❓', unavailable:'⛔', injured:'🚑' };
+
+    function _cmpPlayerRow(p) {
+      const score = p.adjusted_risk_score ?? p.risk_score ?? 0;
+      const cat   = p.adjusted_risk_category ?? p.risk_category ?? 'low';
+      const col   = riskColor(cat);
+      const pct   = Math.round(score * 100);
+      const icon  = _CMP_PART_ICON[p.participation] || '';
+      const isInj = p.participation === 'injured' || p.participation === 'unavailable';
+      const nameStyle = isInj ? 'text-decoration:line-through;opacity:0.55;' : '';
+      const injTip = isInj && p.injury_reason ? ` title="${p.injury_reason}"` : '';
+      return `
+        <div style="display:flex;align-items:center;gap:6px;padding:4px 0;">
+          <span style="width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0;"></span>
+          <span style="flex:1;font-size:12px;font-weight:600;color:var(--text);${nameStyle}white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"${injTip}>${p.full_name}</span>
+          <span style="font-size:11px;font-weight:700;color:${col};font-variant-numeric:tabular-nums;flex-shrink:0;">${pct}%</span>
+          <span style="font-size:12px;flex-shrink:0;">${icon}</span>
+        </div>
+        <div style="height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;margin:1px 0 3px 14px;">
+          <div style="width:${Math.min(pct,100)}%;height:100%;background:${col};opacity:.7;border-radius:1px;"></div>
+        </div>`;
+    }
+
+    function _renderCompareView(d) {
+      const ht = d.home.team_fifa_code;
+      const at = d.away.team_fifa_code;
+      const op = d.outcome_probabilities || {};
+      const mls = d.most_likely_score;
+      const hw = +(op.home_win || 0), dr = +(op.draw || 0), aw = +(op.away_win || 0);
+
+      const hMean = d.home.mean_risk_score || 0;
+      const aMean = d.away.mean_risk_score || 0;
+      const delta = d.risk_delta || 0;
+      const edgeTla = delta < -0.02 ? at : delta > 0.02 ? ht : null;
+      const edgePct = Math.round(Math.abs(delta) * 100);
+
+      const hInj  = (d.home.players||[]).filter(p=>['injured','unavailable'].includes(p.participation)).length;
+      const aInj  = (d.away.players||[]).filter(p=>['injured','unavailable'].includes(p.participation)).length;
+      const hHigh = (d.home.players||[]).filter(p=>['high','very_high'].includes(p.adjusted_risk_category)).length;
+      const aHigh = (d.away.players||[]).filter(p=>['high','very_high'].includes(p.adjusted_risk_category)).length;
+
+      const sortPs = ps => [...ps].sort((a,b) => {
+        const ao = _CMP_PART_ORDER[a.participation] ?? 3;
+        const bo = _CMP_PART_ORDER[b.participation] ?? 3;
+        return ao !== bo ? ao - bo : (b.adjusted_risk_score||0) - (a.adjusted_risk_score||0);
+      });
+      const homePlayers = sortPs(d.home.players || []);
+      const awayPlayers = sortPs(d.away.players || []);
+
+      const POS_GROUPS = ['GK','DEF','MID','ATT'];
+      const POS_LABELS = { GK:'Goalkeepers', DEF:'Defenders', MID:'Midfielders', ATT:'Attackers' };
+
+      const posRows = POS_GROUPS.map(grp => {
+        const hG = homePlayers.filter(p => _cmpPosGroup(p.position) === grp);
+        const aG = awayPlayers.filter(p => _cmpPosGroup(p.position) === grp);
+        if (!hG.length && !aG.length) return '';
+        const empty = '<p style="color:var(--muted);font-size:11px;font-style:italic;padding:6px 0 2px;">—</p>';
+        return `
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 0 6px;margin-top:6px;">
+              <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+              <span style="color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;">${POS_LABELS[grp]}</span>
+              <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
+              <div>${hG.length ? hG.map(_cmpPlayerRow).join('') : empty}</div>
+              <div>${aG.length ? aG.map(_cmpPlayerRow).join('') : empty}</div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const distBar = (td, total) => {
+        return [{l:'L',n:td.low_count,c:'#22c55e'},{l:'M',n:td.moderate_count,c:'#f59e0b'},
+                {l:'H',n:td.high_count,c:'#ef4444'},{l:'V',n:td.very_high_count,c:'#7c3aed'}]
+          .map(b => {
+            const h = total > 0 ? Math.max(4, Math.round(b.n/total*30)) : 4;
+            return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;">
+              <span style="font-size:10px;font-weight:700;color:${b.c};">${b.n}</span>
+              <div style="width:100%;height:${h}px;background:${b.c};opacity:.85;border-radius:2px 2px 0 0;"></div>
+              <span style="font-size:9px;color:var(--muted);">${b.l}</span>
+            </div>`;
+          }).join('');
+      };
+
+      const riskBar = (mean) => {
+        const pct = Math.round(mean*100);
+        const col = riskColor(pct<35?'low':pct<55?'moderate':'high');
+        return `<div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+          <div style="flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;">
+            <div style="width:${pct}%;height:100%;background:${col};border-radius:3px;"></div>
+          </div>
+          <span style="font-size:15px;font-weight:900;color:${col};font-variant-numeric:tabular-nums;">${pct}%</span>
+        </div>`;
+      };
+
+      const probBar = (prob, col, label) => `
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${label}</div>
+          <div style="font-size:22px;font-weight:900;color:${col};line-height:1;">${(prob*100).toFixed(0)}%</div>
+          <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:6px;">
+            <div style="width:${(prob*100).toFixed(0)}%;height:100%;background:${col};border-radius:2px;"></div>
+          </div>
+        </div>`;
+
+      return `
+        <!-- Match header -->
+        <div style="background:linear-gradient(135deg,#050f1e 0%,#0a1628 60%,#050f1e 100%);border-radius:16px;border:1px solid rgba(29,185,84,0.2);padding:20px 24px;">
+          <p style="text-align:center;color:var(--green);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;">
+            Group ${d.group} · ${d.date}
+          </p>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="flex:1;text-align:center;">
+              <div style="display:flex;justify-content:center;margin-bottom:8px;">${flagImg(ht,40)}</div>
+              <p style="color:#fff;font-size:18px;font-weight:900;">${NAMES[ht]||ht}</p>
+              <p style="color:var(--muted);font-size:11px;margin-top:2px;">Home</p>
+            </div>
+            <div style="text-align:center;flex-shrink:0;min-width:80px;">
+              ${mls
+                ? `<div style="color:#fff;font-size:34px;font-weight:900;line-height:1;">${mls.home}–${mls.away}</div>
+                   <p style="color:var(--muted);font-size:10px;margin-top:4px;">most likely · ${(mls.probability*100).toFixed(1)}%</p>`
+                : `<div style="color:rgba(255,255,255,0.15);font-size:28px;font-weight:900;">vs</div>`}
+            </div>
+            <div style="flex:1;text-align:center;">
+              <div style="display:flex;justify-content:center;margin-bottom:8px;">${flagImg(at,40)}</div>
+              <p style="color:#fff;font-size:18px;font-weight:900;">${NAMES[at]||at}</p>
+              <p style="color:var(--muted);font-size:11px;margin-top:2px;">Away</p>
+            </div>
+          </div>
+          ${(hw||dr||aw) ? `
+          <div style="display:flex;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07);">
+            ${probBar(hw,'#3b82f6',NAMES[ht]||ht)}
+            ${probBar(dr,'#94a3b8','Draw')}
+            ${probBar(aw,'#8b5cf6',NAMES[at]||at)}
+          </div>` : ''}
+        </div>
+
+        <!-- Team risk overview -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              ${flagImg(ht,22)}
+              <span style="color:var(--text);font-size:14px;font-weight:800;">${NAMES[ht]||ht}</span>
+            </div>
+            <p style="color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;">Mean Injury Risk</p>
+            ${riskBar(hMean)}
+            <div style="display:flex;gap:3px;align-items:flex-end;height:42px;margin:12px 0 4px;">${distBar(d.home, d.home.total_players)}</div>
+            <p style="color:var(--muted);font-size:11px;margin-top:4px;">${hInj} inj · ${hHigh} high-risk</p>
+          </div>
+          <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              ${flagImg(at,22)}
+              <span style="color:var(--text);font-size:14px;font-weight:800;">${NAMES[at]||at}</span>
+            </div>
+            <p style="color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;">Mean Injury Risk</p>
+            ${riskBar(aMean)}
+            <div style="display:flex;gap:3px;align-items:flex-end;height:42px;margin:12px 0 4px;">${distBar(d.away, d.away.total_players)}</div>
+            <p style="color:var(--muted);font-size:11px;margin-top:4px;">${aInj} inj · ${aHigh} high-risk</p>
+          </div>
+        </div>
+
+        <!-- Injury edge banner -->
+        ${edgeTla
+          ? `<div style="text-align:center;padding:10px 16px;background:rgba(29,185,84,0.07);border-radius:12px;border:1px solid rgba(29,185,84,0.18);">
+               <span style="color:var(--green);font-size:13px;font-weight:700;">⚕ Injury Edge: ${flagImg(edgeTla)} ${NAMES[edgeTla]||edgeTla}</span>
+               <span style="color:var(--muted);font-size:12px;"> — ${edgePct}% lower mean squad risk</span>
+             </div>`
+          : `<div style="text-align:center;padding:10px 16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border);">
+               <span style="color:var(--muted);font-size:13px;">⚕ Squads evenly matched on injury burden</span>
+             </div>`}
+
+        <!-- Side-by-side player breakdown -->
+        <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:4px;">
+            <div style="display:flex;align-items:center;gap:8px;">${flagImg(ht,18)} <span style="color:var(--text);font-size:13px;font-weight:700;">${NAMES[ht]||ht}</span></div>
+            <div style="display:flex;align-items:center;gap:8px;">${flagImg(at,18)} <span style="color:var(--text);font-size:13px;font-weight:700;">${NAMES[at]||at}</span></div>
+          </div>
+          ${posRows}
+        </div>
+
+        <p style="text-align:center;color:var(--muted);font-size:11px;padding-bottom:4px;">
+          Risk from BSD Bzzoiro WC lineups · XGBoost ML or rule-based · Match outcome via Dixon-Coles Poisson
+        </p>`;
+    }
+
+    /* ── INIT ─────────────────────────────────────────────────────*/
+    // Set date input default to today
+    document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+    loadInjury();
+    loadFormPlayers();
+    initPrematchFixtures();
+    initLiveFixtures();
+  </script>
+</body>
+</html>

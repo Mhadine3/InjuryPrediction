@@ -16,7 +16,7 @@
 
 -- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS timescaledb;
+-- CREATE EXTENSION IF NOT EXISTS timescaledb; -- removed for PG18 compat test
 
 -- ============================================================
 -- ENUMERATED TYPES
@@ -416,12 +416,7 @@ COMMENT ON COLUMN daily_metrics.sleep_quality IS
     'Hooper scale: 1 = very, very good ; 7 = very, very bad. Counter-intuitive direction maintained for Hooper index fidelity.';
 
 -- Convert to hypertable — partitioned weekly
-SELECT create_hypertable(
-    'daily_metrics',
-    'measured_at',
-    chunk_time_interval => INTERVAL '7 days',
-    if_not_exists       => TRUE
-);
+-- SELECT create_hypertable(...); -- TimescaleDB call removed for test
 
 -- Indexes on hypertable (TimescaleDB requires including the time column)
 CREATE INDEX idx_dm_player_time ON daily_metrics (player_id, measured_at DESC);

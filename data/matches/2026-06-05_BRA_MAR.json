@@ -1,0 +1,173 @@
+{
+  "match_id": null,
+  "date": "2026-06-05",
+  "home_code": "BRA",
+  "away_code": "MAR",
+  "source": "manual",
+  "lineup_locked": false,
+  "note": "Fill in our_player_id from data/api_player_ids.json. Set minute_on/minute_off for subs. Delete unused sub slots.",
+  "home": {
+    "formation": "FILL IN e.g. 4-3-3",
+    "starters": [
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 1
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 2
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 3
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 4
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 5
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 6
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 7
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 8
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 9
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 10
+      },
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 11
+      }
+    ],
+    "subs": [
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 0,
+        "came_on_for": "FILL IN player replaced",
+        "minute_on": 0,
+        "minute_off": 90
+      }
+    ]
+  },
+  "away": {
+    "formation": "FILL IN e.g. 4-3-3",
+    "starters": [
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 1
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 2
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 3
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 4
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 5
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 6
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 7
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 8
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 9
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 10
+      },
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 11
+      }
+    ],
+    "subs": [
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 0,
+        "came_on_for": "FILL IN player replaced",
+        "minute_on": 0,
+        "minute_off": 90
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "match_id": 537339,
+  "date": "2026-06-13",
+  "home_code": "BRA",
+  "away_code": "MAR",
+  "source": "api",
+  "lineup_locked": false,
+  "home": {
+    "formation": "FILL IN",
+    "starters": [
+      {
+        "our_player_id": "bra_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 0
+      }
+    ],
+    "subs": []
+  },
+  "away": {
+    "formation": "FILL IN",
+    "starters": [
+      {
+        "our_player_id": "mar_XXX",
+        "name": "FILL IN",
+        "position_detail": "FILL IN",
+        "shirt_number": 0
+      }
+    ],
+    "subs": []
+  }
+}

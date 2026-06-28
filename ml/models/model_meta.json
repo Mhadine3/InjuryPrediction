@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-06-13",
+  "split_strategy": "random_80_20_stratified",
+  "feature_cols": [
+    "session_type_enc",
+    "day_of_week_enc",
+    "is_rest",
+    "rpe",
+    "session_duration_min",
+    "srpe",
+    "session_distance_km",
+    "high_intensity_distance_m",
+    "sprints_count",
+    "accel_decel_count",
+    "sleep_duration_h",
+    "sleep_quality",
+    "fatigue",
+    "soreness",
+    "stress",
+    "hooper_index",
+    "hrv_ms",
+    "resting_hr_bpm",
+    "hydration_usg",
+    "hrv_vs_baseline",
+    "hrv_7d_mean",
+    "hrv_7d_std",
+    "hrv_7d_delta",
+    "acute_load_7d",
+    "chronic_load_28d",
+    "acwr",
+    "fatigue_7d_mean",
+    "soreness_7d_mean",
+    "hooper_7d_mean",
+    "srpe_14d_mean",
+    "age",
+    "caps",
+    "hrv_baseline_ms",
+    "sprint_speed_baseline",
+    "vo2_max_baseline",
+    "injury_proneness_enc",
+    "recovery_speed_enc",
+    "age_category_enc",
+    "position_enc",
+    "day_number",
+    "training_phase_enc",
+    "is_taper"
+  ],
+  "risk_cat_map": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "class_names": [
+    "low",
+    "moderate",
+    "high",
+    "very_high"
+  ],
+  "n_classes": 4,
+  "regressor": {
+    "rmse": 0.026118733155350626,
+    "mae": 0.010729951381317188,
+    "r2": 0.9635931947252446,
+    "best_iteration": 279
+  },
+  "classifier": {
+    "accuracy": 0.9946581196581197,
+    "best_iteration": 160
+  }
+}

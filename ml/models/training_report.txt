@@ -1,0 +1,46 @@
+Injury Risk Model — Training Report
+Generated : 2026-06-13
+
+Dataset
+  Source        : data/daily_metrics.csv
+  Total rows    : 18,720
+  Supervised    : 18,720  (excluded 0 no-ACWR rows)
+  Train rows    : 14,976  (random 80%)
+  Test rows     : 3,744  (random 20%)
+  Features      : 42
+
+Regressor  (XGBRegressor — predict injury_risk_score 0-1)
+  RMSE          : 0.0261
+  MAE           : 0.0107
+  R2            : 0.9636
+  Best iter     : 279
+
+Classifier (XGBClassifier — predict risk_category)
+  Classes       : ['low', 'moderate', 'high', 'very_high']
+  Accuracy      : 0.9947
+  Best iter     : 160
+
+Per-class metrics:
+  low            p=0.998  r=0.999  f1=0.999  n=3241
+  moderate       p=0.985  r=0.982  f1=0.983  n=389
+  high           p=0.941  r=0.941  f1=0.941  n=101
+  very_high      p=0.750  r=0.692  f1=0.720  n=13
+  macro avg      p=0.918  r=0.903  f1=0.911  n=3744
+  weighted avg   p=0.995  r=0.995  f1=0.995  n=3744
+
+Top 15 features (regressor):
+   1. acwr                             0.4137
+   2. acute_load_7d                    0.0816
+   3. chronic_load_28d                 0.0683
+   4. training_phase_enc               0.0605
+   5. fatigue                          0.0553
+   6. day_number                       0.0475
+   7. age                              0.0377
+   8. hrv_ms                           0.0355
+   9. injury_proneness_enc             0.0318
+  10. soreness                         0.0234
+  11. is_taper                         0.0222
+  12. hrv_7d_mean                      0.0200
+  13. soreness_7d_mean                 0.0144
+  14. hrv_vs_baseline                  0.0110
+  15. age_category_enc                 0.0093

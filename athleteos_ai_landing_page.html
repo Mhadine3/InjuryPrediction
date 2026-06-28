@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthleteOS AI — AI-Powered Sports Performance & Injury Prevention</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0B1A2F;
+            --bg-mid: #13294B;
+            --accent-blue: #2E75B6;
+            --accent-cyan: #38BDF8;
+            --frosted-white: rgba(255,255,255,0.08);
+            --border-white: rgba(255,255,255,0.12);
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.5);
+            --glass-bg: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.1);
+            --radius-card: 16px;
+            --radius-btn: 8px;
+            --radius-pill: 999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(56,189,248,0.2); }
+            50% { box-shadow: 0 0 40px rgba(56,189,248,0.4); }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes data-pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes chart-draw {
+            from { stroke-dashoffset: 300; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* ===== GLASS CARD SYSTEM ===== */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56,189,248,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 20px rgba(56,189,248,0.1);
+            transform: translateY(-4px);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(11,26,47,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-white);
+            padding: 0 48px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: var(--radius-btn);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            box-shadow: 0 4px 20px rgba(56,189,248,0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 30px rgba(56,189,248,0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-white);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(56,189,248,0.4);
+        }
+
+        .nav-signin {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-signin:hover {
+            color: var(--text-primary);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            padding: 140px 48px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1440px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-pattern {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .hero-bg-pattern::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            right: 5%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+        }
+
+        .hero-bg-pattern::after {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            left: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(46,117,182,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.2);
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--accent-cyan);
+            margin-bottom: 28px;
+        }
+
+        .hero-badge .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: data-pulse 2s infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Dashboard Mockup */
+        .dashboard-mockup {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .dashboard-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .dashboard-live {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .dashboard-live .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: data-pulse 1.5s infinite;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .dash-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .dash-card-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .dash-card-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .dash-card-value.danger { color: var(--danger); }
+        .dash-card-value.warning { color: var(--warning); }
+        .dash-card-value.success { color: var(--success); }
+
+        .gauge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .gauge-svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        .gauge-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 6;
+        }
+
+        .gauge-fill {
+            fill: none;
+            stroke: var(--accent-cyan);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 141;
+            stroke-dashoffset: 35;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .gauge-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .alert-banner {
+            grid-column: 1 / -1;
+            background: linear-gradient(90deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05));
+            border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(239,68,68,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--danger);
+            font-size: 14px;
+        }
+
+        .alert-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fca5a5;
+        }
+
+        .chart-mini {
+            height: 50px;
+            margin-top: 8px;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--accent-cyan);
+            stroke-width: 2;
+            stroke-dasharray: 300;
+            animation: chart-draw 2s ease forwards;
+        }
+
+        .chart-area {
+            fill: url(#chartGradient);
+            opacity: 0.3;
+        }
+
+        /* ===== METRICS BAR ===== */
+        .metrics-bar {
+            padding: 40px 48px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            border-color: rgba(56,189,248,0.2);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .metric-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(56,189,248,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .metric-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* ===== SECTIONS COMMON ===== */
+        .section {
+            padding: 100px 48px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== SPORTS SECTION ===== */
+        .sports-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .sport-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            padding: 36px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sport-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sport-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56,189,248,0.25);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px rgba(56,189,248,0.08);
+        }
+
+        .sport-card:hover::before {
+            opacity: 1;
+        }
+
+        .sport-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(46,117,182,0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            border: 1px solid rgba(56,189,248,0.15);
+        }
+
+        .sport-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .sport-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            padding: 36px 28px;
+            transition: all 0.4s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(56,189,248,0.25);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(46,117,182,0.1));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(56,189,248,0.15);
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .steps-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+        }
+
+        .step-card {
+            flex: 1;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .step-card:hover {
+            border-color: rgba(56,189,248,0.25);
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 20px rgba(56,189,248,0.3);
+        }
+
+        .step-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 50%;
+            right: -24px;
+            width: 24px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            transform: translateY(-50%);
+        }
+
+        /* ===== DASHBOARD SHOWCASE ===== */
+        .showcase-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .showcase-dashboard {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.5);
+        }
+
+        .showcase-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+        }
+
+        .showcase-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .athlete-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .athlete-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .athlete-info {
+            flex: 1;
+        }
+
+        .athlete-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .athlete-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .athlete-risk {
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .risk-low { background: rgba(34,197,94,0.15); color: var(--success); }
+        .risk-med { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .risk-high { background: rgba(239,68,68,0.15); color: var(--danger); }
+
+        /* ===== BENEFITS ===== */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .benefit-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.4s;
+        }
+
+        .benefit-card:hover {
+            border-color: rgba(56,189,248,0.25);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.25);
+        }
+
+        .benefit-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(46,117,182,0.08));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            border: 1px solid rgba(56,189,248,0.12);
+        }
+
+        .benefit-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .benefit-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ===== CTA BAND ===== */
+        .cta-band {
+            padding: 100px 48px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(46,117,182,0.1));
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-band::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(56,189,248,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(46,117,182,0.06) 0%, transparent 50%);
+            animation: gradient-shift 15s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        .cta-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-content h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .cta-content p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 36px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            padding: 16px 48px;
+            font-size: 1.05rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
+            border-radius: var(--radius-btn);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(56,189,248,0.4);
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .cta-btn:hover {
+            box-shadow: 0 12px 40px rgba(56,189,248,0.6);
+            transform: translateY(-3px);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 80px 48px 40px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(4, 1fr);
+            gap: 48px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand .logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 280px;
+        }
+
+        .footer-col h4 {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-bottom-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: rgba(11,26,47,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 24px;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+        }
+
+        .mobile-menu li {
+            margin-bottom: 16px;
+        }
+
+        .mobile-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 120px;
+            }
+
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-ctas {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .sports-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-container {
+                flex-direction: column;
+            }
+
+            .step-connector {
+                display: none;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 24px;
+            }
+
+            .nav-links, .nav-signin {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero, .section, .metrics-bar, .footer {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sports-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .showcase-top, .showcase-bottom {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="nav-logo">⚡</div>
+            <span>AthleteOS AI</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#sports">Sports</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="#" class="nav-signin">Sign In</a>
+            <a href="#cta" class="btn btn-primary">Request Demo</a>
+            <button class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="#sports" onclick="toggleMenu()">Sports</a></li>
+            <li><a href="#features" onclick="toggleMenu()">Features</a></li>
+            <li><a href="#how-it-works" onclick="toggleMenu()">How it Works</a></li>
+            <li><a href="#dashboard" onclick="toggleMenu()">Dashboard</a></li>
+            <li><a href="#" onclick="toggleMenu()">Sign In</a></li>
+        </ul>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-bg-pattern"></div>
+
+        <div class="hero-content animate-fade-in">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                Now Live — Real-Time Risk Detection
+            </div>
+            <h1>AI-Powered Performance & Injury Prevention.</h1>
+            <p>Turn raw sports data into real-time decisions that protect athletes and maximize performance — across every sport.</p>
+            <div class="hero-ctas">
+                <a href="#cta" class="btn btn-primary">Request Demo</a>
+                <a href="#" class="btn btn-secondary">▶ Watch the Demo</a>
+            </div>
+        </div>
+
+        <div class="hero-visual animate-fade-in delay-2">
+            <div class="dashboard-mockup">
+                <div class="dashboard-header">
+                    <span class="dashboard-title">Performance Overview</span>
+                    <div class="dashboard-live">
+                        <span class="dot"></span>
+                        LIVE
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dash-card">
+                        <div class="dash-card-label">Readiness Score</div>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" viewBox="0 0 60 60">
+                                <circle class="gauge-bg" cx="30" cy="30" r="22"/>
+                                <circle class="gauge-fill" cx="30" cy="30" r="22"/>
+                            </svg>
+                            <span class="gauge-text">87</span>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Injury Risk</div>
+                        <div class="dash-card-value danger">High</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">3 athletes flagged</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Workload (hrs)</div>
+                        <div class="dash-card-value warning">12.4</div>
+                        <svg class="chart-mini" viewBox="0 0 100 30" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#38BDF8"/>
+                                    <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path class="chart-area" d="M0,25 Q10,20 20,22 T40,15 T60,18 T80,8 T100,12 L100,30 L0,30Z"/>
+                            <path class="chart-line" d="M0,25 Q10,20 20,22 T40,15 T60,18 T80,8 T100,12"/>
+                        </svg>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Recovery Rate</div>
+                        <div class="dash-card-value success">94%</div>
+                        <div style="font-size:0.75rem;color:var(--success);margin-top:4px;">↑ 3.2% vs last week</div>
+                    </div>
+                    <div class="alert-banner">
+                        <div class="alert-icon">⚠</div>
+                        <span class="alert-text">High Risk Detected — Review flagged athletes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== METRICS BAR ===== -->
+    <section class="metrics-bar">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-icon">🏆</div>
+                <span class="metric-text">5 Sports Supported</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">⚡</div>
+                <span class="metric-text">Real-time Risk Detection</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">🧠</div>
+                <span class="metric-text">Explainable AI (SHAP)</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">🔄</div>
+                <span class="metric-text">Zero Manual Data Entry</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SPORTS SECTION ===== -->
+    <section class="section" id="sports">
+        <div class="section-header reveal">
+            <h2>One Platform, Five Sports.</h2>
+            <p>Specialized AI models tailored to the unique demands of each discipline.</p>
+        </div>
+        <div class="sports-grid">
+            <div class="sport-card glass-card reveal">
+                <div class="sport-icon">⚽</div>
+                <h3>Football</h3>
+                <p>Injury risk & training readiness from workload and wellness data.</p>
+            </div>
+            <div class="sport-card glass-card reveal">
+                <div class="sport-icon">🏀</div>
+                <h3>Basketball</h3>
+                <p>Fatigue and load management across an 82-game season.</p>
+            </div>
+            <div class="sport-card glass-card reveal">
+                <div class="sport-icon">🏎️</div>
+                <h3>Formula 1</h3>
+                <p>Tyre degradation, pit-stop strategy, and driver fatigue from live telemetry.</p>
+            </div>
+            <div class="sport-card glass-card reveal">
+                <div class="sport-icon">🎾</div>
+                <h3>Tennis</h3>
+                <p>Match-load tracking and overuse-injury prevention.</p>
+            </div>
+            <div class="sport-card glass-card reveal">
+                <div class="sport-icon">🏊</div>
+                <h3>Swimming</h3>
+                <p>Training-load monitoring and recovery optimization.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURES SECTION ===== -->
+    <section class="section" id="features">
+        <div class="section-header reveal">
+            <h2>Built for Evidence-Based Decisions.</h2>
+            <p>Every feature designed to turn complex data into clear, actionable intelligence.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card glass-card reveal">
+                <div class="feature-icon">🔮</div>
+                <h3>Predictive Engine</h3>
+                <p>XGBoost models predict fatigue and injury risk before they happen.</p>
+            </div>
+            <div class="feature-card glass-card reveal">
+                <div class="feature-icon">🔍</div>
+                <h3>Explainable Insights</h3>
+                <p>SHAP analysis shows exactly why each prediction was made.</p>
+            </div>
+            <div class="feature-card glass-card reveal">
+                <div class="feature-icon">📡</div>
+                <h3>Automated Data Pipeline</h3>
+                <p>Live ingestion from open sports APIs, no manual entry.</p>
+            </div>
+            <div class="feature-card glass-card reveal">
+                <div class="feature-icon">📊</div>
+                <h3>Real-Time Dashboards</h3>
+                <p>Glassmorphism interfaces for instant, on-the-bench decisions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="section" id="how-it-works">
+        <div class="section-header reveal">
+            <h2>How It Works</h2>
+            <p>From raw data to decisive action in three seamless steps.</p>
+        </div>
+        <div class="steps-container">
+            <div class="step-card reveal">
+                <div class="step-number">1</div>
+                <h3>Ingest Data</h3>
+                <p>Collect live sports, wellness, GPS, and telemetry data from multiple sources automatically.</p>
+                <div class="step-connector"></div>
+            </div>
+            <div class="step-card reveal">
+                <div class="step-number">2</div>
+                <h3>Predict & Explain</h3>
+                <p>Machine learning models detect fatigue and injury risks with full transparency.</p>
+                <div class="step-connector"></div>
+            </div>
+            <div class="step-card reveal">
+                <div class="step-number">3</div>
+                <h3>Recommend Action</h3>
+                <p>Actionable recommendations optimize athlete availability and performance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DASHBOARD SHOWCASE ===== -->
+    <section class="section" id="dashboard">
+        <div class="section-header reveal">
+            <h2>See Everything at a Glance.</h2>
+            <p>Your command center for real-time athlete intelligence.</p>
+        </div>
+        <div class="showcase-wrapper reveal">
+            <div class="showcase-dashboard">
+                <div class="showcase-top">
+                    <div class="dash-card">
+                        <div class="dash-card-label">Team Risk Heatmap</div>
+                        <div class="heatmap-grid">
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#F59E0B"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#EF4444"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#F59E0B"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#F59E0B"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#EF4444"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#F59E0B"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                            <div class="heatmap-cell" style="background:#22C55E"></div>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Readiness</div>
+                        <div class="gauge-container" style="justify-content:center;margin-top:10px;">
+                            <svg class="gauge-svg" viewBox="0 0 60 60" style="width:80px;height:80px;">
+                                <circle class="gauge-bg" cx="30" cy="30" r="26" style="stroke-width:5;"/>
+                                <circle class="gauge-fill" cx="30" cy="30" r="26" style="stroke-width:5;stroke-dasharray:163;stroke-dashoffset:20;"/>
+                            </svg>
+                        </div>
+                        <div style="text-align:center;font-size:1.5rem;font-weight:800;margin-top:8px;">92</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Active Alerts</div>
+                        <div style="margin-top:12px;">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px;background:rgba(239,68,68,0.1);border-radius:8px;">
+                                <span style="color:var(--danger);font-size:12px;">●</span>
+                                <span style="font-size:0.8rem;">Hamstring strain risk</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px;background:rgba(245,158,11,0.1);border-radius:8px;">
+                                <span style="color:var(--warning);font-size:12px;">●</span>
+                                <span style="font-size:0.8rem;">Elevated workload</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;padding:8px;background:rgba(34,197,94,0.1);border-radius:8px;">
+                                <span style="color:var(--success);font-size:12px;">●</span>
+                                <span style="font-size:0.8rem;">Recovery on track</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="showcase-bottom">
+                    <div class="dash-card">
+                        <div class="dash-card-label">Athlete Status</div>
+                        <div class="athlete-row">
+                            <div class="athlete-avatar">JM</div>
+                            <div class="athlete-info">
+                                <div class="athlete-name">J. Martinez</div>
+                                <div class="athlete-status">Forward · 24 yrs</div>
+                            </div>
+                            <span class="athlete-risk risk-low">Low</span>
+                        </div>
+                        <div class="athlete-row">
+                            <div class="athlete-avatar">AK</div>
+                            <div class="athlete-info">
+                                <div class="athlete-name">A. Kovac</div>
+                                <div class="athlete-status">Midfielder · 28 yrs</div>
+                            </div>
+                            <span class="athlete-risk risk-high">High</span>
+                        </div>
+                        <div class="athlete-row">
+                            <div class="athlete-avatar">LW</div>
+                            <div class="athlete-info">
+                                <div class="athlete-name">L. Williams</div>
+                                <div class="athlete-status">Defender · 22 yrs</div>
+                            </div>
+                            <span class="athlete-risk risk-med">Med</span>
+                        </div>
+                        <div class="athlete-row" style="border-bottom:none;">
+                            <div class="athlete-avatar">RC</div>
+                            <div class="athlete-info">
+                                <div class="athlete-name">R. Chen</div>
+                                <div class="athlete-status">Goalkeeper · 31 yrs</div>
+                            </div>
+                            <span class="athlete-risk risk-low">Low</span>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Workload Trend</div>
+                        <svg viewBox="0 0 200 80" style="width:100%;margin-top:10px;">
+                            <defs>
+                                <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.4"/>
+                                    <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path fill="url(#trendGrad)" d="M0,60 Q20,55 40,50 T80,45 T120,35 T160,40 T200,25 L200,80 L0,80Z"/>
+                            <path fill="none" stroke="#38BDF8" stroke-width="2" d="M0,60 Q20,55 40,50 T80,45 T120,35 T160,40 T200,25"/>
+                            <circle cx="160" cy="40" r="4" fill="#38BDF8"/>
+                        </svg>
+                        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.7rem;color:var(--text-muted);">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-label">Live Indicators</div>
+                        <div style="margin-top:16px;display:flex;flex-direction:column;gap:16px;">
+                            <div>
+                                <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:6px;">
+                                    <span>Heart Rate</span>
+                                    <span style="color:var(--accent-cyan);font-weight:600;">142 bpm</span>
+                                </div>
+                                <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+                                    <div style="width:72%;height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-blue));border-radius:2px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:6px;">
+                                    <span>Speed</span>
+                                    <span style="color:var(--accent-cyan);font-weight:600;">28.4 km/h</span>
+                                </div>
+                                <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+                                    <div style="width:85%;height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-blue));border-radius:2px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:6px;">
+                                    <span>Distance</span>
+                                    <span style="color:var(--accent-cyan);font-weight:600;">8.2 km</span>
+                                </div>
+                                <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+                                    <div style="width:60%;height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-blue));border-radius:2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BENEFITS ===== -->
+    <section class="section">
+        <div class="section-header reveal">
+            <h2>Why Teams Use AthleteOS AI</h2>
+            <p>Trusted by elite clubs, national teams, and performance departments worldwide.</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-card glass-card reveal">
+                <div class="benefit-icon">🛡️</div>
+                <h3>Proactive Injury Prevention</h3>
+                <p>Reduce avoidable injuries before they happen with predictive intelligence.</p>
+            </div>
+            <div class="benefit-card glass-card reveal">
+                <div class="benefit-icon">📈</div>
+                <h3>Optimized Athlete Availability</h3>
+                <p>Keep more athletes competition-ready throughout the season.</p>
+            </div>
+            <div class="benefit-card glass-card reveal">
+                <div class="benefit-icon">🎯</div>
+                <h3>Data-Driven Decisions</h3>
+                <p>Replace guesswork with explainable machine-learning insights.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA BAND ===== -->
+    <section class="cta-band" id="cta">
+        <div class="cta-content">
+            <h2>Ready to protect your athletes?</h2>
+            <p>Join the teams using AI to stay ahead of injuries and maximize performance.</p>
+            <button class="cta-btn">Request Demo</button>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">
+                    <div class="logo">⚡</div>
+                    <span>AthleteOS AI</span>
+                </div>
+                <p class="footer-desc">AI-powered sports performance and injury prevention platform for elite teams and athletes.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Sports</h4>
+                <ul>
+                    <li><a href="#sports">Football</a></li>
+                    <li><a href="#sports">Basketball</a></li>
+                    <li><a href="#sports">Formula 1</a></li>
+                    <li><a href="#sports">Tennis</a></li>
+                    <li><a href="#sports">Swimming</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">Research</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="#">Email</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 AthleteOS AI. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        // Scroll reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(11,26,47,0.9)';
+            } else {
+                navbar.style.background = 'rgba(11,26,47,0.7)';
+            }
+        });
+    </script>
+</body>
+</html>
