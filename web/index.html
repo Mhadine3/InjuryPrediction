@@ -249,39 +249,11 @@
 
     <!-- CONTROLS -->
     <div class="rounded-2xl p-4" style="background:var(--card);border:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,0.4);">
-      <div class="flex flex-wrap gap-3 items-center">
-        <!-- Group C -->
-        <div class="flex items-center gap-1 rounded-xl px-2 py-1.5" style="background:rgba(255,255,255,0.03);border:1px solid var(--border);">
-          <span class="text-xs font-bold px-1 border-r mr-1 pr-2" style="color:var(--muted);border-color:var(--border);">Group C</span>
-          <button onclick="selectTeam('BRA')" id="tab-BRA" class="team-tab tab-active flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all">
-            <img src="https://flagcdn.com/w20/br.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Brazil</span>
-          </button>
-          <button onclick="selectTeam('MAR')" id="tab-MAR" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/ma.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Morocco</span>
-          </button>
-          <button onclick="selectTeam('HAI')" id="tab-HAI" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/ht.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Haiti</span>
-          </button>
-          <button onclick="selectTeam('SCO')" id="tab-SCO" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/gb-sct.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Scotland</span>
-          </button>
-        </div>
-        <!-- Group I -->
-        <div class="flex items-center gap-1 rounded-xl px-2 py-1.5" style="background:rgba(255,255,255,0.03);border:1px solid var(--border);">
-          <span class="text-xs font-bold px-1 border-r mr-1 pr-2" style="color:var(--muted);border-color:var(--border);">Group I</span>
-          <button onclick="selectTeam('FRA')" id="tab-FRA" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/fr.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>France</span>
-          </button>
-          <button onclick="selectTeam('SEN')" id="tab-SEN" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/sn.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Senegal</span>
-          </button>
-          <button onclick="selectTeam('IRQ')" id="tab-IRQ" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/iq.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Iraq</span>
-          </button>
-          <button onclick="selectTeam('NOR')" id="tab-NOR" class="team-tab flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm text-slate-600 transition-all hover:bg-white">
-            <img src="https://flagcdn.com/w20/no.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>Norway</span>
-          </button>
-        </div>
+      <div class="space-y-2.5">
+        <!-- Group picker A–L -->
+        <div id="group-picker" class="flex flex-wrap gap-1.5 items-center"></div>
+        <!-- Teams of the selected group -->
+        <div id="team-selector" class="flex flex-wrap gap-1.5 items-center"></div>
       </div>
     </div>
 
@@ -303,6 +275,10 @@
       <button onclick="switchView('predictions')" id="view-predictions"
         class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
         📊 Predictions
+      </button>
+      <button onclick="viewFullBracket()" id="view-bracket"
+        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
+        🏆 Knockout Bracket
       </button>
       <button onclick="switchView('compare')" id="view-compare"
         class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
@@ -880,6 +856,17 @@
       </p>
     </div>
 
+    <!-- ══ KNOCKOUT BRACKET VIEW ══ -->
+    <div id="view-bracket-content" class="hidden space-y-4 pb-8">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h2 id="bracket-heading" class="text-lg font-bold" style="color:var(--text);">🏆 Knockout Bracket — FIFA World Cup 2026</h2>
+        <p class="text-xs" style="color:var(--muted);">Live results from football-data.org · click any decided tie for its pre-match model</p>
+      </div>
+      <div id="bracket-scroll" class="overflow-x-auto">
+        <div id="bracket-cols" class="flex gap-4 min-w-max items-stretch"></div>
+      </div>
+    </div>
+
     <!-- ══ COMPARE VIEW ══ -->
     <div id="view-compare-content" class="hidden space-y-5 pb-8">
 
@@ -1090,8 +1077,11 @@
     const READ_LABEL  = { peak:'Peak', ready:'Ready', moderate:'Moderate', low:'Low', rest:'Rest' };
     const SESSION_ICON = { rest:'😴', recovery:'🔄', technical:'⚽', tactical:'🧠', physical:'💪', match_prep:'🏟️' };
     const SESSION_COLOR = { rest:'text-slate-400', recovery:'text-blue-500', technical:'text-green-600', tactical:'text-purple-600', physical:'text-red-600', match_prep:'text-orange-600' };
-    const _FLAG_CODES = { BRA:'br', MAR:'ma', HAI:'ht', SCO:'gb-sct', FRA:'fr', SEN:'sn', IRQ:'iq', NOR:'no' };
-    const NAMES = { BRA:'Brazil', MAR:'Morocco', HAI:'Haiti', SCO:'Scotland', FRA:'France', SEN:'Senegal', IRQ:'Iraq', NOR:'Norway' };
+    const NAMES = {"CZE": "Czechia", "MEX": "Mexico", "RSA": "South Africa", "KOR": "South Korea", "BIH": "Bosnia-Herzegovina", "CAN": "Canada", "QAT": "Qatar", "SUI": "Switzerland", "BRA": "Brazil", "HAI": "Haiti", "MAR": "Morocco", "SCO": "Scotland", "AUS": "Australia", "PAR": "Paraguay", "TUR": "Turkey", "USA": "United States", "CUW": "Curaçao", "ECU": "Ecuador", "GER": "Germany", "CIV": "Ivory Coast", "JPN": "Japan", "NED": "Netherlands", "SWE": "Sweden", "TUN": "Tunisia", "BEL": "Belgium", "EGY": "Egypt", "IRN": "Iran", "NZL": "New Zealand", "CPV": "Cape Verde Islands", "KSA": "Saudi Arabia", "ESP": "Spain", "URU": "Uruguay", "FRA": "France", "IRQ": "Iraq", "NOR": "Norway", "SEN": "Senegal", "ALG": "Algeria", "ARG": "Argentina", "AUT": "Austria", "JOR": "Jordan", "COL": "Colombia", "COD": "Congo DR", "POR": "Portugal", "UZB": "Uzbekistan", "CRO": "Croatia", "ENG": "England", "GHA": "Ghana", "PAN": "Panama"};
+    const _FLAG_CODES = {"CZE": "cz", "MEX": "mx", "RSA": "za", "KOR": "kr", "BIH": "ba", "CAN": "ca", "QAT": "qa", "SUI": "ch", "BRA": "br", "HAI": "ht", "MAR": "ma", "SCO": "gb-sct", "AUS": "au", "PAR": "py", "TUR": "tr", "USA": "us", "CUW": "cw", "ECU": "ec", "GER": "de", "CIV": "ci", "JPN": "jp", "NED": "nl", "SWE": "se", "TUN": "tn", "BEL": "be", "EGY": "eg", "IRN": "ir", "NZL": "nz", "CPV": "cv", "KSA": "sa", "ESP": "es", "URU": "uy", "FRA": "fr", "IRQ": "iq", "NOR": "no", "SEN": "sn", "ALG": "dz", "ARG": "ar", "AUT": "at", "JOR": "jo", "COL": "co", "COD": "cd", "POR": "pt", "UZB": "uz", "CRO": "hr", "ENG": "gb-eng", "GHA": "gh", "PAN": "pa"};
+    const TEAM_GROUP = {"CZE": "A", "MEX": "A", "RSA": "A", "KOR": "A", "BIH": "B", "CAN": "B", "QAT": "B", "SUI": "B", "BRA": "C", "HAI": "C", "MAR": "C", "SCO": "C", "AUS": "D", "PAR": "D", "TUR": "D", "USA": "D", "CUW": "E", "ECU": "E", "GER": "E", "CIV": "E", "JPN": "F", "NED": "F", "SWE": "F", "TUN": "F", "BEL": "G", "EGY": "G", "IRN": "G", "NZL": "G", "CPV": "H", "KSA": "H", "ESP": "H", "URU": "H", "FRA": "I", "IRQ": "I", "NOR": "I", "SEN": "I", "ALG": "J", "ARG": "J", "AUT": "J", "JOR": "J", "COL": "K", "COD": "K", "POR": "K", "UZB": "K", "CRO": "L", "ENG": "L", "GHA": "L", "PAN": "L"};
+    const TEAM_GROUPS = {"A": [{"tla": "CZE", "name": "Czechia", "iso2": "cz"}, {"tla": "MEX", "name": "Mexico", "iso2": "mx"}, {"tla": "RSA", "name": "South Africa", "iso2": "za"}, {"tla": "KOR", "name": "South Korea", "iso2": "kr"}], "B": [{"tla": "BIH", "name": "Bosnia-Herzegovina", "iso2": "ba"}, {"tla": "CAN", "name": "Canada", "iso2": "ca"}, {"tla": "QAT", "name": "Qatar", "iso2": "qa"}, {"tla": "SUI", "name": "Switzerland", "iso2": "ch"}], "C": [{"tla": "BRA", "name": "Brazil", "iso2": "br"}, {"tla": "HAI", "name": "Haiti", "iso2": "ht"}, {"tla": "MAR", "name": "Morocco", "iso2": "ma"}, {"tla": "SCO", "name": "Scotland", "iso2": "gb-sct"}], "D": [{"tla": "AUS", "name": "Australia", "iso2": "au"}, {"tla": "PAR", "name": "Paraguay", "iso2": "py"}, {"tla": "TUR", "name": "Turkey", "iso2": "tr"}, {"tla": "USA", "name": "United States", "iso2": "us"}], "E": [{"tla": "CUW", "name": "Curaçao", "iso2": "cw"}, {"tla": "ECU", "name": "Ecuador", "iso2": "ec"}, {"tla": "GER", "name": "Germany", "iso2": "de"}, {"tla": "CIV", "name": "Ivory Coast", "iso2": "ci"}], "F": [{"tla": "JPN", "name": "Japan", "iso2": "jp"}, {"tla": "NED", "name": "Netherlands", "iso2": "nl"}, {"tla": "SWE", "name": "Sweden", "iso2": "se"}, {"tla": "TUN", "name": "Tunisia", "iso2": "tn"}], "G": [{"tla": "BEL", "name": "Belgium", "iso2": "be"}, {"tla": "EGY", "name": "Egypt", "iso2": "eg"}, {"tla": "IRN", "name": "Iran", "iso2": "ir"}, {"tla": "NZL", "name": "New Zealand", "iso2": "nz"}], "H": [{"tla": "CPV", "name": "Cape Verde Islands", "iso2": "cv"}, {"tla": "KSA", "name": "Saudi Arabia", "iso2": "sa"}, {"tla": "ESP", "name": "Spain", "iso2": "es"}, {"tla": "URU", "name": "Uruguay", "iso2": "uy"}], "I": [{"tla": "FRA", "name": "France", "iso2": "fr"}, {"tla": "IRQ", "name": "Iraq", "iso2": "iq"}, {"tla": "NOR", "name": "Norway", "iso2": "no"}, {"tla": "SEN", "name": "Senegal", "iso2": "sn"}], "J": [{"tla": "ALG", "name": "Algeria", "iso2": "dz"}, {"tla": "ARG", "name": "Argentina", "iso2": "ar"}, {"tla": "AUT", "name": "Austria", "iso2": "at"}, {"tla": "JOR", "name": "Jordan", "iso2": "jo"}], "K": [{"tla": "COL", "name": "Colombia", "iso2": "co"}, {"tla": "COD", "name": "Congo DR", "iso2": "cd"}, {"tla": "POR", "name": "Portugal", "iso2": "pt"}, {"tla": "UZB", "name": "Uzbekistan", "iso2": "uz"}], "L": [{"tla": "CRO", "name": "Croatia", "iso2": "hr"}, {"tla": "ENG", "name": "England", "iso2": "gb-eng"}, {"tla": "GHA", "name": "Ghana", "iso2": "gh"}, {"tla": "PAN", "name": "Panama", "iso2": "pa"}]};
+
     function flagImg(tla, w) {
       w = w || 20;
       const code = _FLAG_CODES[tla];
@@ -1477,9 +1467,7 @@
       const grid = document.getElementById('readiness-grid');
       grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-16 gap-3"><div class="spinner"></div><p class="text-slate-400 text-sm">Computing readiness scores…</p></div>`;
       try {
-        const url = _GROUP_I.has(currentTeam)
-          ? `${API}/readiness/wc-team/${currentTeam}`
-          : `${API}/readiness/team/${currentTeam}?day_number=${currentDay}`;
+        const url = `${API}/readiness/wc-team/${currentTeam}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`API ${res.status}`);
         const data = await res.json();
@@ -1516,18 +1504,21 @@
     /* ── CONTROLS ─────────────────────────────────────────────────*/
     function selectTeam(code) {
       currentTeam = code;
+      // Ensure the team's group is the one rendered, then highlight its tab.
+      const grp = TEAM_GROUP[code];
+      if (grp && grp !== currentGroup) renderTeamSelector(grp);
       document.querySelectorAll('.team-tab').forEach(b => {
         b.classList.remove('tab-active','text-white');
         b.classList.add('text-slate-600');
       });
       const btn = document.getElementById(`tab-${code}`);
-      btn.classList.add('tab-active');
-      btn.classList.remove('text-slate-600');
+      if (btn) { btn.classList.add('tab-active'); btn.classList.remove('text-slate-600'); }
       const sub = document.getElementById('header-subtitle');
-      if (sub) sub.textContent = `FIFA World Cup 2026 · Group ${_GROUP_I.has(code) ? 'I' : 'C'}`;
+      if (sub) sub.textContent = `FIFA World Cup 2026 · Group ${TEAM_GROUP[code] || '?'}`;
       _populateLiveFixtures(code);
       _populatePrematchFixtures(code);
-      if (currentView === 'scout') loadScoutMatches(code);
+      if (currentView === 'bracket') switchView('injury');   // leaving a stage → team view
+      else if (currentView === 'scout') loadScoutMatches(code);
       else loadCurrent();
     }
 
@@ -1544,13 +1535,77 @@
       document.getElementById('view-scout-content').classList.toggle('hidden',       view !== 'scout');
       document.getElementById('view-profiles-content').classList.toggle('hidden',    view !== 'profiles');
       document.getElementById('view-compare-content').classList.toggle('hidden',     view !== 'compare');
+      document.getElementById('view-bracket-content').classList.toggle('hidden',     view !== 'bracket');
 
       if (view === 'live') { loadLive(); startLivePolling(); }
       else if (view === 'predictions') { stopLivePolling(); if (_currentPrematchId) loadPrematch(_currentPrematchId); }
       else if (view === 'scout') { stopLivePolling(); loadScoutMatches(currentTeam); }
       else if (view === 'profiles') { stopLivePolling(); loadSquadProfiles(document.getElementById('profile-team-select').value || currentTeam); }
       else if (view === 'compare') { stopLivePolling(); initCompareFixtures(currentTeam); loadCompare(); }
+      else if (view === 'bracket') { stopLivePolling(); renderBracket(currentStage); }
       else { stopLivePolling(); if (view !== 'log') loadCurrent(); }
+    }
+
+    /* ── TEAM SELECTOR (48 teams · groups A–L) ────────────────────*/
+    let currentGroup = TEAM_GROUP['BRA'] || 'A';
+    let currentStage = null;   // null = a group is selected; otherwise a knockout stage key
+
+    // Knockout stages shown in the nav bar (in bracket order)
+    const _NAV_STAGES = ['LAST_32','LAST_16','QUARTER_FINALS','SEMI_FINALS','THIRD_PLACE','FINAL'];
+    const _STAGE_SHORT = {
+      LAST_32:'R32', LAST_16:'R16', QUARTER_FINALS:'QF',
+      SEMI_FINALS:'SF', THIRD_PLACE:'3rd', FINAL:'🏆 Final',
+    };
+
+    function renderGroupPicker() {
+      const el = document.getElementById('group-picker');
+      if (!el) return;
+      const groupPills = Object.keys(TEAM_GROUPS).sort().map(g => `
+        <button onclick="selectGroup('${g}')" id="grp-${g}"
+          class="grp-pill px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${(!currentStage && g===currentGroup)?'tab-active':'text-slate-500'}"
+          style="border:1px solid var(--border);background:rgba(255,255,255,0.03);">${g}</button>`).join('');
+      const stagePills = _NAV_STAGES.map(s => `
+        <button onclick="selectStage('${s}')" id="stage-${s}"
+          class="stage-pill px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${s===currentStage?'tab-active':'text-slate-500'}"
+          style="border:1px solid var(--border);background:rgba(29,185,84,0.07);">${_STAGE_SHORT[s]}</button>`).join('');
+      el.innerHTML =
+        `<span class="text-xs font-bold mr-1" style="color:var(--muted);">GROUPS</span>${groupPills}` +
+        `<span class="mx-1.5" style="width:1px;height:22px;background:var(--border);display:inline-block;"></span>` +
+        `<span class="text-xs font-bold mr-1" style="color:var(--muted);">KNOCKOUT</span>${stagePills}`;
+    }
+
+    function renderTeamSelector(group) {
+      currentGroup = group;
+      const el = document.getElementById('team-selector');
+      if (!el) return;
+      const teams = TEAM_GROUPS[group] || [];
+      el.innerHTML = teams.map(t => `
+        <button onclick="selectTeam('${t.tla}')" id="tab-${t.tla}"
+          class="team-tab ${t.tla===currentTeam?'tab-active':'text-slate-600'} flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm transition-all hover:bg-white"
+          style="border:1px solid var(--border);">
+          <img src="https://flagcdn.com/w20/${t.iso2}.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>${t.name}</span>
+        </button>`).join('');
+      document.querySelectorAll('.grp-pill').forEach(b => b.classList.toggle('tab-active', b.id === `grp-${group}`));
+    }
+
+    function selectGroup(g) {
+      currentStage = null;
+      renderGroupPicker();
+      renderTeamSelector(g);
+      const first = (TEAM_GROUPS[g] || [])[0];
+      if (first) selectTeam(first.tla);
+    }
+
+    function selectStage(stage) {
+      currentStage = stage;
+      renderGroupPicker();
+      switchView('bracket');   // bracket branch renders renderBracket(currentStage)
+    }
+
+    function viewFullBracket() {
+      currentStage = null;
+      renderGroupPicker();
+      switchView('bracket');
     }
 
     /* ── LOG METRICS ──────────────────────────────────────────────*/
@@ -1596,7 +1651,7 @@
     function onFormTeamChange() {
       const code = document.getElementById('f-team').value;
       const warn = document.getElementById('group-i-warning');
-      if (warn) warn.classList.toggle('hidden', !_GROUP_I.has(code));
+      if (warn) warn.classList.add('hidden');
       // Reset baseline banner when team changes
       const banner = document.getElementById('log-baseline-banner');
       if (banner) banner.classList.add('hidden');
@@ -2074,22 +2129,8 @@
     function toggleGameState() {}  /* legacy stub */
 
     /* ── PREMATCH PREDICTION ──────────────────────────────────────────*/
-    const PM_FIXTURES = [
-      // Group C — real BSD Bzzoiro schedule
-      { match_id:'2026-06-13_BRA_MAR', home:'BRA', away:'MAR', date:'2026-06-13', group:'C' },
-      { match_id:'2026-06-14_HAI_SCO', home:'HAI', away:'SCO', date:'2026-06-14', group:'C' },
-      { match_id:'2026-06-19_SCO_MAR', home:'SCO', away:'MAR', date:'2026-06-19', group:'C' },
-      { match_id:'2026-06-20_BRA_HAI', home:'BRA', away:'HAI', date:'2026-06-20', group:'C' },
-      { match_id:'2026-06-24_MAR_HAI', home:'MAR', away:'HAI', date:'2026-06-24', group:'C' },
-      { match_id:'2026-06-24_SCO_BRA', home:'SCO', away:'BRA', date:'2026-06-24', group:'C' },
-      // Group I — real BSD Bzzoiro schedule
-      { match_id:'2026-06-16_FRA_SEN', home:'FRA', away:'SEN', date:'2026-06-16', group:'I' },
-      { match_id:'2026-06-16_IRQ_NOR', home:'IRQ', away:'NOR', date:'2026-06-16', group:'I' },
-      { match_id:'2026-06-22_FRA_IRQ', home:'FRA', away:'IRQ', date:'2026-06-22', group:'I' },
-      { match_id:'2026-06-23_NOR_SEN', home:'NOR', away:'SEN', date:'2026-06-23', group:'I' },
-      { match_id:'2026-06-26_NOR_FRA', home:'NOR', away:'FRA', date:'2026-06-26', group:'I' },
-      { match_id:'2026-06-26_SEN_IRQ', home:'SEN', away:'IRQ', date:'2026-06-26', group:'I' },
-    ];
+    const PM_FIXTURES = [{"match_id": "2026-06-11_MEX_RSA", "home": "MEX", "away": "RSA", "date": "2026-06-11", "group": "A", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-12_CAN_BIH", "home": "CAN", "away": "BIH", "date": "2026-06-12", "group": "B", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-12_KOR_CZE", "home": "KOR", "away": "CZE", "date": "2026-06-12", "group": "A", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-13_BRA_MAR", "home": "BRA", "away": "MAR", "date": "2026-06-13", "group": "C", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-13_QAT_SUI", "home": "QAT", "away": "SUI", "date": "2026-06-13", "group": "B", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-13_USA_PAR", "home": "USA", "away": "PAR", "date": "2026-06-13", "group": "D", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 4, "as": 1}, {"match_id": "2026-06-14_AUS_TUR", "home": "AUS", "away": "TUR", "date": "2026-06-14", "group": "D", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-14_CIV_ECU", "home": "CIV", "away": "ECU", "date": "2026-06-14", "group": "E", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-14_GER_CUW", "home": "GER", "away": "CUW", "date": "2026-06-14", "group": "E", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 7, "as": 1}, {"match_id": "2026-06-14_HAI_SCO", "home": "HAI", "away": "SCO", "date": "2026-06-14", "group": "C", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-14_NED_JPN", "home": "NED", "away": "JPN", "date": "2026-06-14", "group": "F", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 2}, {"match_id": "2026-06-15_BEL_EGY", "home": "BEL", "away": "EGY", "date": "2026-06-15", "group": "G", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-15_ESP_CPV", "home": "ESP", "away": "CPV", "date": "2026-06-15", "group": "H", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-15_KSA_URU", "home": "KSA", "away": "URU", "date": "2026-06-15", "group": "H", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-15_SWE_TUN", "home": "SWE", "away": "TUN", "date": "2026-06-15", "group": "F", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 5, "as": 1}, {"match_id": "2026-06-16_FRA_SEN", "home": "FRA", "away": "SEN", "date": "2026-06-16", "group": "I", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-16_IRN_NZL", "home": "IRN", "away": "NZL", "date": "2026-06-16", "group": "G", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 2}, {"match_id": "2026-06-16_IRQ_NOR", "home": "IRQ", "away": "NOR", "date": "2026-06-16", "group": "I", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 4}, {"match_id": "2026-06-17_ARG_ALG", "home": "ARG", "away": "ALG", "date": "2026-06-17", "group": "J", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 0}, {"match_id": "2026-06-17_AUT_JOR", "home": "AUT", "away": "JOR", "date": "2026-06-17", "group": "J", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-17_ENG_CRO", "home": "ENG", "away": "CRO", "date": "2026-06-17", "group": "L", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 4, "as": 2}, {"match_id": "2026-06-17_GHA_PAN", "home": "GHA", "away": "PAN", "date": "2026-06-17", "group": "L", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-17_POR_COD", "home": "POR", "away": "COD", "date": "2026-06-17", "group": "K", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-18_CAN_QAT", "home": "CAN", "away": "QAT", "date": "2026-06-18", "group": "B", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 6, "as": 0}, {"match_id": "2026-06-18_CZE_RSA", "home": "CZE", "away": "RSA", "date": "2026-06-18", "group": "A", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-18_SUI_BIH", "home": "SUI", "away": "BIH", "date": "2026-06-18", "group": "B", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 4, "as": 1}, {"match_id": "2026-06-18_UZB_COL", "home": "UZB", "away": "COL", "date": "2026-06-18", "group": "K", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-19_MEX_KOR", "home": "MEX", "away": "KOR", "date": "2026-06-19", "group": "A", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-19_SCO_MAR", "home": "SCO", "away": "MAR", "date": "2026-06-19", "group": "C", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-19_USA_AUS", "home": "USA", "away": "AUS", "date": "2026-06-19", "group": "D", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-20_BRA_HAI", "home": "BRA", "away": "HAI", "date": "2026-06-20", "group": "C", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 0}, {"match_id": "2026-06-20_GER_CIV", "home": "GER", "away": "CIV", "date": "2026-06-20", "group": "E", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-20_NED_SWE", "home": "NED", "away": "SWE", "date": "2026-06-20", "group": "F", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 5, "as": 1}, {"match_id": "2026-06-20_TUR_PAR", "home": "TUR", "away": "PAR", "date": "2026-06-20", "group": "D", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-21_BEL_IRN", "home": "BEL", "away": "IRN", "date": "2026-06-21", "group": "G", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-21_ECU_CUW", "home": "ECU", "away": "CUW", "date": "2026-06-21", "group": "E", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-21_ESP_KSA", "home": "ESP", "away": "KSA", "date": "2026-06-21", "group": "H", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 4, "as": 0}, {"match_id": "2026-06-21_TUN_JPN", "home": "TUN", "away": "JPN", "date": "2026-06-21", "group": "F", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 4}, {"match_id": "2026-06-21_URU_CPV", "home": "URU", "away": "CPV", "date": "2026-06-21", "group": "H", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 2}, {"match_id": "2026-06-22_ARG_AUT", "home": "ARG", "away": "AUT", "date": "2026-06-22", "group": "J", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-22_FRA_IRQ", "home": "FRA", "away": "IRQ", "date": "2026-06-22", "group": "I", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 0}, {"match_id": "2026-06-22_NZL_EGY", "home": "NZL", "away": "EGY", "date": "2026-06-22", "group": "G", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-23_ENG_GHA", "home": "ENG", "away": "GHA", "date": "2026-06-23", "group": "L", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-23_JOR_ALG", "home": "JOR", "away": "ALG", "date": "2026-06-23", "group": "J", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 2}, {"match_id": "2026-06-23_NOR_SEN", "home": "NOR", "away": "SEN", "date": "2026-06-23", "group": "I", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 2}, {"match_id": "2026-06-23_PAN_CRO", "home": "PAN", "away": "CRO", "date": "2026-06-23", "group": "L", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-23_POR_UZB", "home": "POR", "away": "UZB", "date": "2026-06-23", "group": "K", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 5, "as": 0}, {"match_id": "2026-06-24_BIH_QAT", "home": "BIH", "away": "QAT", "date": "2026-06-24", "group": "B", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-24_COL_COD", "home": "COL", "away": "COD", "date": "2026-06-24", "group": "K", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-24_MAR_HAI", "home": "MAR", "away": "HAI", "date": "2026-06-24", "group": "C", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 4, "as": 2}, {"match_id": "2026-06-24_SCO_BRA", "home": "SCO", "away": "BRA", "date": "2026-06-24", "group": "C", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 3}, {"match_id": "2026-06-24_SUI_CAN", "home": "SUI", "away": "CAN", "date": "2026-06-24", "group": "B", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-25_CUW_CIV", "home": "CUW", "away": "CIV", "date": "2026-06-25", "group": "E", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 2}, {"match_id": "2026-06-25_CZE_MEX", "home": "CZE", "away": "MEX", "date": "2026-06-25", "group": "A", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 3}, {"match_id": "2026-06-25_ECU_GER", "home": "ECU", "away": "GER", "date": "2026-06-25", "group": "E", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-25_JPN_SWE", "home": "JPN", "away": "SWE", "date": "2026-06-25", "group": "F", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-25_RSA_KOR", "home": "RSA", "away": "KOR", "date": "2026-06-25", "group": "A", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-25_TUN_NED", "home": "TUN", "away": "NED", "date": "2026-06-25", "group": "F", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-26_NOR_FRA", "home": "NOR", "away": "FRA", "date": "2026-06-26", "group": "I", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 4}, {"match_id": "2026-06-26_PAR_AUS", "home": "PAR", "away": "AUS", "date": "2026-06-26", "group": "D", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-26_SEN_IRQ", "home": "SEN", "away": "IRQ", "date": "2026-06-26", "group": "I", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 5, "as": 0}, {"match_id": "2026-06-26_TUR_USA", "home": "TUR", "away": "USA", "date": "2026-06-26", "group": "D", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 2}, {"match_id": "2026-06-27_COD_UZB", "home": "COD", "away": "UZB", "date": "2026-06-27", "group": "K", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-27_COL_POR", "home": "COL", "away": "POR", "date": "2026-06-27", "group": "K", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-27_CPV_KSA", "home": "CPV", "away": "KSA", "date": "2026-06-27", "group": "H", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-27_CRO_GHA", "home": "CRO", "away": "GHA", "date": "2026-06-27", "group": "L", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-27_EGY_IRN", "home": "EGY", "away": "IRN", "date": "2026-06-27", "group": "G", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-27_NZL_BEL", "home": "NZL", "away": "BEL", "date": "2026-06-27", "group": "G", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 5}, {"match_id": "2026-06-27_PAN_ENG", "home": "PAN", "away": "ENG", "date": "2026-06-27", "group": "L", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 2}, {"match_id": "2026-06-27_URU_ESP", "home": "URU", "away": "ESP", "date": "2026-06-27", "group": "H", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-28_ALG_AUT", "home": "ALG", "away": "AUT", "date": "2026-06-28", "group": "J", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 3, "as": 3}, {"match_id": "2026-06-28_JOR_ARG", "home": "JOR", "away": "ARG", "date": "2026-06-28", "group": "J", "stage": "GROUP_STAGE", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-28_RSA_CAN", "home": "RSA", "away": "CAN", "date": "2026-06-28", "group": null, "stage": "LAST_32", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-29_BRA_JPN", "home": "BRA", "away": "JPN", "date": "2026-06-29", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-29_GER_PAR", "home": "GER", "away": "PAR", "date": "2026-06-29", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-30_CIV_NOR", "home": "CIV", "away": "NOR", "date": "2026-06-30", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-30_FRA_SWE", "home": "FRA", "away": "SWE", "date": "2026-06-30", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-30_NED_MAR", "home": "NED", "away": "MAR", "date": "2026-06-30", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-01_BEL_SEN", "home": "BEL", "away": "SEN", "date": "2026-07-01", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-01_ENG_COD", "home": "ENG", "away": "COD", "date": "2026-07-01", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-01_MEX_ECU", "home": "MEX", "away": "ECU", "date": "2026-07-01", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-02_ESP_AUT", "home": "ESP", "away": "AUT", "date": "2026-07-02", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-02_POR_CRO", "home": "POR", "away": "CRO", "date": "2026-07-02", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-02_USA_BIH", "home": "USA", "away": "BIH", "date": "2026-07-02", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-03_ARG_CPV", "home": "ARG", "away": "CPV", "date": "2026-07-03", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-03_AUS_EGY", "home": "AUS", "away": "EGY", "date": "2026-07-03", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-03_SUI_ALG", "home": "SUI", "away": "ALG", "date": "2026-07-03", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-04_COL_GHA", "home": "COL", "away": "GHA", "date": "2026-07-04", "group": null, "stage": "LAST_32", "status": "TIMED", "hs": null, "as": null}];
+    const WC_ALL_FIXTURES = [{"match_id": "2026-06-11_MEX_RSA", "home": "MEX", "away": "RSA", "home_name": "Mexico", "away_name": "South Africa", "date": "2026-06-11", "stage": "GROUP_STAGE", "group": "A", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-12_KOR_CZE", "home": "KOR", "away": "CZE", "home_name": "South Korea", "away_name": "Czechia", "date": "2026-06-12", "stage": "GROUP_STAGE", "group": "A", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-12_CAN_BIH", "home": "CAN", "away": "BIH", "home_name": "Canada", "away_name": "Bosnia-Herzegovina", "date": "2026-06-12", "stage": "GROUP_STAGE", "group": "B", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-13_USA_PAR", "home": "USA", "away": "PAR", "home_name": "United States", "away_name": "Paraguay", "date": "2026-06-13", "stage": "GROUP_STAGE", "group": "D", "status": "FINISHED", "hs": 4, "as": 1}, {"match_id": "2026-06-13_QAT_SUI", "home": "QAT", "away": "SUI", "home_name": "Qatar", "away_name": "Switzerland", "date": "2026-06-13", "stage": "GROUP_STAGE", "group": "B", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-13_BRA_MAR", "home": "BRA", "away": "MAR", "home_name": "Brazil", "away_name": "Morocco", "date": "2026-06-13", "stage": "GROUP_STAGE", "group": "C", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-14_HAI_SCO", "home": "HAI", "away": "SCO", "home_name": "Haiti", "away_name": "Scotland", "date": "2026-06-14", "stage": "GROUP_STAGE", "group": "C", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-14_AUS_TUR", "home": "AUS", "away": "TUR", "home_name": "Australia", "away_name": "Turkey", "date": "2026-06-14", "stage": "GROUP_STAGE", "group": "D", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-14_GER_CUW", "home": "GER", "away": "CUW", "home_name": "Germany", "away_name": "Curaçao", "date": "2026-06-14", "stage": "GROUP_STAGE", "group": "E", "status": "FINISHED", "hs": 7, "as": 1}, {"match_id": "2026-06-14_NED_JPN", "home": "NED", "away": "JPN", "home_name": "Netherlands", "away_name": "Japan", "date": "2026-06-14", "stage": "GROUP_STAGE", "group": "F", "status": "FINISHED", "hs": 2, "as": 2}, {"match_id": "2026-06-14_CIV_ECU", "home": "CIV", "away": "ECU", "home_name": "Ivory Coast", "away_name": "Ecuador", "date": "2026-06-14", "stage": "GROUP_STAGE", "group": "E", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-15_SWE_TUN", "home": "SWE", "away": "TUN", "home_name": "Sweden", "away_name": "Tunisia", "date": "2026-06-15", "stage": "GROUP_STAGE", "group": "F", "status": "FINISHED", "hs": 5, "as": 1}, {"match_id": "2026-06-15_ESP_CPV", "home": "ESP", "away": "CPV", "home_name": "Spain", "away_name": "Cape Verde Islands", "date": "2026-06-15", "stage": "GROUP_STAGE", "group": "H", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-15_BEL_EGY", "home": "BEL", "away": "EGY", "home_name": "Belgium", "away_name": "Egypt", "date": "2026-06-15", "stage": "GROUP_STAGE", "group": "G", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-15_KSA_URU", "home": "KSA", "away": "URU", "home_name": "Saudi Arabia", "away_name": "Uruguay", "date": "2026-06-15", "stage": "GROUP_STAGE", "group": "H", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-16_IRN_NZL", "home": "IRN", "away": "NZL", "home_name": "Iran", "away_name": "New Zealand", "date": "2026-06-16", "stage": "GROUP_STAGE", "group": "G", "status": "FINISHED", "hs": 2, "as": 2}, {"match_id": "2026-06-16_FRA_SEN", "home": "FRA", "away": "SEN", "home_name": "France", "away_name": "Senegal", "date": "2026-06-16", "stage": "GROUP_STAGE", "group": "I", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-16_IRQ_NOR", "home": "IRQ", "away": "NOR", "home_name": "Iraq", "away_name": "Norway", "date": "2026-06-16", "stage": "GROUP_STAGE", "group": "I", "status": "FINISHED", "hs": 1, "as": 4}, {"match_id": "2026-06-17_ARG_ALG", "home": "ARG", "away": "ALG", "home_name": "Argentina", "away_name": "Algeria", "date": "2026-06-17", "stage": "GROUP_STAGE", "group": "J", "status": "FINISHED", "hs": 3, "as": 0}, {"match_id": "2026-06-17_AUT_JOR", "home": "AUT", "away": "JOR", "home_name": "Austria", "away_name": "Jordan", "date": "2026-06-17", "stage": "GROUP_STAGE", "group": "J", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-17_POR_COD", "home": "POR", "away": "COD", "home_name": "Portugal", "away_name": "Congo DR", "date": "2026-06-17", "stage": "GROUP_STAGE", "group": "K", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-17_ENG_CRO", "home": "ENG", "away": "CRO", "home_name": "England", "away_name": "Croatia", "date": "2026-06-17", "stage": "GROUP_STAGE", "group": "L", "status": "FINISHED", "hs": 4, "as": 2}, {"match_id": "2026-06-17_GHA_PAN", "home": "GHA", "away": "PAN", "home_name": "Ghana", "away_name": "Panama", "date": "2026-06-17", "stage": "GROUP_STAGE", "group": "L", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-18_UZB_COL", "home": "UZB", "away": "COL", "home_name": "Uzbekistan", "away_name": "Colombia", "date": "2026-06-18", "stage": "GROUP_STAGE", "group": "K", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-18_CZE_RSA", "home": "CZE", "away": "RSA", "home_name": "Czechia", "away_name": "South Africa", "date": "2026-06-18", "stage": "GROUP_STAGE", "group": "A", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-18_SUI_BIH", "home": "SUI", "away": "BIH", "home_name": "Switzerland", "away_name": "Bosnia-Herzegovina", "date": "2026-06-18", "stage": "GROUP_STAGE", "group": "B", "status": "FINISHED", "hs": 4, "as": 1}, {"match_id": "2026-06-18_CAN_QAT", "home": "CAN", "away": "QAT", "home_name": "Canada", "away_name": "Qatar", "date": "2026-06-18", "stage": "GROUP_STAGE", "group": "B", "status": "FINISHED", "hs": 6, "as": 0}, {"match_id": "2026-06-19_MEX_KOR", "home": "MEX", "away": "KOR", "home_name": "Mexico", "away_name": "South Korea", "date": "2026-06-19", "stage": "GROUP_STAGE", "group": "A", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-19_USA_AUS", "home": "USA", "away": "AUS", "home_name": "United States", "away_name": "Australia", "date": "2026-06-19", "stage": "GROUP_STAGE", "group": "D", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-19_SCO_MAR", "home": "SCO", "away": "MAR", "home_name": "Scotland", "away_name": "Morocco", "date": "2026-06-19", "stage": "GROUP_STAGE", "group": "C", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-20_BRA_HAI", "home": "BRA", "away": "HAI", "home_name": "Brazil", "away_name": "Haiti", "date": "2026-06-20", "stage": "GROUP_STAGE", "group": "C", "status": "FINISHED", "hs": 3, "as": 0}, {"match_id": "2026-06-20_TUR_PAR", "home": "TUR", "away": "PAR", "home_name": "Turkey", "away_name": "Paraguay", "date": "2026-06-20", "stage": "GROUP_STAGE", "group": "D", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-20_NED_SWE", "home": "NED", "away": "SWE", "home_name": "Netherlands", "away_name": "Sweden", "date": "2026-06-20", "stage": "GROUP_STAGE", "group": "F", "status": "FINISHED", "hs": 5, "as": 1}, {"match_id": "2026-06-20_GER_CIV", "home": "GER", "away": "CIV", "home_name": "Germany", "away_name": "Ivory Coast", "date": "2026-06-20", "stage": "GROUP_STAGE", "group": "E", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-21_ECU_CUW", "home": "ECU", "away": "CUW", "home_name": "Ecuador", "away_name": "Curaçao", "date": "2026-06-21", "stage": "GROUP_STAGE", "group": "E", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-21_TUN_JPN", "home": "TUN", "away": "JPN", "home_name": "Tunisia", "away_name": "Japan", "date": "2026-06-21", "stage": "GROUP_STAGE", "group": "F", "status": "FINISHED", "hs": 0, "as": 4}, {"match_id": "2026-06-21_ESP_KSA", "home": "ESP", "away": "KSA", "home_name": "Spain", "away_name": "Saudi Arabia", "date": "2026-06-21", "stage": "GROUP_STAGE", "group": "H", "status": "FINISHED", "hs": 4, "as": 0}, {"match_id": "2026-06-21_BEL_IRN", "home": "BEL", "away": "IRN", "home_name": "Belgium", "away_name": "Iran", "date": "2026-06-21", "stage": "GROUP_STAGE", "group": "G", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-21_URU_CPV", "home": "URU", "away": "CPV", "home_name": "Uruguay", "away_name": "Cape Verde Islands", "date": "2026-06-21", "stage": "GROUP_STAGE", "group": "H", "status": "FINISHED", "hs": 2, "as": 2}, {"match_id": "2026-06-22_NZL_EGY", "home": "NZL", "away": "EGY", "home_name": "New Zealand", "away_name": "Egypt", "date": "2026-06-22", "stage": "GROUP_STAGE", "group": "G", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-22_ARG_AUT", "home": "ARG", "away": "AUT", "home_name": "Argentina", "away_name": "Austria", "date": "2026-06-22", "stage": "GROUP_STAGE", "group": "J", "status": "FINISHED", "hs": 2, "as": 0}, {"match_id": "2026-06-22_FRA_IRQ", "home": "FRA", "away": "IRQ", "home_name": "France", "away_name": "Iraq", "date": "2026-06-22", "stage": "GROUP_STAGE", "group": "I", "status": "FINISHED", "hs": 3, "as": 0}, {"match_id": "2026-06-23_NOR_SEN", "home": "NOR", "away": "SEN", "home_name": "Norway", "away_name": "Senegal", "date": "2026-06-23", "stage": "GROUP_STAGE", "group": "I", "status": "FINISHED", "hs": 3, "as": 2}, {"match_id": "2026-06-23_JOR_ALG", "home": "JOR", "away": "ALG", "home_name": "Jordan", "away_name": "Algeria", "date": "2026-06-23", "stage": "GROUP_STAGE", "group": "J", "status": "FINISHED", "hs": 1, "as": 2}, {"match_id": "2026-06-23_POR_UZB", "home": "POR", "away": "UZB", "home_name": "Portugal", "away_name": "Uzbekistan", "date": "2026-06-23", "stage": "GROUP_STAGE", "group": "K", "status": "FINISHED", "hs": 5, "as": 0}, {"match_id": "2026-06-23_ENG_GHA", "home": "ENG", "away": "GHA", "home_name": "England", "away_name": "Ghana", "date": "2026-06-23", "stage": "GROUP_STAGE", "group": "L", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-23_PAN_CRO", "home": "PAN", "away": "CRO", "home_name": "Panama", "away_name": "Croatia", "date": "2026-06-23", "stage": "GROUP_STAGE", "group": "L", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-24_COL_COD", "home": "COL", "away": "COD", "home_name": "Colombia", "away_name": "Congo DR", "date": "2026-06-24", "stage": "GROUP_STAGE", "group": "K", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-24_SUI_CAN", "home": "SUI", "away": "CAN", "home_name": "Switzerland", "away_name": "Canada", "date": "2026-06-24", "stage": "GROUP_STAGE", "group": "B", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-24_BIH_QAT", "home": "BIH", "away": "QAT", "home_name": "Bosnia-Herzegovina", "away_name": "Qatar", "date": "2026-06-24", "stage": "GROUP_STAGE", "group": "B", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-24_MAR_HAI", "home": "MAR", "away": "HAI", "home_name": "Morocco", "away_name": "Haiti", "date": "2026-06-24", "stage": "GROUP_STAGE", "group": "C", "status": "FINISHED", "hs": 4, "as": 2}, {"match_id": "2026-06-24_SCO_BRA", "home": "SCO", "away": "BRA", "home_name": "Scotland", "away_name": "Brazil", "date": "2026-06-24", "stage": "GROUP_STAGE", "group": "C", "status": "FINISHED", "hs": 0, "as": 3}, {"match_id": "2026-06-25_CZE_MEX", "home": "CZE", "away": "MEX", "home_name": "Czechia", "away_name": "Mexico", "date": "2026-06-25", "stage": "GROUP_STAGE", "group": "A", "status": "FINISHED", "hs": 0, "as": 3}, {"match_id": "2026-06-25_RSA_KOR", "home": "RSA", "away": "KOR", "home_name": "South Africa", "away_name": "South Korea", "date": "2026-06-25", "stage": "GROUP_STAGE", "group": "A", "status": "FINISHED", "hs": 1, "as": 0}, {"match_id": "2026-06-25_ECU_GER", "home": "ECU", "away": "GER", "home_name": "Ecuador", "away_name": "Germany", "date": "2026-06-25", "stage": "GROUP_STAGE", "group": "E", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-25_CUW_CIV", "home": "CUW", "away": "CIV", "home_name": "Curaçao", "away_name": "Ivory Coast", "date": "2026-06-25", "stage": "GROUP_STAGE", "group": "E", "status": "FINISHED", "hs": 0, "as": 2}, {"match_id": "2026-06-25_TUN_NED", "home": "TUN", "away": "NED", "home_name": "Tunisia", "away_name": "Netherlands", "date": "2026-06-25", "stage": "GROUP_STAGE", "group": "F", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-25_JPN_SWE", "home": "JPN", "away": "SWE", "home_name": "Japan", "away_name": "Sweden", "date": "2026-06-25", "stage": "GROUP_STAGE", "group": "F", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-26_TUR_USA", "home": "TUR", "away": "USA", "home_name": "Turkey", "away_name": "United States", "date": "2026-06-26", "stage": "GROUP_STAGE", "group": "D", "status": "FINISHED", "hs": 3, "as": 2}, {"match_id": "2026-06-26_PAR_AUS", "home": "PAR", "away": "AUS", "home_name": "Paraguay", "away_name": "Australia", "date": "2026-06-26", "stage": "GROUP_STAGE", "group": "D", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-26_NOR_FRA", "home": "NOR", "away": "FRA", "home_name": "Norway", "away_name": "France", "date": "2026-06-26", "stage": "GROUP_STAGE", "group": "I", "status": "FINISHED", "hs": 1, "as": 4}, {"match_id": "2026-06-26_SEN_IRQ", "home": "SEN", "away": "IRQ", "home_name": "Senegal", "away_name": "Iraq", "date": "2026-06-26", "stage": "GROUP_STAGE", "group": "I", "status": "FINISHED", "hs": 5, "as": 0}, {"match_id": "2026-06-27_URU_ESP", "home": "URU", "away": "ESP", "home_name": "Uruguay", "away_name": "Spain", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "H", "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-27_CPV_KSA", "home": "CPV", "away": "KSA", "home_name": "Cape Verde Islands", "away_name": "Saudi Arabia", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "H", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-27_NZL_BEL", "home": "NZL", "away": "BEL", "home_name": "New Zealand", "away_name": "Belgium", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "G", "status": "FINISHED", "hs": 1, "as": 5}, {"match_id": "2026-06-27_EGY_IRN", "home": "EGY", "away": "IRN", "home_name": "Egypt", "away_name": "Iran", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "G", "status": "FINISHED", "hs": 1, "as": 1}, {"match_id": "2026-06-27_PAN_ENG", "home": "PAN", "away": "ENG", "home_name": "Panama", "away_name": "England", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "L", "status": "FINISHED", "hs": 0, "as": 2}, {"match_id": "2026-06-27_CRO_GHA", "home": "CRO", "away": "GHA", "home_name": "Croatia", "away_name": "Ghana", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "L", "status": "FINISHED", "hs": 2, "as": 1}, {"match_id": "2026-06-27_COL_POR", "home": "COL", "away": "POR", "home_name": "Colombia", "away_name": "Portugal", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "K", "status": "FINISHED", "hs": 0, "as": 0}, {"match_id": "2026-06-27_COD_UZB", "home": "COD", "away": "UZB", "home_name": "Congo DR", "away_name": "Uzbekistan", "date": "2026-06-27", "stage": "GROUP_STAGE", "group": "K", "status": "FINISHED", "hs": 3, "as": 1}, {"match_id": "2026-06-28_JOR_ARG", "home": "JOR", "away": "ARG", "home_name": "Jordan", "away_name": "Argentina", "date": "2026-06-28", "stage": "GROUP_STAGE", "group": "J", "status": "FINISHED", "hs": 1, "as": 3}, {"match_id": "2026-06-28_ALG_AUT", "home": "ALG", "away": "AUT", "home_name": "Algeria", "away_name": "Austria", "date": "2026-06-28", "stage": "GROUP_STAGE", "group": "J", "status": "FINISHED", "hs": 3, "as": 3}, {"match_id": "2026-06-28_RSA_CAN", "home": "RSA", "away": "CAN", "home_name": "South Africa", "away_name": "Canada", "date": "2026-06-28", "stage": "LAST_32", "group": null, "status": "FINISHED", "hs": 0, "as": 1}, {"match_id": "2026-06-29_BRA_JPN", "home": "BRA", "away": "JPN", "home_name": "Brazil", "away_name": "Japan", "date": "2026-06-29", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-29_GER_PAR", "home": "GER", "away": "PAR", "home_name": "Germany", "away_name": "Paraguay", "date": "2026-06-29", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-30_NED_MAR", "home": "NED", "away": "MAR", "home_name": "Netherlands", "away_name": "Morocco", "date": "2026-06-30", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-30_CIV_NOR", "home": "CIV", "away": "NOR", "home_name": "Ivory Coast", "away_name": "Norway", "date": "2026-06-30", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-06-30_FRA_SWE", "home": "FRA", "away": "SWE", "home_name": "France", "away_name": "Sweden", "date": "2026-06-30", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-01_MEX_ECU", "home": "MEX", "away": "ECU", "home_name": "Mexico", "away_name": "Ecuador", "date": "2026-07-01", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-01_ENG_COD", "home": "ENG", "away": "COD", "home_name": "England", "away_name": "Congo DR", "date": "2026-07-01", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-01_BEL_SEN", "home": "BEL", "away": "SEN", "home_name": "Belgium", "away_name": "Senegal", "date": "2026-07-01", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-02_USA_BIH", "home": "USA", "away": "BIH", "home_name": "United States", "away_name": "Bosnia-Herzegovina", "date": "2026-07-02", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-02_ESP_AUT", "home": "ESP", "away": "AUT", "home_name": "Spain", "away_name": "Austria", "date": "2026-07-02", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-02_POR_CRO", "home": "POR", "away": "CRO", "home_name": "Portugal", "away_name": "Croatia", "date": "2026-07-02", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-03_SUI_ALG", "home": "SUI", "away": "ALG", "home_name": "Switzerland", "away_name": "Algeria", "date": "2026-07-03", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-03_AUS_EGY", "home": "AUS", "away": "EGY", "home_name": "Australia", "away_name": "Egypt", "date": "2026-07-03", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-03_ARG_CPV", "home": "ARG", "away": "CPV", "home_name": "Argentina", "away_name": "Cape Verde Islands", "date": "2026-07-03", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "2026-07-04_COL_GHA", "home": "COL", "away": "GHA", "home_name": "Colombia", "away_name": "Ghana", "date": "2026-07-04", "stage": "LAST_32", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537376", "home": "CAN", "away": null, "home_name": "Canada", "away_name": null, "date": "2026-07-04", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537375", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-04", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537377", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-05", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537378", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-06", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537379", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-06", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537380", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-07", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537381", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-07", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537382", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-07", "stage": "LAST_16", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537383", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-09", "stage": "QUARTER_FINALS", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537384", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-10", "stage": "QUARTER_FINALS", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537385", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-11", "stage": "QUARTER_FINALS", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537386", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-12", "stage": "QUARTER_FINALS", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537387", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-14", "stage": "SEMI_FINALS", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537388", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-15", "stage": "SEMI_FINALS", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537389", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-18", "stage": "THIRD_PLACE", "group": null, "status": "TIMED", "hs": null, "as": null}, {"match_id": "match_537390", "home": null, "away": null, "home_name": null, "away_name": null, "date": "2026-07-19", "stage": "FINAL", "group": null, "status": "TIMED", "hs": null, "as": null}];
 
     let _currentPrematchId = PM_FIXTURES[0].match_id;
 
@@ -2157,7 +2198,7 @@
         el.innerHTML = `
         <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl overflow-hidden border border-slate-700/50">
           <div class="px-4 pt-3 pb-1 flex items-center justify-between">
-            <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Next Match · Group ${fixture.group}</span>
+            <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Next Match · ${fixture.group ? 'Group '+fixture.group : (fixture.stage||'').replace(/_/g,' ')}</span>
             <span class="text-xs text-slate-500">${fixture.date}</span>
           </div>
           <div class="px-4 pb-4">
@@ -3076,12 +3117,15 @@
         defaultId = (nxt || PM_FIXTURES[0]).match_id;
       }
 
-      // Build grouped options
+      // Build grouped options (group stage by group A–L, knockout by stage)
       const groups = {};
-      PM_FIXTURES.forEach(f => { (groups[f.group] = groups[f.group] || []).push(f); });
+      PM_FIXTURES.forEach(f => {
+        const key = f.group ? `Group ${f.group}` : (f.stage||'').replace(/_/g,' ');
+        (groups[key] = groups[key] || []).push(f);
+      });
       Object.entries(groups).forEach(([grp, fixtures]) => {
         const og = document.createElement('optgroup');
-        og.label = `Group ${grp}`;
+        og.label = grp;
         fixtures.forEach(f => {
           const opt = document.createElement('option');
           opt.value = f.match_id;
@@ -3312,9 +3356,88 @@
         </p>`;
     }
 
+    /* ── KNOCKOUT BRACKET ─────────────────────────────────────────*/
+    const _STAGE_ORDER = ['LAST_32','LAST_16','QUARTER_FINALS','SEMI_FINALS','THIRD_PLACE','FINAL'];
+    const _STAGE_LABEL = {
+      LAST_32:'Round of 32', LAST_16:'Round of 16', QUARTER_FINALS:'Quarter-finals',
+      SEMI_FINALS:'Semi-finals', THIRD_PLACE:'Third place', FINAL:'Final',
+    };
+
+    function _bracketRow(tla, name, score, isWinner) {
+      const flag = tla ? flagImg(tla, 18) : '';
+      const label = tla ? (NAMES[tla] || tla) : (name || 'TBD');
+      return `<div class="flex items-center justify-between gap-2 ${isWinner?'font-bold':''}" style="color:${tla?'var(--text)':'var(--muted)'}">
+        <span class="flex items-center gap-1.5 truncate">${flag}<span class="truncate">${label}</span></span>
+        <span class="tabular-nums">${score==null?'':score}</span>
+      </div>`;
+    }
+
+    function _bracketCard(m) {
+      const finished = m.status === 'FINISHED' && m.hs != null && m.as != null;
+      const decided  = m.home && m.away;
+      const hWin = finished && m.hs > m.as, aWin = finished && m.as > m.hs;
+      const clickable = decided;
+      const meta = finished ? 'FT' : (m.date || 'TBD');
+      return `<div onclick="${clickable?`openBracketMatch('${m.match_id}')`:''}"
+        class="rounded-lg p-2.5 text-sm ${clickable?'cursor-pointer hover:border-emerald-400':''}"
+        style="background:var(--card);border:1px solid var(--border);min-width:190px;">
+        ${_bracketRow(m.home, m.home_name, finished?m.hs:null, hWin)}
+        ${_bracketRow(m.away, m.away_name, finished?m.as:null, aWin)}
+        <div class="text-[10px] mt-1 text-right" style="color:var(--muted);">${meta}</div>
+      </div>`;
+    }
+
+    function renderBracket(stageFilter) {
+      const cols = document.getElementById('bracket-cols');
+      const hd = document.getElementById('bracket-heading');
+      const byStage = {};
+      WC_ALL_FIXTURES.forEach(m => {
+        if (_STAGE_ORDER.includes(m.stage)) (byStage[m.stage] = byStage[m.stage] || []).push(m);
+      });
+      if (stageFilter) {
+        // Focused single-round view: a wrapping grid of that round's ties.
+        const matches = (byStage[stageFilter] || []).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+        const done = matches.filter(m => m.status === 'FINISHED').length;
+        if (hd) hd.textContent = `🏆 ${_STAGE_LABEL[stageFilter]} — ${matches.length} matches (${done} played)`;
+        cols.classList.remove('min-w-max');
+        cols.innerHTML = `<div class="flex flex-wrap gap-3 w-full">${matches.map(_bracketCard).join('')}</div>`;
+      } else {
+        if (hd) hd.textContent = '🏆 Knockout Bracket — FIFA World Cup 2026';
+        cols.classList.add('min-w-max');
+        cols.innerHTML = _STAGE_ORDER.filter(s => byStage[s]).map(stage => {
+          const matches = byStage[stage].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+          return `<div class="flex flex-col gap-2" style="min-width:200px;">
+            <div class="text-xs font-bold uppercase tracking-wider mb-1" style="color:var(--accent,#1db954);">${_STAGE_LABEL[stage]}</div>
+            ${matches.map(_bracketCard).join('')}
+          </div>`;
+        }).join('');
+      }
+    }
+
+    function openBracketMatch(mid) {
+      _currentPrematchId = mid;
+      switchView('predictions');
+    }
+
+    /* ── Populate 48-team dropdowns (Log Metrics + Profiles) ──────*/
+    function populateTeamDropdown(id) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const cur = sel.value;
+      sel.innerHTML = Object.keys(TEAM_GROUPS).sort().map(g =>
+        `<optgroup label="Group ${g}">` +
+        TEAM_GROUPS[g].map(t => `<option value="${t.tla}">${t.name}</option>`).join('') +
+        `</optgroup>`).join('');
+      if (cur) sel.value = cur;
+    }
+
     /* ── INIT ─────────────────────────────────────────────────────*/
     // Set date input default to today
     document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+    renderGroupPicker();
+    renderTeamSelector(currentGroup);
+    populateTeamDropdown('f-team');
+    populateTeamDropdown('profile-team-select');
     loadInjury();
     loadFormPlayers();
     initPrematchFixtures();

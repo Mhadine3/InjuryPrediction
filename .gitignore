@@ -16,3 +16,15 @@ venv/
 !data/players_baseline.json
 !data/matches/*.json
 !ml/models/model_meta.json
+# WC 2026 full-tournament data + BSD-derived files the app reads at runtime
+# (the VPS builds its image from this checkout, so these must be tracked).
+!data/wc_teams.json
+!data/wc_fixtures.json
+!data/wc_ratings.json
+!data/team_results.json
+!data/player_scoring_stats.json
+!data/latest_wellness.json
+!data/tm_injury_summaries.json
+!data/team_stat_rates.json
+# Local backups stay out of git
+data/players_baseline.backup8.json

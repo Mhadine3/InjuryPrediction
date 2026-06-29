@@ -21,6 +21,10 @@ RUN playwright install --with-deps chromium
 COPY backend/ backend/
 COPY ml/ ml/
 COPY web/ web/
+# Data files (squads, fixtures, ratings) read by the services + seed scripts.
+# The bulky daily_metrics.json is excluded via .dockerignore (CSV suffices to seed).
+COPY scripts/ scripts/
+COPY data/ data/
 
 WORKDIR /app/backend
 

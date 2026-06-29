@@ -1,0 +1,49 @@
+{
+  "source": "unavailable",
+  "reason": "BSD /events/{id}/stats/ exposes attack/dangerous_attack counts but NOT shots-on-target, corners, or fouls at team level. Player-level shots_on_target are aggregated in player_scoring_stats.json.",
+  "corners_available": false,
+  "fouls_available": false,
+  "shots_on_target_available": "player_level_only",
+  "teams": {
+    "BRA": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "MAR": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "HAI": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "SCO": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "FRA": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "SEN": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "IRQ": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    },
+    "NOR": {
+      "shots_on_target": null,
+      "corners": null,
+      "fouls": null
+    }
+  }
+}

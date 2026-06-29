@@ -1,0 +1,1575 @@
+{
+  "fetched_at": "2026-06-13T15:32:03.649148+00:00",
+  "source": "bsd_bzzoiro",
+  "international_avg_goals": 1.35,
+  "teams": {
+    "BRA": {
+      "status": "full",
+      "bsd_team_id": 463,
+      "matches": [
+        {
+          "bsd_event_id": 208278,
+          "league_id": 59,
+          "date": "2025-09-09",
+          "opponent": "Bolivia",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208276,
+          "league_id": 59,
+          "date": "2025-09-05",
+          "opponent": "Chile",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208270,
+          "league_id": 59,
+          "date": "2025-06-11",
+          "opponent": "Paraguay",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208262,
+          "league_id": 59,
+          "date": "2025-06-05",
+          "opponent": "Ecuador",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208258,
+          "league_id": 59,
+          "date": "2025-03-26",
+          "opponent": "Argentina",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 4,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208253,
+          "league_id": 59,
+          "date": "2025-03-21",
+          "opponent": "Colombia",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208251,
+          "league_id": 59,
+          "date": "2024-11-20",
+          "opponent": "Uruguay",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208242,
+          "league_id": 59,
+          "date": "2024-11-14",
+          "opponent": "Venezuela",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208241,
+          "league_id": 59,
+          "date": "2024-10-16",
+          "opponent": "Peru",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208235,
+          "league_id": 59,
+          "date": "2024-10-11",
+          "opponent": "Chile",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208231,
+          "league_id": 59,
+          "date": "2024-09-11",
+          "opponent": "Paraguay",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208225,
+          "league_id": 59,
+          "date": "2024-09-07",
+          "opponent": "Ecuador",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208220,
+          "league_id": 59,
+          "date": "2023-11-22",
+          "opponent": "Argentina",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208215,
+          "league_id": 59,
+          "date": "2023-11-17",
+          "opponent": "Colombia",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208210,
+          "league_id": 59,
+          "date": "2023-10-18",
+          "opponent": "Uruguay",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208206,
+          "league_id": 59,
+          "date": "2023-10-13",
+          "opponent": "Venezuela",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208201,
+          "league_id": 59,
+          "date": "2023-09-13",
+          "opponent": "Peru",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208196,
+          "league_id": 59,
+          "date": "2023-09-09",
+          "opponent": "Bolivia",
+          "venue": "home",
+          "scored": 5,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190292,
+          "league_id": 27,
+          "date": "2022-12-02",
+          "opponent": "Cameroon",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 190290,
+          "league_id": 27,
+          "date": "2022-11-28",
+          "opponent": "Switzerland",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190288,
+          "league_id": 27,
+          "date": "2022-11-24",
+          "opponent": "Serbia",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190231,
+          "league_id": 27,
+          "date": "2018-06-27",
+          "opponent": "Serbia",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190229,
+          "league_id": 27,
+          "date": "2018-06-22",
+          "opponent": "Costa Rica",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190228,
+          "league_id": 27,
+          "date": "2018-06-17",
+          "opponent": "Switzerland",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190159,
+          "league_id": 27,
+          "date": "2014-06-23",
+          "opponent": "Cameroon",
+          "venue": "away",
+          "scored": 4,
+          "conceded": 1,
+          "result": "W"
+        }
+      ],
+      "ratings": {
+        "n_matches": 25,
+        "avg_scored": 1.44,
+        "avg_conceded": 0.8,
+        "stdev_scored": 1.329,
+        "stdev_conceded": 0.894,
+        "attack_rating": 1.0667,
+        "defence_rating": 0.5926
+      },
+      "sources": "league_27:7, league_59:18"
+    },
+    "MAR": {
+      "status": "full",
+      "bsd_team_id": 464,
+      "matches": [
+        {
+          "bsd_event_id": 8995,
+          "league_id": 30,
+          "date": "2026-01-18",
+          "opponent": "Senegal",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 8993,
+          "league_id": 30,
+          "date": "2026-01-14",
+          "opponent": "Nigeria",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 8989,
+          "league_id": 30,
+          "date": "2026-01-09",
+          "opponent": "Cameroon",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8982,
+          "league_id": 30,
+          "date": "2026-01-04",
+          "opponent": "Tanzania",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8971,
+          "league_id": 30,
+          "date": "2025-12-29",
+          "opponent": "Zambia",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8959,
+          "league_id": 30,
+          "date": "2025-12-26",
+          "opponent": "Mali",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 8944,
+          "league_id": 30,
+          "date": "2025-12-21",
+          "opponent": "Comoros",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208512,
+          "league_id": 60,
+          "date": "2025-10-14",
+          "opponent": "Congo Republic",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208447,
+          "league_id": 60,
+          "date": "2025-09-08",
+          "opponent": "Zambia",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208443,
+          "league_id": 60,
+          "date": "2025-09-05",
+          "opponent": "Niger",
+          "venue": "home",
+          "scored": 5,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208422,
+          "league_id": 60,
+          "date": "2025-03-25",
+          "opponent": "Tanzania",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208397,
+          "league_id": 60,
+          "date": "2025-03-21",
+          "opponent": "Niger",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208374,
+          "league_id": 60,
+          "date": "2024-06-11",
+          "opponent": "Congo Republic",
+          "venue": "away",
+          "scored": 6,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208350,
+          "league_id": 60,
+          "date": "2024-06-07",
+          "opponent": "Zambia",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209321,
+          "league_id": 30,
+          "date": "2024-01-30",
+          "opponent": "South Africa",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 209313,
+          "league_id": 30,
+          "date": "2024-01-24",
+          "opponent": "Zambia",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209299,
+          "league_id": 30,
+          "date": "2024-01-21",
+          "opponent": "DR Congo",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 209288,
+          "league_id": 30,
+          "date": "2024-01-17",
+          "opponent": "Tanzania",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208329,
+          "league_id": 60,
+          "date": "2023-11-21",
+          "opponent": "Tanzania",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190286,
+          "league_id": 27,
+          "date": "2022-12-01",
+          "opponent": "Canada",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190283,
+          "league_id": 27,
+          "date": "2022-11-27",
+          "opponent": "Belgium",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190281,
+          "league_id": 27,
+          "date": "2022-11-23",
+          "opponent": "Croatia",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190214,
+          "league_id": 27,
+          "date": "2018-06-25",
+          "opponent": "Spain",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 2,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190211,
+          "league_id": 27,
+          "date": "2018-06-20",
+          "opponent": "Portugal",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 190209,
+          "league_id": 27,
+          "date": "2018-06-15",
+          "opponent": "Iran",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        }
+      ],
+      "ratings": {
+        "n_matches": 25,
+        "avg_scored": 1.68,
+        "avg_conceded": 0.44,
+        "stdev_scored": 1.462,
+        "stdev_conceded": 0.637,
+        "attack_rating": 1.2444,
+        "defence_rating": 0.3259
+      },
+      "sources": "league_27:6, league_30:11, league_60:8"
+    },
+    "HAI": {
+      "status": "full",
+      "bsd_team_id": 465,
+      "matches": [
+        {
+          "bsd_event_id": 208870,
+          "league_id": 62,
+          "date": "2025-11-19",
+          "opponent": "Nicaragua",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208863,
+          "league_id": 62,
+          "date": "2025-11-14",
+          "opponent": "Costa Rica",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208841,
+          "league_id": 62,
+          "date": "2025-10-14",
+          "opponent": "Honduras",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 3,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208823,
+          "league_id": 62,
+          "date": "2025-10-10",
+          "opponent": "Nicaragua",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208809,
+          "league_id": 62,
+          "date": "2025-09-10",
+          "opponent": "Costa Rica",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 3,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208791,
+          "league_id": 62,
+          "date": "2025-09-06",
+          "opponent": "Honduras",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208849,
+          "league_id": 62,
+          "date": "2025-06-10",
+          "opponent": "Curaçao",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 5,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208838,
+          "league_id": 62,
+          "date": "2025-06-07",
+          "opponent": "Aruba",
+          "venue": "away",
+          "scored": 5,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208802,
+          "league_id": 62,
+          "date": "2024-06-09",
+          "opponent": "Barbados",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208782,
+          "league_id": 62,
+          "date": "2024-06-06",
+          "opponent": "Saint Lucia",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        }
+      ],
+      "ratings": {
+        "n_matches": 10,
+        "avg_scored": 2.0,
+        "avg_conceded": 1.3,
+        "stdev_scored": 1.483,
+        "stdev_conceded": 1.676,
+        "attack_rating": 1.4815,
+        "defence_rating": 0.963
+      },
+      "sources": "league_62:10"
+    },
+    "SCO": {
+      "status": "full",
+      "bsd_team_id": 466,
+      "matches": [
+        {
+          "bsd_event_id": 208173,
+          "league_id": 58,
+          "date": "2025-11-18",
+          "opponent": "Denmark",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 2,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208154,
+          "league_id": 58,
+          "date": "2025-11-15",
+          "opponent": "Greece",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 3,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208109,
+          "league_id": 58,
+          "date": "2025-10-12",
+          "opponent": "Belarus",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208086,
+          "league_id": 58,
+          "date": "2025-10-09",
+          "opponent": "Greece",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208070,
+          "league_id": 58,
+          "date": "2025-09-08",
+          "opponent": "Belarus",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208046,
+          "league_id": 58,
+          "date": "2025-09-05",
+          "opponent": "Denmark",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190267,
+          "league_id": 27,
+          "date": "2022-11-30",
+          "opponent": "Argentina",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 190265,
+          "league_id": 27,
+          "date": "2022-11-26",
+          "opponent": "Saudi Arabia",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190264,
+          "league_id": 27,
+          "date": "2022-11-22",
+          "opponent": "Mexico",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190249,
+          "league_id": 27,
+          "date": "2018-06-28",
+          "opponent": "Japan",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190248,
+          "league_id": 27,
+          "date": "2018-06-24",
+          "opponent": "Colombia",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 3,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 190246,
+          "league_id": 27,
+          "date": "2018-06-19",
+          "opponent": "Senegal",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 2,
+          "result": "L"
+        }
+      ],
+      "ratings": {
+        "n_matches": 12,
+        "avg_scored": 1.417,
+        "avg_conceded": 1.167,
+        "stdev_scored": 1.256,
+        "stdev_conceded": 1.143,
+        "attack_rating": 1.0494,
+        "defence_rating": 0.8642
+      },
+      "sources": "league_27:6, league_58:6"
+    },
+    "FRA": {
+      "status": "full",
+      "bsd_team_id": 485,
+      "matches": [
+        {
+          "bsd_event_id": 208158,
+          "league_id": 58,
+          "date": "2025-11-16",
+          "opponent": "Azerbaijan",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208135,
+          "league_id": 58,
+          "date": "2025-11-13",
+          "opponent": "Ukraine",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208120,
+          "league_id": 58,
+          "date": "2025-10-13",
+          "opponent": "Iceland",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 2,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208097,
+          "league_id": 58,
+          "date": "2025-10-10",
+          "opponent": "Azerbaijan",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208077,
+          "league_id": 58,
+          "date": "2025-09-09",
+          "opponent": "Iceland",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208049,
+          "league_id": 58,
+          "date": "2025-09-05",
+          "opponent": "Ukraine",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190274,
+          "league_id": 27,
+          "date": "2022-11-30",
+          "opponent": "Tunisia",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 190272,
+          "league_id": 27,
+          "date": "2022-11-26",
+          "opponent": "Denmark",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190270,
+          "league_id": 27,
+          "date": "2022-11-22",
+          "opponent": "Australia",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190219,
+          "league_id": 27,
+          "date": "2018-06-26",
+          "opponent": "Denmark",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190218,
+          "league_id": 27,
+          "date": "2018-06-21",
+          "opponent": "Peru",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190215,
+          "league_id": 27,
+          "date": "2018-06-16",
+          "opponent": "Australia",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190184,
+          "league_id": 27,
+          "date": "2014-06-25",
+          "opponent": "Ecuador",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 190181,
+          "league_id": 27,
+          "date": "2014-06-20",
+          "opponent": "Switzerland",
+          "venue": "away",
+          "scored": 5,
+          "conceded": 2,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190180,
+          "league_id": 27,
+          "date": "2014-06-15",
+          "opponent": "Honduras",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        }
+      ],
+      "ratings": {
+        "n_matches": 15,
+        "avg_scored": 2.2,
+        "avg_conceded": 0.667,
+        "stdev_scored": 1.47,
+        "stdev_conceded": 0.699,
+        "attack_rating": 1.6296,
+        "defence_rating": 0.4938
+      },
+      "sources": "league_27:9, league_58:6"
+    },
+    "SEN": {
+      "status": "full",
+      "bsd_team_id": 486,
+      "matches": [
+        {
+          "bsd_event_id": 8995,
+          "league_id": 30,
+          "date": "2026-01-18",
+          "opponent": "Morocco",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 8992,
+          "league_id": 30,
+          "date": "2026-01-14",
+          "opponent": "Egypt",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8988,
+          "league_id": 30,
+          "date": "2026-01-09",
+          "opponent": "Mali",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8980,
+          "league_id": 30,
+          "date": "2026-01-03",
+          "opponent": "Sudan",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8974,
+          "league_id": 30,
+          "date": "2025-12-30",
+          "opponent": "Benin",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 8961,
+          "league_id": 30,
+          "date": "2025-12-27",
+          "opponent": "DR Congo",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 8949,
+          "league_id": 30,
+          "date": "2025-12-23",
+          "opponent": "Botswana",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208511,
+          "league_id": 60,
+          "date": "2025-10-14",
+          "opponent": "Mauritania",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208483,
+          "league_id": 60,
+          "date": "2025-10-10",
+          "opponent": "South Sudan",
+          "venue": "away",
+          "scored": 5,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208460,
+          "league_id": 60,
+          "date": "2025-09-09",
+          "opponent": "DR Congo",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 2,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208442,
+          "league_id": 60,
+          "date": "2025-09-05",
+          "opponent": "Sudan",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208419,
+          "league_id": 60,
+          "date": "2025-03-25",
+          "opponent": "Togo",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208399,
+          "league_id": 60,
+          "date": "2025-03-22",
+          "opponent": "Sudan",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208356,
+          "league_id": 60,
+          "date": "2024-06-09",
+          "opponent": "Mauritania",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208339,
+          "league_id": 60,
+          "date": "2024-06-06",
+          "opponent": "DR Congo",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 209319,
+          "league_id": 30,
+          "date": "2024-01-29",
+          "opponent": "Côte d'Ivoire",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 209307,
+          "league_id": 30,
+          "date": "2024-01-23",
+          "opponent": "Guinea",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209294,
+          "league_id": 30,
+          "date": "2024-01-19",
+          "opponent": "Cameroon",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209282,
+          "league_id": 30,
+          "date": "2024-01-15",
+          "opponent": "Gambia",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208323,
+          "league_id": 60,
+          "date": "2023-11-21",
+          "opponent": "Togo",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208305,
+          "league_id": 60,
+          "date": "2023-11-18",
+          "opponent": "South Sudan",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190255,
+          "league_id": 27,
+          "date": "2022-11-29",
+          "opponent": "Ecuador",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190253,
+          "league_id": 27,
+          "date": "2022-11-25",
+          "opponent": "Qatar",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 190252,
+          "league_id": 27,
+          "date": "2022-11-21",
+          "opponent": "Netherlands",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 190250,
+          "league_id": 27,
+          "date": "2018-06-28",
+          "opponent": "Colombia",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 1,
+          "result": "L"
+        }
+      ],
+      "ratings": {
+        "n_matches": 25,
+        "avg_scored": 1.92,
+        "avg_conceded": 0.48,
+        "stdev_scored": 1.412,
+        "stdev_conceded": 0.64,
+        "attack_rating": 1.4222,
+        "defence_rating": 0.3556
+      },
+      "sources": "league_27:4, league_30:11, league_60:10"
+    },
+    "IRQ": {
+      "status": "full",
+      "bsd_team_id": 933,
+      "matches": [
+        {
+          "bsd_event_id": 208754,
+          "league_id": 61,
+          "date": "2025-11-18",
+          "opponent": "United Arab Emirates",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208753,
+          "league_id": 61,
+          "date": "2025-11-13",
+          "opponent": "United Arab Emirates",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 1,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208635,
+          "league_id": 61,
+          "date": "2025-10-14",
+          "opponent": "Saudi Arabia",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208606,
+          "league_id": 61,
+          "date": "2025-10-11",
+          "opponent": "Indonesia",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208750,
+          "league_id": 61,
+          "date": "2025-06-10",
+          "opponent": "Jordan",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208742,
+          "league_id": 61,
+          "date": "2025-06-05",
+          "opponent": "South Korea",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208734,
+          "league_id": 61,
+          "date": "2025-03-25",
+          "opponent": "Palestine",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 2,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208723,
+          "league_id": 61,
+          "date": "2025-03-20",
+          "opponent": "Kuwait",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 2,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208714,
+          "league_id": 61,
+          "date": "2024-11-19",
+          "opponent": "Oman",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208688,
+          "league_id": 61,
+          "date": "2024-11-14",
+          "opponent": "Jordan",
+          "venue": "home",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208655,
+          "league_id": 61,
+          "date": "2024-10-15",
+          "opponent": "South Korea",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 3,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 208632,
+          "league_id": 61,
+          "date": "2024-10-10",
+          "opponent": "Palestine",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208604,
+          "league_id": 61,
+          "date": "2024-09-10",
+          "opponent": "Kuwait",
+          "venue": "away",
+          "scored": 0,
+          "conceded": 0,
+          "result": "D"
+        },
+        {
+          "bsd_event_id": 208573,
+          "league_id": 61,
+          "date": "2024-09-05",
+          "opponent": "Oman",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208705,
+          "league_id": 61,
+          "date": "2024-06-11",
+          "opponent": "Vietnam",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208663,
+          "league_id": 61,
+          "date": "2024-06-06",
+          "opponent": "Indonesia",
+          "venue": "away",
+          "scored": 2,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208639,
+          "league_id": 61,
+          "date": "2024-03-26",
+          "opponent": "Philippines",
+          "venue": "away",
+          "scored": 5,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208622,
+          "league_id": 61,
+          "date": "2024-03-21",
+          "opponent": "Philippines",
+          "venue": "home",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209368,
+          "league_id": 68,
+          "date": "2024-01-29",
+          "opponent": "Jordan",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 3,
+          "result": "L"
+        },
+        {
+          "bsd_event_id": 209360,
+          "league_id": 68,
+          "date": "2024-01-24",
+          "opponent": "Vietnam",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 2,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209347,
+          "league_id": 68,
+          "date": "2024-01-19",
+          "opponent": "Japan",
+          "venue": "home",
+          "scored": 2,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 209338,
+          "league_id": 68,
+          "date": "2024-01-15",
+          "opponent": "Indonesia",
+          "venue": "away",
+          "scored": 3,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208586,
+          "league_id": 61,
+          "date": "2023-11-21",
+          "opponent": "Vietnam",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208559,
+          "league_id": 61,
+          "date": "2023-11-16",
+          "opponent": "Indonesia",
+          "venue": "home",
+          "scored": 5,
+          "conceded": 1,
+          "result": "W"
+        }
+      ],
+      "ratings": {
+        "n_matches": 24,
+        "avg_scored": 1.667,
+        "avg_conceded": 0.833,
+        "stdev_scored": 1.344,
+        "stdev_conceded": 0.986,
+        "attack_rating": 1.2346,
+        "defence_rating": 0.6173
+      },
+      "sources": "league_61:20, league_68:4"
+    },
+    "NOR": {
+      "status": "full",
+      "bsd_team_id": 488,
+      "matches": [
+        {
+          "bsd_event_id": 208163,
+          "league_id": 58,
+          "date": "2025-11-16",
+          "opponent": "Italy",
+          "venue": "away",
+          "scored": 4,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208134,
+          "league_id": 58,
+          "date": "2025-11-13",
+          "opponent": "Estonia",
+          "venue": "home",
+          "scored": 4,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208102,
+          "league_id": 58,
+          "date": "2025-10-11",
+          "opponent": "Israel",
+          "venue": "home",
+          "scored": 5,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208081,
+          "league_id": 58,
+          "date": "2025-09-09",
+          "opponent": "Moldova",
+          "venue": "home",
+          "scored": 11,
+          "conceded": 1,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208025,
+          "league_id": 58,
+          "date": "2025-06-09",
+          "opponent": "Estonia",
+          "venue": "away",
+          "scored": 1,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208013,
+          "league_id": 58,
+          "date": "2025-06-06",
+          "opponent": "Italy",
+          "venue": "home",
+          "scored": 3,
+          "conceded": 0,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 208007,
+          "league_id": 58,
+          "date": "2025-03-25",
+          "opponent": "Israel",
+          "venue": "away",
+          "scored": 4,
+          "conceded": 2,
+          "result": "W"
+        },
+        {
+          "bsd_event_id": 207995,
+          "league_id": 58,
+          "date": "2025-03-22",
+          "opponent": "Moldova",
+          "venue": "away",
+          "scored": 5,
+          "conceded": 0,
+          "result": "W"
+        }
+      ],
+      "ratings": {
+        "n_matches": 8,
+        "avg_scored": 4.625,
+        "avg_conceded": 0.625,
+        "stdev_scored": 2.69,
+        "stdev_conceded": 0.696,
+        "attack_rating": 3.4259,
+        "defence_rating": 0.463
+      },
+      "sources": "league_58:8"
+    }
+  }
+}

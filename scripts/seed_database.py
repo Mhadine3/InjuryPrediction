@@ -45,18 +45,31 @@ def pid(s: str) -> uuid.UUID:
 
 # ── static team definitions ───────────────────────────────────────────────────
 
-TEAMS = [
-    # Group C
+# Teams are loaded from data/wc_teams.json (all 48 WC 2026 nations, produced by
+# build_full_wc.py). Falls back to the original 8 if that file is absent.
+_FALLBACK_TEAMS = [
     {"name": "Brazil",   "fifa_code": "BRA", "group_code": "C", "confederation": "CONMEBOL"},
     {"name": "Morocco",  "fifa_code": "MAR", "group_code": "C", "confederation": "CAF"},
     {"name": "Haiti",    "fifa_code": "HAI", "group_code": "C", "confederation": "CONCACAF"},
     {"name": "Scotland", "fifa_code": "SCO", "group_code": "C", "confederation": "UEFA"},
-    # Group I
     {"name": "France",   "fifa_code": "FRA", "group_code": "I", "confederation": "UEFA"},
     {"name": "Senegal",  "fifa_code": "SEN", "group_code": "I", "confederation": "CAF"},
     {"name": "Iraq",     "fifa_code": "IRQ", "group_code": "I", "confederation": "AFC"},
     {"name": "Norway",   "fifa_code": "NOR", "group_code": "I", "confederation": "UEFA"},
 ]
+
+def _load_teams() -> list[dict]:
+    f = DATA_DIR / "wc_teams.json"
+    if f.exists():
+        raw = json.loads(f.read_text(encoding="utf-8"))
+        return [
+            {"name": t["name"], "fifa_code": t["tla"],
+             "group_code": t.get("group", "?"), "confederation": t.get("confederation", "UEFA")}
+            for t in raw
+        ]
+    return _FALLBACK_TEAMS
+
+TEAMS = _load_teams()
 
 # position_detail → DB enum value
 POSITION_MAP = {

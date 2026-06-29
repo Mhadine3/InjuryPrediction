@@ -1,0 +1,338 @@
+[
+  {
+    "tla": "ALG",
+    "name": "Algeria",
+    "group": "J",
+    "confederation": "CAF",
+    "iso2": "dz"
+  },
+  {
+    "tla": "ARG",
+    "name": "Argentina",
+    "group": "J",
+    "confederation": "CONMEBOL",
+    "iso2": "ar"
+  },
+  {
+    "tla": "AUS",
+    "name": "Australia",
+    "group": "D",
+    "confederation": "AFC",
+    "iso2": "au"
+  },
+  {
+    "tla": "AUT",
+    "name": "Austria",
+    "group": "J",
+    "confederation": "UEFA",
+    "iso2": "at"
+  },
+  {
+    "tla": "BEL",
+    "name": "Belgium",
+    "group": "G",
+    "confederation": "UEFA",
+    "iso2": "be"
+  },
+  {
+    "tla": "BIH",
+    "name": "Bosnia-Herzegovina",
+    "group": "B",
+    "confederation": "UEFA",
+    "iso2": "ba"
+  },
+  {
+    "tla": "BRA",
+    "name": "Brazil",
+    "group": "C",
+    "confederation": "CONMEBOL",
+    "iso2": "br"
+  },
+  {
+    "tla": "CAN",
+    "name": "Canada",
+    "group": "B",
+    "confederation": "CONCACAF",
+    "iso2": "ca"
+  },
+  {
+    "tla": "CIV",
+    "name": "Ivory Coast",
+    "group": "E",
+    "confederation": "CAF",
+    "iso2": "ci"
+  },
+  {
+    "tla": "COD",
+    "name": "Congo DR",
+    "group": "K",
+    "confederation": "CAF",
+    "iso2": "cd"
+  },
+  {
+    "tla": "COL",
+    "name": "Colombia",
+    "group": "K",
+    "confederation": "CONMEBOL",
+    "iso2": "co"
+  },
+  {
+    "tla": "CPV",
+    "name": "Cape Verde Islands",
+    "group": "H",
+    "confederation": "CAF",
+    "iso2": "cv"
+  },
+  {
+    "tla": "CRO",
+    "name": "Croatia",
+    "group": "L",
+    "confederation": "UEFA",
+    "iso2": "hr"
+  },
+  {
+    "tla": "CUW",
+    "name": "Curaçao",
+    "group": "E",
+    "confederation": "CONCACAF",
+    "iso2": "cw"
+  },
+  {
+    "tla": "CZE",
+    "name": "Czechia",
+    "group": "A",
+    "confederation": "UEFA",
+    "iso2": "cz"
+  },
+  {
+    "tla": "ECU",
+    "name": "Ecuador",
+    "group": "E",
+    "confederation": "CONMEBOL",
+    "iso2": "ec"
+  },
+  {
+    "tla": "EGY",
+    "name": "Egypt",
+    "group": "G",
+    "confederation": "CAF",
+    "iso2": "eg"
+  },
+  {
+    "tla": "ENG",
+    "name": "England",
+    "group": "L",
+    "confederation": "UEFA",
+    "iso2": "gb-eng"
+  },
+  {
+    "tla": "ESP",
+    "name": "Spain",
+    "group": "H",
+    "confederation": "UEFA",
+    "iso2": "es"
+  },
+  {
+    "tla": "FRA",
+    "name": "France",
+    "group": "I",
+    "confederation": "UEFA",
+    "iso2": "fr"
+  },
+  {
+    "tla": "GER",
+    "name": "Germany",
+    "group": "E",
+    "confederation": "UEFA",
+    "iso2": "de"
+  },
+  {
+    "tla": "GHA",
+    "name": "Ghana",
+    "group": "L",
+    "confederation": "CAF",
+    "iso2": "gh"
+  },
+  {
+    "tla": "HAI",
+    "name": "Haiti",
+    "group": "C",
+    "confederation": "CONCACAF",
+    "iso2": "ht"
+  },
+  {
+    "tla": "IRN",
+    "name": "Iran",
+    "group": "G",
+    "confederation": "AFC",
+    "iso2": "ir"
+  },
+  {
+    "tla": "IRQ",
+    "name": "Iraq",
+    "group": "I",
+    "confederation": "AFC",
+    "iso2": "iq"
+  },
+  {
+    "tla": "JOR",
+    "name": "Jordan",
+    "group": "J",
+    "confederation": "AFC",
+    "iso2": "jo"
+  },
+  {
+    "tla": "JPN",
+    "name": "Japan",
+    "group": "F",
+    "confederation": "AFC",
+    "iso2": "jp"
+  },
+  {
+    "tla": "KOR",
+    "name": "South Korea",
+    "group": "A",
+    "confederation": "AFC",
+    "iso2": "kr"
+  },
+  {
+    "tla": "KSA",
+    "name": "Saudi Arabia",
+    "group": "H",
+    "confederation": "AFC",
+    "iso2": "sa"
+  },
+  {
+    "tla": "MAR",
+    "name": "Morocco",
+    "group": "C",
+    "confederation": "CAF",
+    "iso2": "ma"
+  },
+  {
+    "tla": "MEX",
+    "name": "Mexico",
+    "group": "A",
+    "confederation": "CONCACAF",
+    "iso2": "mx"
+  },
+  {
+    "tla": "NED",
+    "name": "Netherlands",
+    "group": "F",
+    "confederation": "UEFA",
+    "iso2": "nl"
+  },
+  {
+    "tla": "NOR",
+    "name": "Norway",
+    "group": "I",
+    "confederation": "UEFA",
+    "iso2": "no"
+  },
+  {
+    "tla": "NZL",
+    "name": "New Zealand",
+    "group": "G",
+    "confederation": "OFC",
+    "iso2": "nz"
+  },
+  {
+    "tla": "PAN",
+    "name": "Panama",
+    "group": "L",
+    "confederation": "CONCACAF",
+    "iso2": "pa"
+  },
+  {
+    "tla": "PAR",
+    "name": "Paraguay",
+    "group": "D",
+    "confederation": "CONMEBOL",
+    "iso2": "py"
+  },
+  {
+    "tla": "POR",
+    "name": "Portugal",
+    "group": "K",
+    "confederation": "UEFA",
+    "iso2": "pt"
+  },
+  {
+    "tla": "QAT",
+    "name": "Qatar",
+    "group": "B",
+    "confederation": "AFC",
+    "iso2": "qa"
+  },
+  {
+    "tla": "RSA",
+    "name": "South Africa",
+    "group": "A",
+    "confederation": "CAF",
+    "iso2": "za"
+  },
+  {
+    "tla": "SCO",
+    "name": "Scotland",
+    "group": "C",
+    "confederation": "UEFA",
+    "iso2": "gb-sct"
+  },
+  {
+    "tla": "SEN",
+    "name": "Senegal",
+    "group": "I",
+    "confederation": "CAF",
+    "iso2": "sn"
+  },
+  {
+    "tla": "SUI",
+    "name": "Switzerland",
+    "group": "B",
+    "confederation": "UEFA",
+    "iso2": "ch"
+  },
+  {
+    "tla": "SWE",
+    "name": "Sweden",
+    "group": "F",
+    "confederation": "UEFA",
+    "iso2": "se"
+  },
+  {
+    "tla": "TUN",
+    "name": "Tunisia",
+    "group": "F",
+    "confederation": "CAF",
+    "iso2": "tn"
+  },
+  {
+    "tla": "TUR",
+    "name": "Turkey",
+    "group": "D",
+    "confederation": "UEFA",
+    "iso2": "tr"
+  },
+  {
+    "tla": "URU",
+    "name": "Uruguay",
+    "group": "H",
+    "confederation": "CONMEBOL",
+    "iso2": "uy"
+  },
+  {
+    "tla": "USA",
+    "name": "United States",
+    "group": "D",
+    "confederation": "CONCACAF",
+    "iso2": "us"
+  },
+  {
+    "tla": "UZB",
+    "name": "Uzbekistan",
+    "group": "K",
+    "confederation": "AFC",
+    "iso2": "uz"
+  }
+]

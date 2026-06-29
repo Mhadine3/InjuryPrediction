@@ -1,0 +1,338 @@
+{
+  "ALG": {
+    "attack_rating": 1.0759,
+    "defence_rating": 1.3463,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "ARG": {
+    "attack_rating": 1.4815,
+    "defence_rating": 0.5352,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "AUS": {
+    "attack_rating": 0.6704,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "AUT": {
+    "attack_rating": 1.2111,
+    "defence_rating": 1.2111,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "BEL": {
+    "attack_rating": 1.2111,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "BIH": {
+    "attack_rating": 1.0759,
+    "defence_rating": 1.2111,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "BRA": {
+    "attack_rating": 1.3463,
+    "defence_rating": 0.5352,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "CAN": {
+    "attack_rating": 1.4167,
+    "defence_rating": 0.6056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 4
+  },
+  "CIV": {
+    "attack_rating": 0.9407,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "COD": {
+    "attack_rating": 0.9407,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "COL": {
+    "attack_rating": 0.9407,
+    "defence_rating": 0.5352,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "CPV": {
+    "attack_rating": 0.6704,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "CRO": {
+    "attack_rating": 1.0759,
+    "defence_rating": 1.0759,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "CUW": {
+    "attack_rating": 0.5352,
+    "defence_rating": 1.6167,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "CZE": {
+    "attack_rating": 0.6704,
+    "defence_rating": 1.2111,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "ECU": {
+    "attack_rating": 0.6704,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "EGY": {
+    "attack_rating": 1.0759,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "ENG": {
+    "attack_rating": 1.2111,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "ESP": {
+    "attack_rating": 1.0759,
+    "defence_rating": 0.45,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "FRA": {
+    "attack_rating": 1.7519,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "GER": {
+    "attack_rating": 1.7519,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "GHA": {
+    "attack_rating": 0.6704,
+    "defence_rating": 0.6704,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "HAI": {
+    "attack_rating": 0.6704,
+    "defence_rating": 1.4815,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "IRN": {
+    "attack_rating": 0.8056,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "IRQ": {
+    "attack_rating": 0.5352,
+    "defence_rating": 1.9,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "JOR": {
+    "attack_rating": 0.8056,
+    "defence_rating": 1.4815,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "JPN": {
+    "attack_rating": 1.3463,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "KOR": {
+    "attack_rating": 0.6704,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "KSA": {
+    "attack_rating": 0.5352,
+    "defence_rating": 1.0759,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "MAR": {
+    "attack_rating": 1.2111,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "MEX": {
+    "attack_rating": 1.2111,
+    "defence_rating": 0.45,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "NED": {
+    "attack_rating": 1.7519,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "NOR": {
+    "attack_rating": 1.4815,
+    "defence_rating": 1.3463,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "NZL": {
+    "attack_rating": 0.9407,
+    "defence_rating": 1.7519,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "PAN": {
+    "attack_rating": 0.45,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "PAR": {
+    "attack_rating": 0.6704,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "POR": {
+    "attack_rating": 1.2111,
+    "defence_rating": 0.5352,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "QAT": {
+    "attack_rating": 0.6704,
+    "defence_rating": 1.7519,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "RSA": {
+    "attack_rating": 0.4704,
+    "defence_rating": 0.7407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 4
+  },
+  "SCO": {
+    "attack_rating": 0.5352,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "SEN": {
+    "attack_rating": 1.4815,
+    "defence_rating": 1.2111,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "SUI": {
+    "attack_rating": 1.3463,
+    "defence_rating": 0.8056,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "SWE": {
+    "attack_rating": 1.3463,
+    "defence_rating": 1.3463,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "TUN": {
+    "attack_rating": 0.6704,
+    "defence_rating": 1.9,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "TUR": {
+    "attack_rating": 0.8056,
+    "defence_rating": 1.0759,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "URU": {
+    "attack_rating": 0.8056,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "USA": {
+    "attack_rating": 1.4815,
+    "defence_rating": 0.9407,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  },
+  "UZB": {
+    "attack_rating": 0.6704,
+    "defence_rating": 1.887,
+    "stdev_scored": 1.0,
+    "stdev_conceded": 1.0,
+    "n_results": 3
+  }
+}

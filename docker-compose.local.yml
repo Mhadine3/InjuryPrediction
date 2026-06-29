@@ -1,0 +1,17 @@
+# Local dev override — run with:
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build db app
+# Supplies DB creds, points the app at the db container, publishes 8000, skips Caddy.
+services:
+  db:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: injuryprediction
+    ports:
+      - "5432:5432"
+
+  app:
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/injuryprediction
+    ports:
+      - "8000:8000"

@@ -24,3 +24,8 @@ backend/*.png
 # Standalone HTML mockups (the served UI is web/index.html)
 athleteos_ai_landing_page.html
 wc2026_injury_platform.html
+
+# Large generated artifacts not needed at runtime (CSV is enough for seeding)
+data/daily_metrics.json
+data/players_baseline.backup8.json
+web/index.backup8.html

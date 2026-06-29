@@ -69,6 +69,7 @@ _CONF_FACTORS: dict[str, dict[str, float]] = {
     "AFC":      {"attack": 0.90, "defence": 1.15},  # Below-avg opp
     "CAF":      {"attack": 0.82, "defence": 1.55},  # Weak opp → atk inflated, def too strong
     "CONCACAF": {"attack": 0.80, "defence": 1.60},  # Weakest opp on average
+    "OFC":      {"attack": 0.75, "defence": 1.65},  # Weakest qualifying path
 }
 
 _TEAM_CONF: dict[str, str] = {
@@ -147,6 +148,18 @@ _TEAM_RESULTS, _PLAYER_STATS, _BASELINE_RAW, _STAT_RATES = _load_all()
 _PLAYERS_BY_TEAM: dict[str, list[dict]] = {}
 for _p in (_BASELINE_RAW.get("players") or []):
     _PLAYERS_BY_TEAM.setdefault(_p["team_code"], []).append(_p)
+
+# Extend confederation + fallback-rating coverage to all 48 WC 2026 teams from
+# the generated data files. Existing tuned entries (the original 8) take priority.
+for _t in (_load_json(DATA_DIR / "wc_teams.json") or []):
+    _TEAM_CONF.setdefault(_t["tla"], _t.get("confederation", "UEFA"))
+for _tla, _r in (_load_json(DATA_DIR / "wc_ratings.json") or {}).items():
+    _FALLBACK_RATINGS.setdefault(_tla, {
+        "attack_rating":  _r.get("attack_rating", 1.0),
+        "defence_rating": _r.get("defence_rating", 1.0),
+        "stdev_scored":   _r.get("stdev_scored", 1.0),
+        "stdev_conceded": _r.get("stdev_conceded", 1.0),
+    })
 
 
 # ─── BSD auth + HTTP helpers ──────────────────────────────────────────────────

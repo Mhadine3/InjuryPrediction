@@ -78,23 +78,39 @@ MATCH_MINUTES     = 90
 BLOCK_MINUTES     = 15
 PREDICTION_TARGETS = ["goals", "shots", "corners", "fouls"]
 
-# Upcoming Group C matches (for "no live match" display)
-SCHEDULED_MATCHES = [
-    # Group C — dates and pairings from BSD Bzzoiro event data
-    {"match_id": "2026-06-13_BRA_MAR", "home": "BRA", "away": "MAR", "date": "2026-06-13", "group": "C", "bsd_event_id": 8293},
-    {"match_id": "2026-06-14_HAI_SCO", "home": "HAI", "away": "SCO", "date": "2026-06-14", "group": "C", "bsd_event_id": 8294},
-    {"match_id": "2026-06-19_SCO_MAR", "home": "SCO", "away": "MAR", "date": "2026-06-19", "group": "C", "bsd_event_id": 8317},
-    {"match_id": "2026-06-20_BRA_HAI", "home": "BRA", "away": "HAI", "date": "2026-06-20", "group": "C", "bsd_event_id": 8318},
-    {"match_id": "2026-06-24_MAR_HAI", "home": "MAR", "away": "HAI", "date": "2026-06-24", "group": "C", "bsd_event_id": 8337},
-    {"match_id": "2026-06-24_SCO_BRA", "home": "SCO", "away": "BRA", "date": "2026-06-24", "group": "C", "bsd_event_id": 8338},
-    # Group I — dates and pairings from BSD Bzzoiro event data
-    {"match_id": "2026-06-16_FRA_SEN", "home": "FRA", "away": "SEN", "date": "2026-06-16", "group": "I", "bsd_event_id": 8304},
-    {"match_id": "2026-06-16_IRQ_NOR", "home": "IRQ", "away": "NOR", "date": "2026-06-16", "group": "I", "bsd_event_id": 8305},
-    {"match_id": "2026-06-22_FRA_IRQ", "home": "FRA", "away": "IRQ", "date": "2026-06-22", "group": "I", "bsd_event_id": 8328},
-    {"match_id": "2026-06-23_NOR_SEN", "home": "NOR", "away": "SEN", "date": "2026-06-23", "group": "I", "bsd_event_id": 8329},
-    {"match_id": "2026-06-26_NOR_FRA", "home": "NOR", "away": "FRA", "date": "2026-06-26", "group": "I", "bsd_event_id": 8347},
-    {"match_id": "2026-06-26_SEN_IRQ", "home": "SEN", "away": "IRQ", "date": "2026-06-26", "group": "I", "bsd_event_id": 8348},
+# Full WC 2026 schedule — loaded from data/wc_fixtures.json (all 104 matches incl.
+# knockout) produced by build_full_wc.py. Falls back to the original 12 group games.
+import json as _json
+from pathlib import Path as _Path
+
+_FIXTURES_FILE = _Path(__file__).resolve().parents[3] / "data" / "wc_fixtures.json"
+
+_FALLBACK_SCHEDULE = [
+    {"match_id": "2026-06-13_BRA_MAR", "home": "BRA", "away": "MAR", "date": "2026-06-13", "group": "C"},
+    {"match_id": "2026-06-14_HAI_SCO", "home": "HAI", "away": "SCO", "date": "2026-06-14", "group": "C"},
+    {"match_id": "2026-06-19_SCO_MAR", "home": "SCO", "away": "MAR", "date": "2026-06-19", "group": "C"},
+    {"match_id": "2026-06-20_BRA_HAI", "home": "BRA", "away": "HAI", "date": "2026-06-20", "group": "C"},
+    {"match_id": "2026-06-24_MAR_HAI", "home": "MAR", "away": "HAI", "date": "2026-06-24", "group": "C"},
+    {"match_id": "2026-06-24_SCO_BRA", "home": "SCO", "away": "BRA", "date": "2026-06-24", "group": "C"},
+    {"match_id": "2026-06-16_FRA_SEN", "home": "FRA", "away": "SEN", "date": "2026-06-16", "group": "I"},
+    {"match_id": "2026-06-16_IRQ_NOR", "home": "IRQ", "away": "NOR", "date": "2026-06-16", "group": "I"},
+    {"match_id": "2026-06-22_FRA_IRQ", "home": "FRA", "away": "IRQ", "date": "2026-06-22", "group": "I"},
+    {"match_id": "2026-06-23_NOR_SEN", "home": "NOR", "away": "SEN", "date": "2026-06-23", "group": "I"},
+    {"match_id": "2026-06-26_NOR_FRA", "home": "NOR", "away": "FRA", "date": "2026-06-26", "group": "I"},
+    {"match_id": "2026-06-26_SEN_IRQ", "home": "SEN", "away": "IRQ", "date": "2026-06-26", "group": "I"},
 ]
+
+def _load_schedule() -> list[dict]:
+    if _FIXTURES_FILE.exists():
+        try:
+            fx = _json.loads(_FIXTURES_FILE.read_text(encoding="utf-8"))
+            # Only matches with both teams decided are usable for scheduling.
+            return [f for f in fx if f.get("home") and f.get("away")]
+        except Exception:
+            pass
+    return _FALLBACK_SCHEDULE
+
+SCHEDULED_MATCHES = _load_schedule()
 
 # Football-data.org match IDs for the tracked matches
 FOOTBALLDATA_MATCH_IDS: dict[str, int] = {

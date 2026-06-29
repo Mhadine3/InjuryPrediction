@@ -1,0 +1,392 @@
+{
+  "bra_018_neymar": {
+    "total_injuries": 15,
+    "total_days_missed": 933,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Calf injury",
+      "from_date": "2026-05-18",
+      "until_date": null,
+      "days_missed": 29,
+      "games_missed": 7,
+      "club": "221, 3439"
+    },
+    "type_counts": {
+      "Hamstring injury": 4,
+      "Fitness": 2,
+      "Ankle injury": 2,
+      "Calf injury": 1,
+      "Rest": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "bra_019_junior": {
+    "total_injuries": 10,
+    "total_days_missed": 195,
+    "most_recent": {
+      "season": "24/25",
+      "injury": "Ankle sprain",
+      "from_date": "2025-12-05",
+      "until_date": "2025-05-23",
+      "days_missed": 12,
+      "games_missed": 2,
+      "club": "418"
+    },
+    "type_counts": {
+      "Ankle sprain": 1,
+      "Muscle injury": 1,
+      "Cervical spine injury": 1,
+      "Torn thigh muscle": 1,
+      "Hamstring muscle injury": 1
+    },
+    "cached_at": "2026-06-17"
+  },
+  "bra_013_casemiro": {
+    "total_injuries": 12,
+    "total_days_missed": 275,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "unknown injury",
+      "from_date": "2026-06-05",
+      "until_date": "2026-12-05",
+      "days_missed": 7,
+      "games_missed": 1,
+      "club": "985"
+    },
+    "type_counts": {
+      "muscular problems": 2,
+      "Ankle sprain": 2,
+      "unknown injury": 1,
+      "Knock": 1,
+      "Stomach flu": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "mar_006_mazraoui": {
+    "total_injuries": 15,
+    "total_days_missed": 289,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Shoulder injury",
+      "from_date": "2026-07-06",
+      "until_date": "2026-06-13",
+      "days_missed": 7,
+      "games_missed": null,
+      "club": null
+    },
+    "type_counts": {
+      "Ill": 2,
+      "Muscle injury": 2,
+      "Shoulder injury": 1,
+      "Foot injury": 1,
+      "Knock": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "fra_025_michael_olise": {
+    "total_injuries": 4,
+    "total_days_missed": 213,
+    "most_recent": {
+      "season": "23/24",
+      "injury": "Hamstring injury",
+      "from_date": "2024-03-02",
+      "until_date": "2024-03-04",
+      "days_missed": 61,
+      "games_missed": 7,
+      "club": "873"
+    },
+    "type_counts": {
+      "Hamstring injury": 2,
+      "Inflammation of the sole of the foot": 1,
+      "Rest": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "fra_023_kylian_mbappé": {
+    "total_injuries": 15,
+    "total_days_missed": 147,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Torn muscle fiber",
+      "from_date": "2026-04-25",
+      "until_date": "2026-11-05",
+      "days_missed": 17,
+      "games_missed": 2,
+      "club": "418"
+    },
+    "type_counts": {
+      "Calf injury": 3,
+      "Knee problems": 2,
+      "Hamstring injury": 2,
+      "Torn muscle fiber": 1,
+      "muscular problems": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "fra_017_rayan_cherki": {
+    "total_injuries": 3,
+    "total_days_missed": 127,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Thigh problems",
+      "from_date": "2025-08-30",
+      "until_date": "2025-03-10",
+      "days_missed": 35,
+      "games_missed": 9,
+      "club": "281, 3377"
+    },
+    "type_counts": {
+      "Thigh problems": 1,
+      "Muscle injury": 1,
+      "Metatarsal fracture": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "fra_016_manu_koné": {
+    "total_injuries": 15,
+    "total_days_missed": 325,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "muscular problems",
+      "from_date": "2026-05-16",
+      "until_date": "2026-05-20",
+      "days_missed": 5,
+      "games_missed": 1,
+      "club": "12"
+    },
+    "type_counts": {
+      "muscular problems": 3,
+      "Muscle fatigue": 2,
+      "Hamstring muscle injury": 1,
+      "Hamstring injury": 1,
+      "Bruise on ankle": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "fra_013_ngolo_kanté": {
+    "total_injuries": 15,
+    "total_days_missed": 515,
+    "most_recent": {
+      "season": "24/25",
+      "injury": "Muscle injury",
+      "from_date": "2025-09-01",
+      "until_date": "2025-01-13",
+      "days_missed": 5,
+      "games_missed": 1,
+      "club": "8023"
+    },
+    "type_counts": {
+      "Muscle injury": 3,
+      "Hamstring injury": 3,
+      "Groin injury": 2,
+      "Knee problems": 2,
+      "Corona virus": 2
+    },
+    "cached_at": "2026-06-15"
+  },
+  "fra_004_theo_hernández": {
+    "total_injuries": 15,
+    "total_days_missed": 148,
+    "most_recent": {
+      "season": "24/25",
+      "injury": "Thigh problems",
+      "from_date": "2025-05-15",
+      "until_date": "2025-05-22",
+      "days_missed": 8,
+      "games_missed": 1,
+      "club": "5"
+    },
+    "type_counts": {
+      "Muscle fatigue": 3,
+      "flu": 2,
+      "Thigh problems": 1,
+      "Rest": 1,
+      "Bruise on ankle": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "mar_016_saibari": {
+    "total_injuries": 9,
+    "total_days_missed": 424,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Muscle injury",
+      "from_date": "2026-12-04",
+      "until_date": "2026-05-13",
+      "days_missed": 32,
+      "games_missed": 3,
+      "club": "383"
+    },
+    "type_counts": {
+      "unknown injury": 3,
+      "Knock": 3,
+      "Muscle injury": 2,
+      "minor knock": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "mar_020_kaabi": {
+    "total_injuries": 3,
+    "total_days_missed": 45,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Muscle injury",
+      "from_date": "2026-01-29",
+      "until_date": "2026-06-02",
+      "days_missed": 9,
+      "games_missed": 2,
+      "club": "683"
+    },
+    "type_counts": {
+      "Muscle injury": 1,
+      "unknown injury": 1,
+      "Corona virus": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "mar_022_rahimi": {
+    "total_injuries": 4,
+    "total_days_missed": 69,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "unknown injury",
+      "from_date": "2025-08-29",
+      "until_date": "2025-06-10",
+      "days_missed": 39,
+      "games_missed": 8,
+      "club": "2150, 3575"
+    },
+    "type_counts": {
+      "unknown injury": 1,
+      "concussion": 1,
+      "Corona virus": 1,
+      "Broken nose bone": 1
+    },
+    "cached_at": "2026-06-15"
+  },
+  "mar_010_diop": {
+    "total_injuries": 14,
+    "total_days_missed": 350,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Knock",
+      "from_date": "2025-10-31",
+      "until_date": "2025-11-28",
+      "days_missed": 29,
+      "games_missed": 3,
+      "club": "931"
+    },
+    "type_counts": {
+      "Knock": 3,
+      "Ankle injury": 2,
+      "unknown injury": 1,
+      "Calf problems": 1,
+      "Hamstring injury": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "mar_004_hakimi": {
+    "total_injuries": 8,
+    "total_days_missed": 202,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Hamstring injury",
+      "from_date": "2026-04-29",
+      "until_date": "2026-05-25",
+      "days_missed": 27,
+      "games_missed": 5,
+      "club": "583"
+    },
+    "type_counts": {
+      "Hamstring injury": 3,
+      "Ankle sprain": 1,
+      "Corona virus": 1,
+      "Ankle problems": 1,
+      "Quarantine": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "sen_021_sadio_mané": {
+    "total_injuries": 15,
+    "total_days_missed": 362,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Ankle injury",
+      "from_date": "2026-03-13",
+      "until_date": "2026-03-26",
+      "days_missed": 14,
+      "games_missed": 1,
+      "club": "18544"
+    },
+    "type_counts": {
+      "Hamstring injury": 2,
+      "Ankle injury": 1,
+      "Torn thigh muscle": 1,
+      "Knee problems": 1,
+      "Inflammation in the head of the fibula": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "nor_024_erling_haaland": {
+    "total_injuries": 15,
+    "total_days_missed": 252,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Knock",
+      "from_date": "2026-02-26",
+      "until_date": "2026-01-03",
+      "days_missed": 4,
+      "games_missed": 1,
+      "club": "281"
+    },
+    "type_counts": {
+      "Ankle injury": 3,
+      "muscular problems": 3,
+      "Knock": 1,
+      "Knee problems": 1,
+      "Muscle injury": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "nor_014_martin_ødegaard": {
+    "total_injuries": 15,
+    "total_days_missed": 299,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Knee problems",
+      "from_date": "2026-04-29",
+      "until_date": "2026-04-05",
+      "days_missed": 6,
+      "games_missed": 1,
+      "club": "11"
+    },
+    "type_counts": {
+      "Muscle injury": 3,
+      "Knee problems": 2,
+      "Knock": 2,
+      "Calf injury": 2,
+      "Knee injury": 1
+    },
+    "cached_at": "2026-06-16"
+  },
+  "irq_019_zidane_iqbal": {
+    "total_injuries": 6,
+    "total_days_missed": 244,
+    "most_recent": {
+      "season": "25/26",
+      "injury": "Fever",
+      "from_date": "2025-12-13",
+      "until_date": "2025-12-16",
+      "days_missed": 4,
+      "games_missed": 1,
+      "club": "200"
+    },
+    "type_counts": {
+      "unknown injury": 3,
+      "Fever": 1,
+      "Knee surgery": 1,
+      "Ill": 1
+    },
+    "cached_at": "2026-06-16"
+  }
+}

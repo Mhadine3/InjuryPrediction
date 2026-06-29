@@ -152,6 +152,7 @@ CREATE TABLE players (
     height_cm       SMALLINT        CHECK (height_cm BETWEEN 150 AND 220),
     weight_kg       NUMERIC(5,2)    CHECK (weight_kg BETWEEN 50.0 AND 130.0),
     dominant_foot   CHAR(5)         CHECK (dominant_foot IN ('left','right','both')),
+    caps            SMALLINT        NOT NULL DEFAULT 0,
     is_active       BOOLEAN         NOT NULL DEFAULT TRUE,
     created_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW()
@@ -346,89 +347,58 @@ CREATE INDEX idx_ts_coach_date ON training_sessions (created_by_coach_id, sessio
 CREATE INDEX idx_ts_type_date  ON training_sessions (session_type, session_date);
 
 -- ============================================================
--- TABLE: daily_metrics  [TIMESCALEDB HYPERTABLE]
--- Core time-series table — 15 metrics per player per day
--- Partitioned weekly (chunk_time_interval = 7 days)
---
--- Partitioning choice: 7 days aligns with the training week
--- reporting cadence and keeps each chunk at ~700 rows
--- (100 players × 7 days), well within TimescaleDB sweet spot.
+-- TABLE: daily_metrics
+-- Core daily training/wellness table — one row per player per day.
+-- Columns match the SQLAlchemy ORM model (app/models/metric.py):
+-- metric_date keying, stored ACWR + ML risk outputs.
 -- ============================================================
 
 CREATE TABLE daily_metrics (
-    id                        UUID                NOT NULL DEFAULT uuid_generate_v4(),
-    player_id                 UUID                NOT NULL REFERENCES players(id) ON DELETE RESTRICT,
-    measured_at               TIMESTAMPTZ         NOT NULL,   -- PARTITION KEY
-    session_id                UUID                REFERENCES training_sessions(id) ON DELETE SET NULL,
+    id                          UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
+    player_id                   UUID         NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    metric_date                 DATE         NOT NULL,
+    session_type                VARCHAR(20),
 
-    -- ── HOOPER WELLNESS ────────────────────────────────────────
-    -- Source: Hooper & Mackinnon, Sports Medicine 1995, 20(5):321-327
-    -- Scale: 1 (very very good) to 7 (very very bad)
-    sleep_duration_h          NUMERIC(4,2)        CHECK (sleep_duration_h  BETWEEN 0.0  AND 24.0),
-    sleep_quality             SMALLINT            CHECK (sleep_quality     BETWEEN 1    AND 7),
-    fatigue                   SMALLINT            CHECK (fatigue           BETWEEN 1    AND 7),
-    soreness                  SMALLINT            CHECK (soreness          BETWEEN 1    AND 7),
-    stress                    SMALLINT            CHECK (stress            BETWEEN 1    AND 7),
+    -- Hooper & Mackinnon 1995 wellness (1-7 Likert)
+    sleep_quality               SMALLINT,
+    fatigue                     SMALLINT,
+    soreness                    SMALLINT,
+    stress                      SMALLINT,
+    sleep_duration_h            NUMERIC(4,2),
 
-    -- ── GPS EXTERNAL LOAD ──────────────────────────────────────
-    -- Source: Bradley 2009 (JOSS 27:2, EPL data); Dellal 2010 (EJSS 10:1)
-    session_distance_km       NUMERIC(5,2)        CHECK (session_distance_km        BETWEEN 0.0 AND 20.0),
-    high_intensity_distance_m INTEGER             CHECK (high_intensity_distance_m  BETWEEN 0   AND 10000),  -- threshold: >19.8 km/h
-    sprints_count             SMALLINT            CHECK (sprints_count              BETWEEN 0   AND 150),    -- threshold: >25.2 km/h
-    accel_decel_count         SMALLINT            CHECK (accel_decel_count          BETWEEN 0   AND 500),    -- threshold: >3 m/s²
+    -- Foster 2001 sRPE
+    rpe                         SMALLINT,
+    session_duration_min        SMALLINT,
+    srpe                        INTEGER,
 
-    -- ── FOSTER INTERNAL LOAD ───────────────────────────────────
-    -- Source: Foster et al., JSCR 2001, 15(1):109-115
-    rpe                       NUMERIC(3,1)        CHECK (rpe               BETWEEN 0.0 AND 10.0),  -- Modified Borg CR-10; collected 30 min post-session
-    session_duration_min      SMALLINT            CHECK (session_duration_min BETWEEN 0 AND 300),
-    srpe                      INTEGER             GENERATED ALWAYS AS               -- sRPE (AU) = RPE × duration. Stored for query performance.
-                                  (ROUND(rpe * session_duration_min)::INTEGER) STORED,
+    -- Bradley 2009 / Dellal 2010 GPS load
+    session_distance_km         NUMERIC(5,2),
+    high_intensity_distance_m   INTEGER,
+    sprints_count               SMALLINT,
+    accel_decel_count           SMALLINT,
 
-    -- ── BUCHHEIT RECOVERY MARKERS ──────────────────────────────
-    -- Source: Buchheit, Frontiers in Physiology 2014, 5:73
-    hrv_ms                    NUMERIC(5,1)        CHECK (hrv_ms          BETWEEN 20.0  AND 150.0),  -- RMSSD in ms; morning supine measurement
-    resting_hr_bpm            SMALLINT            CHECK (resting_hr_bpm  BETWEEN 30    AND 100),
-    hydration_usg             NUMERIC(5,3)        CHECK (hydration_usg   BETWEEN 1.001 AND 1.035),  -- urine specific gravity; >1.020 = dehydration alert
+    -- Buchheit 2014 recovery markers
+    hrv_ms                      NUMERIC(6,2),
+    resting_hr_bpm              SMALLINT,
 
-    -- ── METADATA ───────────────────────────────────────────────
-    recorded_by_coach_id      UUID                REFERENCES coaches(id) ON DELETE SET NULL,
-    data_source               data_source_type    NOT NULL DEFAULT 'manual',
-    created_at                TIMESTAMPTZ         NOT NULL DEFAULT NOW(),
+    -- Armstrong 1994 hydration
+    hydration_usg               NUMERIC(6,4),
 
-    PRIMARY KEY (id, measured_at)   -- composite PK required by TimescaleDB
+    -- Gabbett 2016 ACWR (computed, stored for fast queries)
+    acute_load_7d               INTEGER,
+    chronic_load_28d            INTEGER,
+    acwr                        NUMERIC(5,3),
+
+    -- ML output
+    injury_risk_score           NUMERIC(5,4),
+    risk_category               VARCHAR(20),
+
+    data_source                 VARCHAR(20)  DEFAULT 'manual',
+    created_at                  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at                  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
-COMMENT ON TABLE daily_metrics IS
-    'TimescaleDB hypertable. 15 metrics per player per day. ~135,000 rows for 100 players × 90 days. Weekly partitioning (chunk_time_interval=7d).';
-COMMENT ON COLUMN daily_metrics.measured_at IS
-    'Partition key. Store as day + 06:00 local time in UTC to avoid DST gaps in daily aggregations.';
-COMMENT ON COLUMN daily_metrics.srpe IS
-    'Session RPE in Arbitrary Units (AU). Foster 2001: sRPE = CR-10 RPE × session duration (min). Generated column, stored for index efficiency.';
-COMMENT ON COLUMN daily_metrics.hrv_ms IS
-    'RMSSD (root mean square of successive differences) in ms. Morning supine protocol per Buchheit 2014. Interpret vs individual baseline in player_baseline_profiles.';
-COMMENT ON COLUMN daily_metrics.hydration_usg IS
-    'Urine specific gravity. 1.001-1.010: well-hydrated. >1.020: dehydrated (alert). >1.030: severe. Armstrong et al. 1994, MSSE.';
-COMMENT ON COLUMN daily_metrics.high_intensity_distance_m IS
-    'Distance covered above 19.8 km/h. Bradley 2009 EPL threshold. Key discriminator between positions and session intensities.';
-COMMENT ON COLUMN daily_metrics.accel_decel_count IS
-    'Events exceeding ±3 m/s². Dellal 2010 injury risk marker — accumulation correlates with soft-tissue injury risk.';
-COMMENT ON COLUMN daily_metrics.sleep_quality IS
-    'Hooper scale: 1 = very, very good ; 7 = very, very bad. Counter-intuitive direction maintained for Hooper index fidelity.';
-
--- Convert to hypertable — partitioned weekly
-SELECT create_hypertable(
-    'daily_metrics',
-    'measured_at',
-    chunk_time_interval => INTERVAL '7 days',
-    if_not_exists       => TRUE
-);
-
--- Indexes on hypertable (TimescaleDB requires including the time column)
-CREATE INDEX idx_dm_player_time ON daily_metrics (player_id, measured_at DESC);
-CREATE INDEX idx_dm_session     ON daily_metrics (session_id)               WHERE session_id IS NOT NULL;
-CREATE INDEX idx_dm_source_time ON daily_metrics (data_source, measured_at DESC);
-CREATE INDEX idx_dm_alert_hrv   ON daily_metrics (player_id, measured_at DESC)
-    WHERE hrv_ms IS NOT NULL;                   -- partial index for recovery dashboard queries
+CREATE INDEX ix_daily_metrics_player_date ON daily_metrics (player_id, metric_date);
 
 -- ============================================================
 -- TABLE: wellness_questionnaires
