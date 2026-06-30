@@ -1,6 +1,7 @@
 from pathlib import Path
+from typing import Annotated
 from pydantic import field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict, NoDecode
 
 _ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
 
@@ -11,7 +12,10 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/injury_prediction"
     ML_MODELS_DIR: Path = Path(__file__).resolve().parents[2] / "ml" / "models"
     ENVIRONMENT: str = "development"
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8081"]
+    # NoDecode: stop pydantic-settings from JSON-decoding the env value so a plain
+    # comma-separated string (e.g. CORS_ORIGINS=https://a.com,https://b.com) works
+    # and is handled by _split_cors below instead of raising a SettingsError.
+    CORS_ORIGINS: Annotated[list[str], NoDecode] = ["http://localhost:3000", "http://localhost:8081"]
 
     # ACWR thresholds — Gabbett 2016
     ACWR_MODERATE_MIN: float = 1.30
