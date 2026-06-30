@@ -10,6 +10,7 @@ from app.routers import teams, players, metrics, predictions, readiness
 from app.routers import live_predictions
 from app.routers import heatmap
 from app.routers import player_profile
+from app.routers import bracket
 from app.services.ml_inference import InjuryModel
 
 _WEB_DIR = Path(__file__).resolve().parents[2] / "web"
@@ -45,6 +46,7 @@ app.include_router(readiness.router,       prefix=API_PREFIX)
 app.include_router(live_predictions.router, prefix=API_PREFIX)
 app.include_router(heatmap.router,          prefix=API_PREFIX)
 app.include_router(player_profile.router,  prefix=API_PREFIX)
+app.include_router(bracket.router,          prefix=API_PREFIX)
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)

@@ -9,295 +9,267 @@
   <style>
     /* ── Design tokens ───────────────────────────────────────── */
     :root {
-      --navy:      #050f1e;
-      --navy-2:    #0a1628;
-      --card:      #0e1d30;
-      --card-2:    #112035;
-      --green:     #1db954;
-      --green-dim: #17a349;
-      --gold:      #ffd700;
+      --bg:        #f5f7fb;
+      --bg-2:      #eef2f9;
+      --navy:      #f5f7fb;
+      --card:      #ffffff;
+      --card-solid:#ffffff;
+      --card-2:    #f8fafc;
+      --green:     #334155;   /* text / icon accent (slate) */
+      --green-dim: #1e293b;
+      --accent:    #1e293b;   /* solid accent for pills / buttons */
+      --accent-2:  #475569;
+      --accent-grad: linear-gradient(135deg, #334155 0%, #0f172a 100%);
+      --gold:      #c98a04;
       --red:       #ef4444;
       --amber:     #f59e0b;
-      --border:    rgba(255,255,255,0.07);
-      --border-g:  rgba(29,185,84,0.25);
-      --text:      #d5e3ff;
-      --muted:     #5e7599;
+      --border:    #e4e9f1;
+      --border-g:  #cbd5e1;
+      --text:      #0f172a;
+      --muted:     #64748b;
     }
 
     * { font-family: 'Inter', sans-serif; }
 
-    /* ── Body & background ──────────────────────────────────── */
     body {
-      background: var(--navy) !important;
+      background: var(--bg) !important;
       background-image:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(29,185,84,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 30% at 95% 90%, rgba(255,215,0,0.03) 0%, transparent 60%) !important;
+        radial-gradient(ellipse 70% 50% at 8% -10%, rgba(51,65,85,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 40% at 100% 0%, rgba(100,116,139,0.05) 0%, transparent 55%) !important;
+      background-attachment: fixed !important;
+      color: var(--text);
     }
 
-    /* ── Tailwind colour overrides ──────────────────────────── */
-    .bg-white                { background: var(--card) !important; }
-    .bg-slate-50             { background: rgba(255,255,255,0.03) !important; }
-    .bg-slate-100            { background: rgba(255,255,255,0.05) !important; }
-    .bg-slate-200            { background: rgba(255,255,255,0.07) !important; }
-    .bg-slate-800            { background: rgba(255,255,255,0.06) !important; }
-    .border-slate-200        { border-color: var(--border) !important; }
-    .border-slate-100        { border-color: rgba(255,255,255,0.04) !important; }
-    .border-slate-300        { border-color: rgba(255,255,255,0.1) !important; }
-    .border-red-200          { border-color: rgba(239,68,68,0.3) !important; }
-    .text-slate-900          { color: var(--text) !important; }
-    .text-slate-800          { color: var(--text) !important; }
-    .text-slate-700          { color: #bdd0ee !important; }
-    .text-slate-600          { color: #8fa8c8 !important; }
-    .text-slate-500          { color: var(--muted) !important; }
-    .text-slate-400          { color: #476080 !important; }
-    .text-slate-300          { color: #3a5070 !important; }
-    .text-blue-600           { color: var(--green) !important; }
-    .text-blue-700           { color: var(--green) !important; }
-    .text-blue-400           { color: #7bd0ff !important; }
-    .shadow-sm               { box-shadow: 0 2px 16px rgba(0,0,0,0.5) !important; }
-    .shadow-md               { box-shadow: 0 4px 24px rgba(0,0,0,0.6) !important; }
-    .shadow-lg               { box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important; }
+    /* Cards — white with hairline + soft shadow */
+    .bg-white {
+      background: var(--card) !important;
+      border: 1px solid var(--border) !important;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .bg-slate-50  { background: #f8fafc !important; }
+    .bg-slate-100 { background: #f1f5f9 !important; }
+    .bg-slate-200 { background: #e2e8f0 !important; }
+    .bg-slate-800 { background: #f1f5f9 !important; }
+    .border-slate-200 { border-color: var(--border) !important; }
+    .border-slate-100 { border-color: #eef2f7 !important; }
+    .border-slate-300 { border-color: #cbd5e1 !important; }
+    .text-slate-900 { color: #0f172a !important; }
+    .text-slate-800 { color: #1e293b !important; }
+    .text-slate-700 { color: #334155 !important; }
+    .text-slate-600 { color: #475569 !important; }
+    .text-slate-500 { color: #64748b !important; }
+    .text-slate-400 { color: #94a3b8 !important; }
+    .text-slate-300 { color: #cbd5e1 !important; }
+    .text-blue-600  { color: #334155 !important; }
+    .text-blue-700  { color: #1e293b !important; }
+    .shadow-sm { box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 6px 20px -10px rgba(15,23,42,0.12) !important; }
+    .shadow-md { box-shadow: 0 2px 6px rgba(15,23,42,0.06), 0 14px 36px -14px rgba(15,23,42,0.16) !important; }
+    .shadow-lg { box-shadow: 0 4px 10px rgba(15,23,42,0.07), 0 24px 50px -18px rgba(15,23,42,0.20) !important; }
 
-    /* Hover helpers used in static HTML */
-    .hover\:bg-white:hover   { background: rgba(255,255,255,0.08) !important; }
-    .hover\:bg-slate-50:hover{ background: rgba(255,255,255,0.05) !important; }
-    .hover\:shadow-md:hover  { box-shadow: 0 4px 24px rgba(0,0,0,0.6) !important; }
-    .hover\:text-slate-700:hover { color: var(--text) !important; }
+    /* Modern shapes */
+    .rounded-lg   { border-radius: 12px !important; }
+    .rounded-xl   { border-radius: 18px !important; }
+    .rounded-2xl  { border-radius: 24px !important; }
+    .rounded-t-xl { border-top-left-radius: 18px !important; border-top-right-radius: 18px !important; }
 
-    /* Inputs & selects */
+    .hover\:bg-white:hover    { background: #f8fafc !important; }
+    .hover\:bg-slate-50:hover { background: #f1f5f9 !important; }
+    .hover\:shadow-md:hover   { box-shadow: 0 2px 6px rgba(15,23,42,0.06), 0 14px 36px -14px rgba(15,23,42,0.16) !important; }
+    .hover\:text-slate-700:hover { color: #0f172a !important; }
+
     input, select, textarea {
-      background: rgba(255,255,255,0.04) !important;
+      background: #ffffff !important;
       color: var(--text) !important;
-      border-color: rgba(255,255,255,0.1) !important;
+      border-color: #cbd5e1 !important;
     }
-    input::placeholder { color: var(--muted) !important; }
-    select option       { background: #0e1d30; color: var(--text); }
-    input[type=range]   { background: transparent !important; }
+    input::placeholder { color: #94a3b8 !important; }
+    select option { background: #ffffff; color: var(--text); }
+    input[type=range] { background: transparent !important; }
 
-    /* ── Animations ─────────────────────────────────────────── */
     .bar-fill   { transition: width 0.6s cubic-bezier(.4,0,.2,1); }
     .card-enter { animation: fadeUp 0.35s ease forwards; opacity: 0; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     @keyframes spin   { to { transform:rotate(360deg); } }
 
-    /* ── Range input ─────────────────────────────────────────── */
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
-      background: var(--green); cursor:pointer; box-shadow:0 0 0 3px rgba(29,185,84,.2);
+      background: var(--accent); cursor:pointer; box-shadow:0 0 0 3px rgba(30,41,59,.15);
     }
     input[type=range]::-webkit-slider-runnable-track {
-      height:5px; border-radius:3px; background:rgba(255,255,255,0.08);
+      height:5px; border-radius:3px; background:#e2e8f0;
     }
 
-    /* ── Spinner ─────────────────────────────────────────────── */
     .spinner {
-      border:3px solid rgba(255,255,255,0.06);
-      border-top-color: var(--green);
+      border:3px solid #e2e8f0;
+      border-top-color: var(--accent);
       border-radius:50%; width:36px; height:36px;
       animation: spin .8s linear infinite;
     }
 
-    /* ── Scrollbar ───────────────────────────────────────────── */
-    ::-webkit-scrollbar { width:6px; }
-    ::-webkit-scrollbar-track { background: var(--navy); }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius:3px; }
+    ::-webkit-scrollbar { width:8px; height:8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius:4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-    /* ── Team tab buttons ────────────────────────────────────── */
+    /* Team / stage pills */
     .tab-active {
-      background: var(--green) !important;
-      color: #fff !important;
-      box-shadow: 0 0 14px rgba(29,185,84,0.4);
+      background: var(--accent-grad) !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
+      border-color: transparent !important;
+      box-shadow: 0 6px 18px -6px rgba(15,23,42,0.40);
     }
 
-    /* ── View tabs ───────────────────────────────────────────── */
-    .view-tab { color: var(--muted); }
-    .view-tab-active {
-      border-bottom: 3px solid var(--green) !important;
-      color: var(--green) !important;
-      font-weight: 700;
+    .view-tab { color: var(--muted); transition: color .15s ease; }
+    .view-tab:hover { color: var(--text); }
+    .view-tab-active { position: relative; color: var(--text) !important; font-weight: 700; }
+    .view-tab-active::after {
+      content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 3px;
+      border-radius: 3px 3px 0 0; background: var(--accent-grad);
     }
+    .stage-pill, .team-tab { transition: all .15s ease; }
+    .stage-pill:hover, .team-tab:hover { border-color: #94a3b8 !important; color: var(--text); }
 
-    /* ── Position filter buttons ─────────────────────────────── */
     .pos-filter-btn {
       padding:4px 12px; border-radius:999px; font-size:11px; font-weight:600;
-      border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04);
+      border:1px solid #e2e8f0; background:#f8fafc;
       color: var(--muted); cursor:pointer; transition:all .15s;
     }
-    .pos-filter-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
-    .pos-filter-btn.active {
-      background: var(--green); color:#fff; border-color: var(--green);
-      box-shadow: 0 0 10px rgba(29,185,84,0.35);
-    }
+    .pos-filter-btn:hover { background:#f1f5f9; color: var(--text); }
+    .pos-filter-btn.active { background: var(--accent); color:#fff; border-color: var(--accent); }
 
-    /* ── Heatmap ─────────────────────────────────────────────── */
     .heatmap-cell { padding:6px 3px; min-width:52px; border-radius:5px; cursor:default; transition:opacity .15s; }
     .heatmap-cell:hover { opacity:0.82; }
     .heatmap-cell .score { font-size:11px; font-weight:700; line-height:1.1; }
     .heatmap-cell .prob  { font-size:10px; opacity:.85; }
-    .heatmap-mls { outline:2px solid #fbbf24; outline-offset:-1px; }
+    .heatmap-mls { outline:2px solid #f59e0b; outline-offset:-1px; }
 
-    /* ── Risk/readiness badge tones (JS-generated) ───────────── */
+    /* Risk / readiness badge tones (work on white) */
     .bg-green-50   { background: rgba(34,197,94,0.12)  !important; }
-    .bg-amber-50   { background: rgba(245,158,11,0.12) !important; }
-    .bg-red-50     { background: rgba(239,68,68,0.12)  !important; }
-    .bg-purple-50  { background: rgba(124,58,237,0.12) !important; }
-    .bg-blue-50    { background: rgba(37,99,235,0.12)  !important; }
+    .bg-amber-50   { background: rgba(245,158,11,0.14) !important; }
+    .bg-red-50     { background: rgba(239,68,68,0.10)  !important; }
+    .bg-purple-50  { background: rgba(124,58,237,0.10) !important; }
+    .bg-blue-50    { background: rgba(37,99,235,0.10)  !important; }
     .bg-emerald-50 { background: rgba(16,185,129,0.12) !important; }
     .bg-orange-50  { background: rgba(249,115,22,0.12) !important; }
-    .bg-indigo-50  { background: rgba(99,102,241,0.12) !important; }
-    .bg-red-100    { background: rgba(239,68,68,0.14)  !important; }
-    .bg-blue-100   { background: rgba(37,99,235,0.14)  !important; }
+    .bg-indigo-50  { background: rgba(99,102,241,0.10) !important; }
+    .bg-red-100    { background: rgba(239,68,68,0.12)  !important; }
+    .bg-blue-100   { background: rgba(37,99,235,0.12)  !important; }
 
-    .border-green-200   { border-color: rgba(34,197,94,0.35)   !important; }
-    .border-amber-200   { border-color: rgba(245,158,11,0.35)  !important; }
+    .border-green-200   { border-color: rgba(34,197,94,0.40)   !important; }
+    .border-amber-200   { border-color: rgba(245,158,11,0.40)  !important; }
     .border-red-200     { border-color: rgba(239,68,68,0.35)   !important; }
     .border-red-300     { border-color: rgba(239,68,68,0.45)   !important; }
-    .border-emerald-200 { border-color: rgba(16,185,129,0.35)  !important; }
+    .border-emerald-200 { border-color: rgba(16,185,129,0.40)  !important; }
     .border-blue-200    { border-color: rgba(37,99,235,0.35)   !important; }
-    .border-orange-200  { border-color: rgba(249,115,22,0.35)  !important; }
+    .border-orange-200  { border-color: rgba(249,115,22,0.40)  !important; }
     .border-indigo-300  { border-color: rgba(99,102,241,0.45)  !important; }
 
-    /* ── Action buttons ──────────────────────────────────────── */
-    .bg-blue-600               { background: var(--green)     !important; }
-    .hover\:bg-blue-700:hover  { background: var(--green-dim) !important; }
-    .bg-blue-700               { background: var(--green-dim) !important; }
-    .bg-indigo-600             { background: #5046e4          !important; }
+    /* Action buttons — solid dark-slate accent, white text */
+    .bg-blue-600               { background: var(--accent-grad) !important; color:#fff !important; }
+    .hover\:bg-blue-700:hover  { background: linear-gradient(135deg,#475569,#1e293b) !important; }
+    .bg-blue-700               { background: var(--accent-grad) !important; color:#fff !important; }
+    .bg-indigo-600             { background: #4f46e5          !important; }
     .hover\:bg-indigo-700:hover{ background: #4338ca          !important; }
-    .bg-orange-600             { background: #d97706          !important; }
-    .hover\:bg-orange-700:hover{ background: #b45309          !important; }
+    .bg-orange-600             { background: #ea580c          !important; }
+    .hover\:bg-orange-700:hover{ background: #c2410c          !important; }
     .bg-purple-600             { background: #7c3aed          !important; }
     .hover\:bg-purple-700:hover{ background: #6d28d9          !important; }
 
-    /* ── Warnings / banners ──────────────────────────────────── */
-    #group-i-warning,
-    #scout-no-data {
-      background: rgba(245,158,11,0.07) !important;
-      border-color: rgba(245,158,11,0.25) !important;
+    #group-i-warning, #scout-no-data {
+      background: rgba(245,158,11,0.10) !important;
+      border-color: rgba(245,158,11,0.30) !important;
     }
-    .text-amber-800 { color: #fbbf24 !important; }
-    .text-amber-700 { color: #f5a623 !important; }
-    .text-amber-500 { color: #f5a623 !important; }
+    .text-amber-800 { color: #b45309 !important; }
+    .text-amber-700 { color: #c2740a !important; }
+    .text-amber-500 { color: #d97706 !important; }
     .bg-amber-50.border-amber-200 {
-      background: rgba(245,158,11,0.07) !important;
-      border-color: rgba(245,158,11,0.25) !important;
+      background: rgba(245,158,11,0.10) !important;
+      border-color: rgba(245,158,11,0.30) !important;
     }
 
-    /* ── Result banners (Log Metrics) ───────────────────────── */
-    #result-banner.bg-green-50  { background: rgba(34,197,94,0.1)  !important; border-color:rgba(34,197,94,0.45)  !important; }
-    #result-banner.bg-amber-50  { background: rgba(245,158,11,0.1) !important; border-color:rgba(245,158,11,0.45) !important; }
-    #result-banner.bg-red-50    { background: rgba(239,68,68,0.1)  !important; border-color:rgba(239,68,68,0.45)  !important; }
-    #result-banner.bg-purple-50 { background: rgba(124,58,237,0.1) !important; border-color:rgba(124,58,237,0.45) !important; }
+    #result-banner.bg-green-50  { background: rgba(34,197,94,0.12)  !important; border-color:rgba(34,197,94,0.40)  !important; }
+    #result-banner.bg-amber-50  { background: rgba(245,158,11,0.12) !important; border-color:rgba(245,158,11,0.40) !important; }
+    #result-banner.bg-red-50    { background: rgba(239,68,68,0.10)  !important; border-color:rgba(239,68,68,0.40)  !important; }
+    #result-banner.bg-purple-50 { background: rgba(124,58,237,0.10) !important; border-color:rgba(124,58,237,0.40) !important; }
 
-    /* ── Live badge colors ───────────────────────────────────── */
-    .bg-red-100.text-red-700   { background: rgba(239,68,68,0.12)  !important; }
-    .bg-blue-100.text-blue-700 { background: rgba(37,99,235,0.12)  !important; }
-    .bg-slate-100.text-slate-600 { background: rgba(255,255,255,0.07) !important; }
+    .bg-red-100.text-red-700     { background: rgba(239,68,68,0.12)  !important; }
+    .bg-blue-100.text-blue-700   { background: rgba(37,99,235,0.12)  !important; }
+    .bg-slate-100.text-slate-600 { background: #f1f5f9 !important; }
 
-    /* ── Animate-pulse skeletons ─────────────────────────────── */
     .animate-pulse .h-4,
     .animate-pulse .h-8,
     .animate-pulse .h-10,
-    .animate-pulse .h-8.bg-slate-100 { background: rgba(255,255,255,0.05) !important; }
+    .animate-pulse .h-8.bg-slate-100 { background: #eef2f7 !important; }
 
-    /* ── Predictions match header ────────────────────────────── */
-    .from-slate-900 { --tw-gradient-from: #050f1e; }
-    .via-blue-950   { --tw-gradient-via:  #071526; }
-    .to-slate-900   { --tw-gradient-to:   #050f1e; }
-    .text-blue-400  { color: var(--green) !important; }
-    #pm-kickoff { background: rgba(255,255,255,0.08) !important; color: var(--muted) !important; }
+    /* Predictions match header — kept as a dark hero card on the light UI */
+    .from-slate-900 { --tw-gradient-from: #0f172a; }
+    .via-blue-950   { --tw-gradient-via:  #15213b; }
+    .to-slate-900   { --tw-gradient-to:   #0f172a; }
+    .text-blue-400  { color: #cbd5e1 !important; }
+    #pm-kickoff { background: rgba(255,255,255,0.10) !important; color: #cbd5e1 !important; }
 
-    /* ── Focus rings ─────────────────────────────────────────── */
     .focus\:ring-blue-500:focus,
-    .focus\:ring-indigo-500:focus { --tw-ring-color: var(--green); }
+    .focus\:ring-indigo-500:focus { --tw-ring-color: #94a3b8; }
 
-    /* ── Divider lines ───────────────────────────────────────── */
-    .h-px.flex-1.bg-slate-200 { background: rgba(255,255,255,0.06) !important; }
-    .w-px.h-4.bg-slate-200    { background: rgba(255,255,255,0.08) !important; }
+    .h-px.flex-1.bg-slate-200 { background: #e2e8f0 !important; }
+    .w-px.h-4.bg-slate-200    { background: #e2e8f0 !important; }
 
-    /* ── Table text ──────────────────────────────────────────── */
     th { color: var(--muted) !important; }
   </style>
 </head>
 <body class="min-h-screen">
 
   <!-- HEADER -->
-  <header class="text-white" style="background:linear-gradient(135deg,#050f1e 0%,#091c34 55%,#050f1e 100%);border-bottom:1px solid rgba(29,185,84,0.2);box-shadow:0 4px 30px rgba(0,0,0,0.6);">
+  <header style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.82);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--border);box-shadow:0 1px 0 rgba(15,23,42,0.04), 0 10px 30px -18px rgba(15,23,42,0.25);">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-4">
-        <div style="background:linear-gradient(135deg,#1db954,#0e7a36);border-radius:12px;padding:10px;box-shadow:0 0 20px rgba(29,185,84,0.45);">
-          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div style="background:linear-gradient(135deg,#334155,#0f172a);border-radius:14px;padding:10px;box-shadow:0 8px 22px -8px rgba(15,23,42,0.4);">
+          <svg class="w-7 h-7" style="color:#ffffff" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" stroke-width="2"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0l2 5-2 2-2-2 2-5zm-8 8l5 2v3l-5-2V10zm16 0v3l-5 2v-3l5-2zm-8 9l-2-4h4l-2 4z"/>
           </svg>
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight" style="color:#e8f0fe;letter-spacing:-0.02em;">Injury Risk &amp; Performance Monitor</h1>
-          <p id="header-subtitle" style="color:#1db954;font-size:12px;font-weight:600;margin-top:3px;letter-spacing:0.02em;">FIFA World Cup 2026 · Group C &amp; I</p>
+          <h1 class="text-xl font-bold tracking-tight" style="color:#0f172a;letter-spacing:-0.02em;">Injury Risk &amp; Performance Monitor</h1>
+          <p id="header-subtitle" style="color:#475569;font-size:12px;font-weight:600;margin-top:3px;letter-spacing:0.02em;">FIFA World Cup 2026 · Group C &amp; I</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <div style="background:linear-gradient(135deg,#ffd700,#d4a900);color:#000;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:0.06em;">⚽ WC 2026</div>
         <div class="text-right hidden sm:block">
           <p style="color:var(--muted);font-size:11px;">Last updated</p>
-          <p id="last-updated" style="color:#d5e3ff;font-size:13px;font-weight:600;">—</p>
+          <p id="last-updated" style="color:#334155;font-size:13px;font-weight:600;">—</p>
         </div>
       </div>
+    </div>
+    <!-- PRIMARY FEATURE NAV -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <nav class="flex items-end gap-0.5 overflow-x-auto">
+        <button onclick="switchView('injury')" id="view-injury" class="view-tab view-tab-active px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">⚠ Injury Risk</button>
+        <button onclick="switchView('readiness')" id="view-readiness" class="view-tab px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">⚡ Readiness</button>
+        <button onclick="switchView('live')" id="view-live" class="view-tab px-4 py-2.5 text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"><span class="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block"></span>Live Match</button>
+        <button onclick="switchView('predictions')" id="view-predictions" class="view-tab px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">📊 Predictions</button>
+        <button onclick="viewFullBracket()" id="view-bracket" class="view-tab px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">🏆 Knockout Bracket</button>
+        <button onclick="switchView('compare')" id="view-compare" class="view-tab px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">⚔ Compare</button>
+        <button onclick="switchView('scout')" id="view-scout" class="view-tab px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">🗺 Scout</button>
+        <button onclick="switchView('profiles')" id="view-profiles" class="view-tab px-4 py-2.5 text-sm font-medium transition-all whitespace-nowrap">👤 Profiles</button>
+        <div class="flex-1"></div>
+        <button onclick="switchView('log')" id="view-log" class="view-tab mb-1.5 px-3 py-1.5 text-xs font-semibold border rounded-lg transition-all whitespace-nowrap" style="color:var(--muted);border-color:var(--border);">✚ Log Metrics</button>
+      </nav>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5">
 
-    <!-- CONTROLS -->
-    <div class="rounded-2xl p-4" style="background:var(--card);border:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,0.4);">
-      <div class="space-y-2.5">
-        <!-- Group picker A–L -->
-        <div id="group-picker" class="flex flex-wrap gap-1.5 items-center"></div>
-        <!-- Teams of the selected group -->
-        <div id="team-selector" class="flex flex-wrap gap-1.5 items-center"></div>
+    <!-- KNOCKOUT STAGE + TEAM SELECTOR -->
+    <div class="rounded-2xl p-4 space-y-3" style="background:var(--card);border:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,0.4);">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-xs font-bold mr-1" style="color:var(--muted);">STAGE</span>
+        <div id="stage-bar" class="flex flex-wrap gap-1.5 items-center"></div>
       </div>
-    </div>
-
-    <!-- VIEW TABS -->
-    <div class="flex items-end px-4 pt-3 rounded-t-xl" style="background:var(--card);border:1px solid var(--border);border-bottom:1px solid rgba(29,185,84,0.15);">
-      <button onclick="switchView('injury')" id="view-injury"
-        class="view-tab view-tab-active px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        ⚠ Injury Risk
-      </button>
-      <button onclick="switchView('readiness')" id="view-readiness"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        ⚡ Readiness
-      </button>
-      <button onclick="switchView('live')" id="view-live"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all flex items-center gap-1.5 whitespace-nowrap">
-        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block"></span>
-        Live Match
-      </button>
-      <button onclick="switchView('predictions')" id="view-predictions"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        📊 Predictions
-      </button>
-      <button onclick="viewFullBracket()" id="view-bracket"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        🏆 Knockout Bracket
-      </button>
-      <button onclick="switchView('compare')" id="view-compare"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        ⚔ Compare
-      </button>
-      <button onclick="switchView('scout')" id="view-scout"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        🗺 Scout
-      </button>
-      <button onclick="switchView('profiles')" id="view-profiles"
-        class="view-tab px-5 py-2.5 text-sm font-medium transition-all whitespace-nowrap">
-        👤 Profiles
-      </button>
-      <div class="flex-1"></div>
-      <button onclick="switchView('log')" id="view-log"
-        class="view-tab mb-1.5 px-3 py-1.5 text-xs font-semibold border rounded-lg transition-all whitespace-nowrap"
-        style="color:var(--muted);border-color:var(--border);">
-        ✚ Log Metrics
-      </button>
+      <div id="team-selector" class="flex flex-wrap gap-1.5 items-center"></div>
+      <div id="team-road"></div>
     </div>
 
     <!-- ══ INJURY RISK VIEW ══ -->
@@ -414,7 +386,7 @@
 
             <!-- Player baseline banner (shown after player selected) -->
             <div id="log-baseline-banner" class="hidden rounded-xl p-3 space-y-2"
-              style="background:rgba(29,185,84,0.06);border:1px solid rgba(29,185,84,0.2);">
+              style="background:rgba(100,116,139,0.06);border:1px solid rgba(100,116,139,0.2);">
               <div class="flex items-center justify-between">
                 <span style="color:var(--green);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Player Baseline Profile</span>
                 <span id="log-bl-name" style="color:var(--text);font-size:12px;font-weight:600;"></span>
@@ -1042,7 +1014,7 @@
 
         <!-- Hero card -->
         <div id="profile-hero" class="rounded-2xl overflow-hidden shadow-lg border"
-          style="background:linear-gradient(135deg,#050f1e 0%,#0a1e36 60%,#071c30 100%);border-color:rgba(29,185,84,0.2);">
+          style="background:linear-gradient(135deg,#0b1020 0%,#0a1e36 60%,#071c30 100%);border-color:rgba(100,116,139,0.2);">
         </div>
 
         <!-- 3-column: Physical · Traits · Injury Summary -->
@@ -1065,7 +1037,7 @@
 
   <script>
     const API = window.location.origin + '/api/v1';
-    let currentTeam = 'BRA', currentDay = 70, currentView = 'injury';
+    let currentTeam = null, currentDay = 70, currentView = 'injury';
     let debounce = null;
 
     /* ── COLOUR HELPERS ─────────────────────────────────────────── */
@@ -1438,8 +1410,23 @@
         : filtered.map((p,i) => injuryCard(p,i)).join('');
     }
 
+    const _PICK_TEAM = `<div class="col-span-full flex flex-col items-center justify-center py-20 gap-2 text-center">
+        <div style="font-size:32px">👆</div>
+        <p class="text-lg font-bold" style="color:var(--text)">Pick a team to begin</p>
+        <p class="text-sm" style="color:var(--muted)">Choose a stage and a team above to see its injury risk, readiness, squad and knockout road.</p>
+      </div>`;
+
+    function _clearTeamPanels() {
+      ['injury-stats','match-pred-preview','team-road','readiness-stats'].forEach(id => {
+        const e = document.getElementById(id); if (e) e.innerHTML = '';
+      });
+      const st = document.getElementById('squad-title'); if (st) st.textContent = 'Squad';
+      const rt = document.getElementById('readiness-title'); if (rt) rt.textContent = 'Readiness';
+    }
+
     async function loadInjury() {
       const grid = document.getElementById('injury-grid');
+      if (!currentTeam) { _clearTeamPanels(); grid.innerHTML = _PICK_TEAM; return; }
       grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-16 gap-3"><div class="spinner"></div><p class="text-slate-400 text-sm">Loading WC 2026 injury data…</p></div>`;
       // reset filter to All
       document.querySelectorAll('.pos-filter-btn').forEach((b,i) => { if(i===0) b.classList.add('active'); else b.classList.remove('active'); });
@@ -1465,6 +1452,7 @@
 
     async function loadReadiness() {
       const grid = document.getElementById('readiness-grid');
+      if (!currentTeam) { _clearTeamPanels(); grid.innerHTML = _PICK_TEAM; return; }
       grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-16 gap-3"><div class="spinner"></div><p class="text-slate-400 text-sm">Computing readiness scores…</p></div>`;
       try {
         const url = `${API}/readiness/wc-team/${currentTeam}`;
@@ -1504,9 +1492,12 @@
     /* ── CONTROLS ─────────────────────────────────────────────────*/
     function selectTeam(code) {
       currentTeam = code;
-      // Ensure the team's group is the one rendered, then highlight its tab.
-      const grp = TEAM_GROUP[code];
-      if (grp && grp !== currentGroup) renderTeamSelector(grp);
+      // If the team isn't in the currently shown stage, switch to the earliest
+      // stage it appears in so its chip exists and can be highlighted.
+      if (!_stageTeams(currentStage).some(t => t.tla === code)) {
+        const st = _NAV_STAGES.find(s => _stageTeams(s).some(t => t.tla === code));
+        if (st) { renderStageBar(); renderStageTeams(st); }
+      }
       document.querySelectorAll('.team-tab').forEach(b => {
         b.classList.remove('tab-active','text-white');
         b.classList.add('text-slate-600');
@@ -1514,10 +1505,11 @@
       const btn = document.getElementById(`tab-${code}`);
       if (btn) { btn.classList.add('tab-active'); btn.classList.remove('text-slate-600'); }
       const sub = document.getElementById('header-subtitle');
-      if (sub) sub.textContent = `FIFA World Cup 2026 · Group ${TEAM_GROUP[code] || '?'}`;
+      if (sub) sub.textContent = `${NAMES[code] || code} · FIFA World Cup 2026`;
+      renderTeamRoad(code);
       _populateLiveFixtures(code);
       _populatePrematchFixtures(code);
-      if (currentView === 'bracket') switchView('injury');   // leaving a stage → team view
+      if (currentView === 'bracket') switchView('injury');   // leaving the bracket → team view
       else if (currentView === 'scout') loadScoutMatches(code);
       else loadCurrent();
     }
@@ -1542,70 +1534,138 @@
       else if (view === 'scout') { stopLivePolling(); loadScoutMatches(currentTeam); }
       else if (view === 'profiles') { stopLivePolling(); loadSquadProfiles(document.getElementById('profile-team-select').value || currentTeam); }
       else if (view === 'compare') { stopLivePolling(); initCompareFixtures(currentTeam); loadCompare(); }
-      else if (view === 'bracket') { stopLivePolling(); renderBracket(currentStage); }
+      else if (view === 'bracket') { stopLivePolling(); renderBracket(null); }
       else { stopLivePolling(); if (view !== 'log') loadCurrent(); }
     }
 
-    /* ── TEAM SELECTOR (48 teams · groups A–L) ────────────────────*/
-    let currentGroup = TEAM_GROUP['BRA'] || 'A';
-    let currentStage = null;   // null = a group is selected; otherwise a knockout stage key
+    /* ── KNOCKOUT STAGE NAV + TEAM SELECTOR ───────────────────────*/
+    const _NAV_STAGES  = ['LAST_32','LAST_16','QUARTER_FINALS','SEMI_FINALS','FINAL'];
+    const _STAGE_SHORT = { LAST_32:'R32', LAST_16:'R16', QUARTER_FINALS:'QF', SEMI_FINALS:'Semi', FINAL:'🏆 Final' };
+    const _STAGE_FULL  = { LAST_32:'Round of 32', LAST_16:'Round of 16', QUARTER_FINALS:'Quarter-final', SEMI_FINALS:'Semi-final', FINAL:'Final' };
+    let currentStage = 'LAST_32';
+    let BRACKET = null;   // /bracket/projection result (actual + predicted)
 
-    // Knockout stages shown in the nav bar (in bracket order)
-    const _NAV_STAGES = ['LAST_32','LAST_16','QUARTER_FINALS','SEMI_FINALS','THIRD_PLACE','FINAL'];
-    const _STAGE_SHORT = {
-      LAST_32:'R32', LAST_16:'R16', QUARTER_FINALS:'QF',
-      SEMI_FINALS:'SF', THIRD_PLACE:'3rd', FINAL:'🏆 Final',
-    };
-
-    function renderGroupPicker() {
-      const el = document.getElementById('group-picker');
-      if (!el) return;
-      const groupPills = Object.keys(TEAM_GROUPS).sort().map(g => `
-        <button onclick="selectGroup('${g}')" id="grp-${g}"
-          class="grp-pill px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${(!currentStage && g===currentGroup)?'tab-active':'text-slate-500'}"
-          style="border:1px solid var(--border);background:rgba(255,255,255,0.03);">${g}</button>`).join('');
-      const stagePills = _NAV_STAGES.map(s => `
-        <button onclick="selectStage('${s}')" id="stage-${s}"
-          class="stage-pill px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${s===currentStage?'tab-active':'text-slate-500'}"
-          style="border:1px solid var(--border);background:rgba(29,185,84,0.07);">${_STAGE_SHORT[s]}</button>`).join('');
-      el.innerHTML =
-        `<span class="text-xs font-bold mr-1" style="color:var(--muted);">GROUPS</span>${groupPills}` +
-        `<span class="mx-1.5" style="width:1px;height:22px;background:var(--border);display:inline-block;"></span>` +
-        `<span class="text-xs font-bold mr-1" style="color:var(--muted);">KNOCKOUT</span>${stagePills}`;
+    async function loadBracketProjection() {
+      try {
+        const res = await fetch(`${API}/bracket/projection`);
+        if (res.ok) BRACKET = await res.json();
+      } catch (_) {}
+      renderStageBar();
+      renderStageTeams(currentStage);
     }
 
-    function renderTeamSelector(group) {
-      currentGroup = group;
+    // Ordered, de-duped participants of a stage (actual advancers + predicted)
+    function _stageTeams(stage) {
+      const out = [], seen = new Set();
+      ((BRACKET && BRACKET.stages[stage]) || []).forEach(n => {
+        [['home', n.home_predicted], ['away', n.away_predicted]].forEach(([k, pred]) => {
+          if (n[k] && !seen.has(n[k])) { seen.add(n[k]); out.push({ tla: n[k], predicted: pred }); }
+        });
+      });
+      return out;
+    }
+
+    function renderStageBar() {
+      const el = document.getElementById('stage-bar');
+      if (!el) return;
+      el.innerHTML = _NAV_STAGES.map(s => {
+        const teams = ((BRACKET && BRACKET.stages[s]) || []).length * 2;
+        return `<button onclick="selectStage('${s}')" id="stage-${s}"
+          class="stage-pill px-3.5 py-1.5 rounded-lg text-sm font-bold transition-all ${s===currentStage?'tab-active':'text-slate-500'}"
+          style="border:1px solid var(--border);background:rgba(100,116,139,0.07);">
+          ${_STAGE_SHORT[s]}<span class="opacity-60 font-medium ml-1">${teams||''}</span></button>`;
+      }).join('');
+    }
+
+    function renderStageTeams(stage) {
+      currentStage = stage;
       const el = document.getElementById('team-selector');
       if (!el) return;
-      const teams = TEAM_GROUPS[group] || [];
-      el.innerHTML = teams.map(t => `
+      const teams = _stageTeams(stage);
+      el.innerHTML = teams.length ? teams.map(t => `
         <button onclick="selectTeam('${t.tla}')" id="tab-${t.tla}"
-          class="team-tab ${t.tla===currentTeam?'tab-active':'text-slate-600'} flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm transition-all hover:bg-white"
-          style="border:1px solid var(--border);">
-          <img src="https://flagcdn.com/w20/${t.iso2}.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" /><span>${t.name}</span>
-        </button>`).join('');
-      document.querySelectorAll('.grp-pill').forEach(b => b.classList.toggle('tab-active', b.id === `grp-${group}`));
-    }
-
-    function selectGroup(g) {
-      currentStage = null;
-      renderGroupPicker();
-      renderTeamSelector(g);
-      const first = (TEAM_GROUPS[g] || [])[0];
-      if (first) selectTeam(first.tla);
+          class="team-tab ${t.tla===currentTeam?'tab-active':'text-slate-600'} flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all hover:bg-white"
+          style="border:1px solid var(--border);" title="${t.predicted?'Predicted to reach this stage':'Confirmed in this stage'}">
+          <img src="https://flagcdn.com/w20/${_FLAG_CODES[t.tla]||''}.png" class="w-5 h-3.5 rounded-sm object-cover" alt="" />
+          <span>${NAMES[t.tla]||t.tla}</span>${t.predicted?'<span class="opacity-50 text-xs">~</span>':''}
+        </button>`).join('') : `<span class="text-sm" style="color:var(--muted)">Loading bracket…</span>`;
+      document.querySelectorAll('.stage-pill').forEach(b => b.classList.toggle('tab-active', b.id === `stage-${stage}`));
     }
 
     function selectStage(stage) {
-      currentStage = stage;
-      renderGroupPicker();
-      switchView('bracket');   // bracket branch renders renderBracket(currentStage)
+      renderStageBar();
+      renderStageTeams(stage);
     }
 
-    function viewFullBracket() {
-      currentStage = null;
-      renderGroupPicker();
-      switchView('bracket');
+    function viewFullBracket() { switchView('bracket'); }
+
+    /* ── TEAM ROAD TO THE FINAL ────────────────────────────────────*/
+    function _teamRoadData(tla) {
+      if (!BRACKET) return null;
+      const r32 = BRACKET.stages['LAST_32'] || [];
+      let i = r32.findIndex(n => n.home === tla || n.away === tla);
+      if (i < 0) return null;
+      const steps = [];
+      for (let s = 0; s < _NAV_STAGES.length; s++) {
+        const node = (BRACKET.stages[_NAV_STAGES[s]] || [])[i];
+        if (!node) break;
+        const isHome = node.home === tla, isAway = node.away === tla;
+        if (!isHome && !isAway) break;
+        const opp = isHome ? node.away : node.home;
+        const oppPred = isHome ? node.away_predicted : node.home_predicted;
+        const finished = node.status === 'FINISHED' && node.hs != null;
+        const won = node.winner === tla;
+        let winPct = null;
+        if (node.p_home != null) winPct = Math.round(((isHome ? node.p_home : node.p_away) + 0.5 * node.p_draw) * 100);
+        steps.push({ stage: _NAV_STAGES[s], opp, oppPred, finished, won,
+                     score: finished ? (`${node.hs}-${node.as}` + (node.pen_h!=null ? ' (pens)' : '')) : null, winPct });
+        if (!won) break;            // eliminated (actual loss OR model predicts loss)
+        i = Math.floor(i / 2);
+      }
+      const last = steps[steps.length - 1];
+      return { steps, champion: !!(last && last.stage === 'FINAL' && last.won) };
+    }
+
+    function renderTeamRoad(tla) {
+      const el = document.getElementById('team-road');
+      if (!el) return;
+      const data = _teamRoadData(tla);
+      if (!data) { el.innerHTML = ''; return; }
+      const cells = data.steps.map((st, idx) => {
+        const elim = !st.won;
+        const oppFlag = `https://flagcdn.com/w20/${_FLAG_CODES[st.opp]||''}.png`;
+        const status = st.finished
+          ? `<span class="text-xs font-bold ${st.won?'text-emerald-500':'text-red-500'}">${st.won?'WON':'OUT'} ${st.score}</span>`
+          : `<span class="text-xs font-semibold" style="color:var(--green)">${st.winPct!=null?st.winPct+'% to advance':''}</span>`;
+        const border = (st.won && !st.finished) ? 'rgba(100,116,139,0.45)' : 'var(--border)';
+        const bg = (elim && st.finished) ? 'rgba(239,68,68,0.10)' : 'var(--card)';
+        return `<div class="flex items-center gap-2">
+          <div class="rounded-lg px-2.5 py-1.5" style="background:${bg};border:1px solid ${border};min-width:128px;">
+            <div class="text-[10px] font-bold uppercase tracking-wider mb-0.5" style="color:var(--muted)">${_STAGE_FULL[st.stage]}</div>
+            <div class="flex items-center gap-1.5 text-sm" style="color:var(--text)">
+              <span class="opacity-60">vs</span>
+              <img src="${oppFlag}" class="w-4 h-3 rounded-sm object-cover" alt=""/>
+              <span class="truncate font-semibold">${NAMES[st.opp]||st.opp||'TBD'}</span>${st.oppPred?'<span class="opacity-50 text-xs">~</span>':''}
+            </div>
+            <div class="mt-0.5">${status}</div>
+          </div>
+          ${idx < data.steps.length-1 ? '<span style="color:var(--muted)">→</span>' : ''}
+        </div>`;
+      }).join('');
+      const last = data.steps[data.steps.length - 1];
+      const verdict = data.champion
+        ? `<span class="text-xs font-bold" style="color:#ffd700">🏆 Projected champion</span>`
+        : (last && !last.won
+            ? `<span class="text-xs font-semibold" style="color:${last.finished?'#f87171':'var(--muted)'}">${last.finished?'Eliminated':'Projected out'} · ${_STAGE_FULL[last.stage]}</span>`
+            : '');
+      el.innerHTML = `
+        <div class="mt-1 pt-3" style="border-top:1px solid var(--border)">
+          <div class="flex items-center gap-2 mb-2 flex-wrap">
+            <span class="text-xs font-bold flex items-center gap-1.5" style="color:var(--muted)">${flagImg(tla,18)} ${NAMES[tla]||tla} · ROAD TO THE FINAL</span>
+            ${verdict}
+          </div>
+          <div class="flex flex-wrap items-center gap-2">${cells}</div>
+        </div>`;
     }
 
     /* ── LOG METRICS ──────────────────────────────────────────────*/
@@ -2159,80 +2219,81 @@
       _populatePrematchFixtures(currentTeam);
     }
 
-    async function loadMatchPredictionPreview(matchId) {
+    async function loadMatchPredictionPreview() {
       const el = document.getElementById('match-pred-preview');
       if (!el) return;
-      if (!matchId) { el.innerHTML = ''; return; }
+      if (!currentTeam) { el.innerHTML = ''; return; }
+      const tla = currentTeam;
+      const data = (typeof _teamRoadData === 'function') ? _teamRoadData(tla) : null;
 
-      const fixture = PM_FIXTURES.find(f => f.match_id === matchId);
-      if (!fixture) { el.innerHTML = ''; return; }
+      // The team's next UNPLAYED match in its knockout road (actual or predicted).
+      const next = data && data.steps.find(s => !s.finished);
+      if (!next || !next.opp) {
+        const last = data && data.steps[data.steps.length - 1];
+        const note = !data ? 'No upcoming knockout match.'
+          : (last && last.stage === 'FINAL' && last.won) ? '🏆 Projected champion — no further matches.'
+          : 'Eliminated — no upcoming match.';
+        el.innerHTML = `<div class="rounded-2xl p-4" style="background:var(--card);border:1px solid var(--border)">
+          <span class="text-xs font-bold uppercase tracking-widest" style="color:var(--muted)">Next match</span>
+          <p class="mt-1 text-sm" style="color:var(--text)">${note}</p></div>`;
+        return;
+      }
 
-      el.innerHTML = `<div class="bg-slate-900 rounded-xl p-4 animate-pulse">
-        <div class="h-3 bg-slate-700 rounded w-1/3 mb-3"></div>
-        <div class="flex justify-between gap-3">
-          <div class="h-8 bg-slate-800 rounded flex-1"></div>
-          <div class="h-8 bg-slate-800 rounded flex-1"></div>
-          <div class="h-8 bg-slate-800 rounded flex-1"></div>
-        </div>
-      </div>`;
+      const ht = tla, at = next.opp;
+      const stageLabel = (typeof _STAGE_FULL !== 'undefined' && _STAGE_FULL[next.stage]) || next.stage;
+      el.innerHTML = `<div class="rounded-2xl p-4 animate-pulse" style="background:var(--card);border:1px solid var(--border)">
+        <div class="h-3 rounded w-1/3 mb-3" style="background:#eef2f7"></div>
+        <div class="flex justify-between gap-3"><div class="h-8 rounded flex-1" style="background:#f1f5f9"></div><div class="h-8 rounded flex-1" style="background:#f1f5f9"></div><div class="h-8 rounded flex-1" style="background:#f1f5f9"></div></div></div>`;
 
       try {
-        const res = await fetch(`${API}/predictions/match/${matchId}/prematch`);
+        const res = await fetch(`${API}/predictions/match/2026-07-15_${ht}_${at}/prematch`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const d = await res.json();
-
-        const op  = d.outcome_probabilities || {};
+        const op = d.outcome_probabilities || {};
         const mls = d.most_likely_score;
-        const ht = fixture.home, at = fixture.away;
-        const hw = +(op.home_win || 0), dr = +(op.draw || 0), aw = +(op.away_win || 0);
+        const hw = +(op.home_win||0), dr = +(op.draw||0), aw = +(op.away_win||0);
 
         const probBar = (prob, col, label) => `
           <div class="flex-1 text-center">
-            <div class="text-xs text-slate-400 mb-1 truncate" title="${label}">${label.length > 9 ? label.slice(0,8)+'…' : label}</div>
+            <div class="text-xs mb-1 truncate" style="color:var(--muted)" title="${label}">${label.length>10?label.slice(0,9)+'…':label}</div>
             <div class="text-lg font-black tabular-nums" style="color:${col}">${(prob*100).toFixed(0)}%</div>
-            <div class="h-1 rounded-full mt-1.5 bg-slate-700 overflow-hidden">
+            <div class="h-1.5 rounded-full mt-1.5 overflow-hidden" style="background:#eef2f7">
               <div class="h-full rounded-full transition-all duration-500" style="width:${(prob*100).toFixed(0)}%;background:${col}"></div>
             </div>
           </div>`;
 
         el.innerHTML = `
-        <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl overflow-hidden border border-slate-700/50">
+        <div class="rounded-2xl overflow-hidden" style="background:var(--card);border:1px solid var(--border);box-shadow:0 2px 6px rgba(15,23,42,0.05)">
           <div class="px-4 pt-3 pb-1 flex items-center justify-between">
-            <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Next Match · ${fixture.group ? 'Group '+fixture.group : (fixture.stage||'').replace(/_/g,' ')}</span>
-            <span class="text-xs text-slate-500">${fixture.date}</span>
+            <span class="text-xs font-bold uppercase tracking-widest" style="color:var(--green)">Next match · ${stageLabel}${next.oppPred?' · predicted':''}</span>
+            <span class="text-xs" style="color:var(--muted)">${next.winPct!=null?next.winPct+'% to advance':''}</span>
           </div>
           <div class="px-4 pb-4">
             <div class="flex items-center justify-between gap-3 mb-4">
               <div class="flex items-center gap-2 min-w-0">
-                <span class="text-xl flex-shrink-0">${flagImg(ht, 28)}</span>
-                <span class="text-white font-bold text-sm truncate">${NAMES[ht]||ht}</span>
+                ${flagImg(ht,28)}<span class="font-bold text-sm truncate" style="color:var(--text)">${NAMES[ht]||ht}</span>
               </div>
               <div class="text-center flex-shrink-0">
-                ${mls
-                  ? `<span class="text-2xl font-black text-white tabular-nums">${mls.home}–${mls.away}</span>
-                     <p class="text-xs text-slate-500 mt-0.5">most likely · ${(mls.probability*100).toFixed(1)}%</p>`
-                  : `<span class="text-slate-600 text-lg font-bold">vs</span>`}
+                ${mls?`<span class="text-2xl font-black tabular-nums" style="color:var(--text)">${mls.home}–${mls.away}</span>
+                   <p class="text-xs mt-0.5" style="color:var(--muted)">most likely · ${(mls.probability*100).toFixed(1)}%</p>`
+                  :`<span class="text-lg font-bold" style="color:var(--muted)">vs</span>`}
               </div>
               <div class="flex items-center gap-2 min-w-0 flex-row-reverse">
-                <span class="text-xl flex-shrink-0">${flagImg(at, 28)}</span>
-                <span class="text-white font-bold text-sm truncate">${NAMES[at]||at}</span>
+                ${flagImg(at,28)}<span class="font-bold text-sm truncate" style="color:var(--text)">${NAMES[at]||at}${next.oppPred?' ~':''}</span>
               </div>
             </div>
             <div class="flex gap-3 mb-3">
-              ${probBar(hw, '#3b82f6', NAMES[ht]||ht)}
-              ${probBar(dr, '#94a3b8', 'Draw')}
-              ${probBar(aw, '#8b5cf6', NAMES[at]||at)}
+              ${probBar(hw,'#334155',NAMES[ht]||ht)}
+              ${probBar(dr,'#94a3b8','Draw')}
+              ${probBar(aw,'#d97706',NAMES[at]||at)}
             </div>
-            <button onclick="switchView('predictions')"
-              class="w-full text-center text-xs text-blue-400 hover:text-blue-300 transition-colors pt-1 border-t border-slate-700/50">
+            <button onclick="switchView('predictions')" class="w-full text-center text-xs pt-2 transition-colors" style="color:var(--green);border-top:1px solid var(--border)">
               Full analysis — scoreline matrix, scorer probabilities →
             </button>
           </div>
         </div>`;
       } catch(e) {
-        el.innerHTML = `<div class="bg-slate-900 rounded-xl border border-slate-700/50 p-4">
-          <p class="text-xs text-slate-500">Match prediction unavailable: ${e.message}</p>
-        </div>`;
+        el.innerHTML = `<div class="rounded-2xl p-4" style="background:var(--card);border:1px solid var(--border)"><p class="text-xs" style="color:var(--muted)">Match prediction unavailable: ${e.message}</p></div>`;
       }
     }
 
@@ -2489,6 +2550,7 @@
       const controls = document.getElementById('scout-controls');
       const area     = document.getElementById('scout-heatmap-area');
 
+      if (!tla) { controls.classList.add('hidden'); noData.classList.remove('hidden'); noData.innerHTML = _PICK_TEAM; return; }
       noData.classList.add('hidden');
       controls.classList.remove('hidden');
 
@@ -2865,7 +2927,7 @@
           <div style="flex-shrink:0;">
             ${imgUrl
               ? `<img src="${imgUrl}" alt="${d.name}" class="rounded-xl object-cover shadow-lg"
-                   style="width:100px;height:120px;object-fit:cover;border:2px solid rgba(29,185,84,0.3);"
+                   style="width:100px;height:120px;object-fit:cover;border:2px solid rgba(100,116,139,0.3);"
                    onerror="this.outerHTML='<div style=\'width:100px;height:120px;border-radius:12px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:40px;\'>&#x1F464;</div>'">`
               : `<div style="width:100px;height:120px;border-radius:12px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:40px;">&#x1F464;</div>`
             }
@@ -2879,7 +2941,7 @@
             </div>
             <h2 style="color:#e8f0fe;font-size:26px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;">${d.name}</h2>
             <div class="flex flex-wrap items-center gap-3 mt-2">
-              <span style="background:rgba(29,185,84,0.15);color:var(--green);border:1px solid rgba(29,185,84,0.3);padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700;">${d.position_detail || d.position}</span>
+              <span style="background:rgba(100,116,139,0.15);color:var(--green);border:1px solid rgba(100,116,139,0.3);padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700;">${d.position_detail || d.position}</span>
               <span style="color:var(--muted);font-size:13px;">&#x1F3DB; ${prof.current_club || d.club || '—'}</span>
             </div>
           </div>
@@ -3000,7 +3062,7 @@
       const el = document.getElementById('profile-stats');
 
       const phRows = [
-        ['Sprint Speed (max)', ph.sprint_speed_max_kmh != null ? ph.sprint_speed_max_kmh + ' km/h' : null, '#1db954'],
+        ['Sprint Speed (max)', ph.sprint_speed_max_kmh != null ? ph.sprint_speed_max_kmh + ' km/h' : null, '#dbe4fb'],
         ['VO₂ Max', ph.vo2_max_ml_kg_min != null ? ph.vo2_max_ml_kg_min + ' ml/kg/min' : null, '#7bd0ff'],
         ['Distance / Match', ph.distance_per_match_km != null ? ph.distance_per_match_km + ' km' : null, '#c084fc'],
         ['High-Intensity Dist.', ph.hi_distance_per_match_m != null ? ph.hi_distance_per_match_m + ' m' : null, '#ffd700'],
@@ -3278,7 +3340,7 @@
 
       return `
         <!-- Match header -->
-        <div style="background:linear-gradient(135deg,#050f1e 0%,#0a1628 60%,#050f1e 100%);border-radius:16px;border:1px solid rgba(29,185,84,0.2);padding:20px 24px;">
+        <div style="background:linear-gradient(135deg,#0b1020 0%,#0e1530 60%,#0b1020 100%);border-radius:16px;border:1px solid rgba(100,116,139,0.2);padding:20px 24px;">
           <p style="text-align:center;color:var(--green);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;">
             Group ${d.group} · ${d.date}
           </p>
@@ -3334,7 +3396,7 @@
 
         <!-- Injury edge banner -->
         ${edgeTla
-          ? `<div style="text-align:center;padding:10px 16px;background:rgba(29,185,84,0.07);border-radius:12px;border:1px solid rgba(29,185,84,0.18);">
+          ? `<div style="text-align:center;padding:10px 16px;background:rgba(100,116,139,0.07);border-radius:12px;border:1px solid rgba(100,116,139,0.18);">
                <span style="color:var(--green);font-size:13px;font-weight:700;">⚕ Injury Edge: ${flagImg(edgeTla)} ${NAMES[edgeTla]||edgeTla}</span>
                <span style="color:var(--muted);font-size:12px;"> — ${edgePct}% lower mean squad risk</span>
              </div>`
@@ -3387,31 +3449,54 @@
       </div>`;
     }
 
+    function _projCard(n) {
+      const finished = n.status === 'FINISHED' && n.hs != null;
+      const hWin = n.winner === n.home, aWin = n.winner === n.away;
+      const row = (tla, pred, score, win) => `<div class="flex items-center justify-between gap-2 ${win?'font-bold':''}" style="color:${tla?'var(--text)':'var(--muted)'};opacity:${(tla && finished && !win)?0.5:1}">
+          <span class="flex items-center gap-1.5 truncate">${tla?flagImg(tla,16):''}<span class="truncate">${NAMES[tla]||tla||'TBD'}</span>${pred?'<span class="opacity-50 text-xs">~</span>':''}</span>
+          <span class="tabular-nums">${score!=null?score:''}</span></div>`;
+      const clickable = n.home && n.away;
+      const meta = finished ? (n.pen_h!=null ? 'FT · pens' : 'FT') : (n.p_home!=null ? `${Math.round(n.p_home*100)} · ${Math.round(n.p_draw*100)} · ${Math.round(n.p_away*100)}` : 'TBD');
+      return `<div onclick="${clickable?`selectTeam('${n.home}')`:''}"
+        class="rounded-lg p-2.5 text-sm ${clickable?'cursor-pointer hover:border-emerald-400':''}"
+        style="background:var(--card);border:1px solid var(--border);min-width:190px;">
+        ${row(n.home, n.home_predicted, finished?n.hs:null, hWin)}
+        ${row(n.away, n.away_predicted, finished?n.as:null, aWin)}
+        <div class="text-[10px] mt-1 text-right" style="color:var(--muted);">${meta}</div>
+      </div>`;
+    }
+
     function renderBracket(stageFilter) {
       const cols = document.getElementById('bracket-cols');
       const hd = document.getElementById('bracket-heading');
-      const byStage = {};
-      WC_ALL_FIXTURES.forEach(m => {
-        if (_STAGE_ORDER.includes(m.stage)) (byStage[m.stage] = byStage[m.stage] || []).push(m);
-      });
-      if (stageFilter) {
-        // Focused single-round view: a wrapping grid of that round's ties.
-        const matches = (byStage[stageFilter] || []).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
-        const done = matches.filter(m => m.status === 'FINISHED').length;
-        if (hd) hd.textContent = `🏆 ${_STAGE_LABEL[stageFilter]} — ${matches.length} matches (${done} played)`;
-        cols.classList.remove('min-w-max');
-        cols.innerHTML = `<div class="flex flex-wrap gap-3 w-full">${matches.map(_bracketCard).join('')}</div>`;
-      } else {
-        if (hd) hd.textContent = '🏆 Knockout Bracket — FIFA World Cup 2026';
-        cols.classList.add('min-w-max');
-        cols.innerHTML = _STAGE_ORDER.filter(s => byStage[s]).map(stage => {
-          const matches = byStage[stage].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
-          return `<div class="flex flex-col gap-2" style="min-width:200px;">
-            <div class="text-xs font-bold uppercase tracking-wider mb-1" style="color:var(--accent,#1db954);">${_STAGE_LABEL[stage]}</div>
-            ${matches.map(_bracketCard).join('')}
-          </div>`;
-        }).join('');
+      if (BRACKET) {
+        const order = BRACKET.stage_order, labels = BRACKET.stage_labels;
+        if (stageFilter && BRACKET.stages[stageFilter]) {
+          const ns = BRACKET.stages[stageFilter];
+          const done = ns.filter(n => n.status === 'FINISHED').length;
+          if (hd) hd.textContent = `🏆 ${labels[stageFilter]} — ${ns.length} matches (${done} played)`;
+          cols.classList.remove('min-w-max');
+          cols.innerHTML = `<div class="flex flex-wrap gap-3 w-full">${ns.map(_projCard).join('')}</div>`;
+        } else {
+          if (hd) hd.textContent = '🏆 Knockout Bracket — actual results + model projection (~ = predicted)';
+          cols.classList.add('min-w-max');
+          cols.innerHTML = order.map(s => `<div class="flex flex-col gap-2" style="min-width:200px;">
+            <div class="text-xs font-bold uppercase tracking-wider mb-1" style="color:var(--green);">${labels[s]}</div>
+            ${(BRACKET.stages[s]||[]).map(_projCard).join('')}</div>`).join('');
+        }
+        return;
       }
+      // Fallback to the static fixture snapshot if the projection didn't load.
+      const byStage = {};
+      WC_ALL_FIXTURES.forEach(m => { if (_STAGE_ORDER.includes(m.stage)) (byStage[m.stage]=byStage[m.stage]||[]).push(m); });
+      if (hd) hd.textContent = '🏆 Knockout Bracket — FIFA World Cup 2026';
+      cols.classList.add('min-w-max');
+      cols.innerHTML = _STAGE_ORDER.filter(s => byStage[s]).map(stage => {
+        const matches = byStage[stage].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+        return `<div class="flex flex-col gap-2" style="min-width:200px;">
+          <div class="text-xs font-bold uppercase tracking-wider mb-1" style="color:var(--green);">${_STAGE_LABEL[stage]}</div>
+          ${matches.map(_bracketCard).join('')}</div>`;
+      }).join('');
     }
 
     function openBracketMatch(mid) {
@@ -3434,14 +3519,15 @@
     /* ── INIT ─────────────────────────────────────────────────────*/
     // Set date input default to today
     document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
-    renderGroupPicker();
-    renderTeamSelector(currentGroup);
     populateTeamDropdown('f-team');
     populateTeamDropdown('profile-team-select');
-    loadInjury();
     loadFormPlayers();
     initPrematchFixtures();
     initLiveFixtures();
+    // Load the knockout projection, then select the default team (renders its road
+    // + injury view). selectTeam → loadCurrent → loadInjury (currentView='injury').
+    // No team is pre-selected — render the stage bar + chips and prompt the user to pick.
+    loadBracketProjection().then(() => loadInjury());
   </script>
 </body>
 </html>
