@@ -206,8 +206,8 @@
     .from-slate-900 { --tw-gradient-from: #0f172a; }
     .via-blue-950   { --tw-gradient-via:  #15213b; }
     .to-slate-900   { --tw-gradient-to:   #0f172a; }
-    .text-blue-400  { color: #cbd5e1 !important; }
-    #pm-kickoff { background: rgba(255,255,255,0.10) !important; color: #cbd5e1 !important; }
+    .text-blue-400  { color: #64748b !important; }
+    #pm-kickoff { background: #f1f5f9 !important; color: #64748b !important; }
 
     .focus\:ring-blue-500:focus,
     .focus\:ring-indigo-500:focus { --tw-ring-color: #94a3b8; }
@@ -698,22 +698,22 @@
       </div>
 
       <!-- Fixture header — match poster -->
-      <div class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-2xl shadow-lg overflow-hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="px-6 pt-4 pb-2 text-center">
-          <p id="pm-group-label" class="text-xs font-bold text-blue-400 uppercase tracking-widest">World Cup 2026</p>
+          <p id="pm-group-label" class="text-xs font-bold uppercase tracking-widest" style="color:var(--green)">World Cup 2026</p>
         </div>
         <div class="flex items-center justify-center gap-3 px-6 pb-5">
           <div class="text-center flex-1 min-w-0">
-            <p id="pm-home-flag" class="mb-2 flex justify-center drop-shadow-lg"></p>
-            <p id="pm-home-name" class="text-lg font-black text-white">Home</p>
+            <p id="pm-home-flag" class="mb-2 flex justify-center"></p>
+            <p id="pm-home-name" class="text-lg font-black" style="color:var(--text)">Home</p>
           </div>
           <div class="text-center px-4 flex flex-col items-center gap-1">
-            <p class="text-4xl font-black text-slate-500">vs</p>
-            <p id="pm-kickoff" class="text-xs text-slate-400 whitespace-nowrap bg-slate-800 px-3 py-1 rounded-full mt-1"></p>
+            <p class="text-3xl font-black" style="color:var(--muted)">vs</p>
+            <p id="pm-kickoff" class="text-xs whitespace-nowrap px-3 py-1 rounded-full mt-1"></p>
           </div>
           <div class="text-center flex-1 min-w-0">
-            <p id="pm-away-flag" class="mb-2 flex justify-center drop-shadow-lg"></p>
-            <p id="pm-away-name" class="text-lg font-black text-white">Away</p>
+            <p id="pm-away-flag" class="mb-2 flex justify-center"></p>
+            <p id="pm-away-name" class="text-lg font-black" style="color:var(--text)">Away</p>
           </div>
         </div>
       </div>
@@ -721,7 +721,7 @@
       <!-- Outcome probabilities -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
         <div class="flex items-center gap-2 mb-5">
-          <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+          <div class="w-2 h-2 rounded-full" style="background:var(--green)"></div>
           <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Match Outcome</h3>
           <span id="pm-market-badge" class="ml-auto text-xs text-slate-400"></span>
         </div>
@@ -1511,6 +1511,7 @@
       _populatePrematchFixtures(code);
       if (currentView === 'bracket') switchView('injury');   // leaving the bracket → team view
       else if (currentView === 'scout') loadScoutMatches(code);
+      else if (currentView === 'predictions') { if (_currentPrematchId) loadPrematch(_currentPrematchId); }
       else loadCurrent();
     }
 
@@ -1929,8 +1930,27 @@
       return PM_FIXTURES.filter(f => f.home === tla || f.away === tla);
     }
 
+    // Upcoming (unplayed) matches for a team, from its knockout projection road.
+    function _upcomingTeamMatches(tla) {
+      if (!tla || typeof _teamRoadData !== 'function') return [];
+      const data = _teamRoadData(tla);
+      if (!data) return [];
+      const stageDate = {};
+      (typeof WC_ALL_FIXTURES !== 'undefined' ? WC_ALL_FIXTURES : []).forEach(f => {
+        if (f.stage && !stageDate[f.stage]) stageDate[f.stage] = f.date;
+      });
+      return data.steps.filter(s => !s.finished && s.opp).map(s => ({
+        match_id: `${stageDate[s.stage] || '2026-07-15'}_${tla}_${s.opp}`,
+        home: tla, away: s.opp, date: stageDate[s.stage] || '2026-07-15',
+        stage: s.stage, group: null, upcoming: true, predicted: s.oppPred,
+      }));
+    }
+
     function _optLabel(f) {
-      return `${f.date}  ·  ${NAMES[f.home]||f.home} vs ${NAMES[f.away]||f.away}`;
+      const sfull = (typeof _STAGE_FULL !== 'undefined' && _STAGE_FULL[f.stage]) || (f.stage||'').replace(/_/g,' ');
+      const tag = f.upcoming ? `▶ NEXT · ${sfull}${f.predicted ? ' (predicted)' : ''}`
+                : (f.group ? `Group ${f.group}` : sfull);
+      return `${tag}  ·  ${NAMES[f.home]||f.home} vs ${NAMES[f.away]||f.away}`;
     }
 
     function _populateLiveFixtures(tla) {
@@ -2198,21 +2218,19 @@
       const sel = document.getElementById('pm-fixture-select');
       if (!sel) return;
       sel.innerHTML = '';
-      const today = new Date().toISOString().slice(0, 10);
-      const fixtures = _teamFixtures(tla);
-      let defaultIdx = 0;
-      let foundUpcoming = false;
-      fixtures.forEach((f, i) => {
+      // Upcoming knockout match(es) first, then past games (most recent first).
+      const upcoming = _upcomingTeamMatches(tla);
+      const past = _teamFixtures(tla).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      const fixtures = upcoming.concat(past);
+      if (!fixtures.length) { _currentPrematchId = null; return; }
+      fixtures.forEach(f => {
         const opt = document.createElement('option');
         opt.value = f.match_id;
         opt.textContent = _optLabel(f);
         sel.appendChild(opt);
-        if (!foundUpcoming && f.date >= today) { defaultIdx = i; foundUpcoming = true; }
       });
-      if (fixtures.length) {
-        sel.selectedIndex = defaultIdx;
-        _currentPrematchId = fixtures[defaultIdx].match_id;
-      }
+      sel.selectedIndex = 0;                    // default = the next upcoming match
+      _currentPrematchId = fixtures[0].match_id;
     }
 
     function initPrematchFixtures() {
@@ -2482,9 +2500,15 @@
       document.getElementById('pm-mls').textContent = '—';
       document.getElementById('pm-mls-prob').textContent = '—';
 
-      const fixture = PM_FIXTURES.find(f => f.match_id === matchId) || {};
+      let fixture = PM_FIXTURES.find(f => f.match_id === matchId);
+      if (!fixture) {                                  // synthetic upcoming id: DATE_HOME_AWAY
+        const p = (matchId || '').split('_');
+        fixture = { date: p[0], home: p[1], away: p[2] };
+      }
+      const _stageLbl = fixture.group ? `Group ${fixture.group}`
+        : (fixture.stage && typeof _STAGE_FULL !== 'undefined' && _STAGE_FULL[fixture.stage]) || '';
       document.getElementById('pm-group-label').textContent =
-        fixture.group ? `World Cup 2026 · Group ${fixture.group}` : 'World Cup 2026';
+        _stageLbl ? `World Cup 2026 · ${_stageLbl}` : 'World Cup 2026';
       document.getElementById('pm-home-flag').innerHTML   = flagImg(fixture.home, 80);
       document.getElementById('pm-home-name').textContent = NAMES[fixture.home] || fixture.home || '';
       document.getElementById('pm-away-flag').innerHTML   = flagImg(fixture.away, 80);
