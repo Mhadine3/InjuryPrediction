@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AthleteOS AI — Injury Risk & Match Prediction · FIFA World Cup 2026</title>
+  <meta name="description" content="AI platform that predicts player injury risk and match outcomes for all 48 teams of the 2026 FIFA World Cup — sports-science-backed load monitoring, an XGBoost injury model, and a live Dixon-Coles knockout projection." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
+  <style>
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --text:#0f172a; --muted:#64748b;
+      --border:#e4e9f1; --accent:#1e293b; --accent2:#334155;
+      --grad:linear-gradient(135deg,#334155 0%,#0f172a 100%);
+    }
+    *{font-family:'Inter',sans-serif;}
+    body{background:var(--bg);color:var(--text);
+      background-image:
+        radial-gradient(ellipse 60% 45% at 12% -8%, rgba(51,65,85,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(100,116,139,0.07) 0%, transparent 55%);
+      background-attachment:fixed;}
+    .glass{background:rgba(255,255,255,0.75);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:22px;
+      box-shadow:0 1px 2px rgba(15,23,42,0.04),0 18px 40px -22px rgba(15,23,42,0.16);
+      transition:transform .2s ease, box-shadow .2s ease;}
+    .card:hover{transform:translateY(-3px);box-shadow:0 2px 6px rgba(15,23,42,0.06),0 26px 54px -24px rgba(15,23,42,0.22);}
+    .btn{border-radius:14px;font-weight:700;transition:all .18s ease;}
+    .btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 26px -10px rgba(15,23,42,0.5);}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -12px rgba(15,23,42,0.6);}
+    .btn-ghost{border:1px solid var(--border);color:var(--text);background:#fff;}
+    .btn-ghost:hover{border-color:#94a3b8;}
+    .chip{border:1px solid var(--border);background:#fff;border-radius:999px;}
+    .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .fade{opacity:0;transform:translateY(14px);animation:fade .6s ease forwards;}
+    @keyframes fade{to{opacity:1;transform:none;}}
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+
+  <!-- NAV -->
+  <header class="glass sticky top-0 z-50" style="border-bottom:1px solid var(--border);">
+    <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-3">
+        <span style="background:var(--grad);border-radius:12px;padding:8px;display:inline-flex;box-shadow:0 8px 20px -8px rgba(15,23,42,0.5);">
+          <svg class="w-5 h-5" style="color:#fff" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0l2 5-2 2-2-2 2-5zm-8 8l5 2v3l-5-2V10zm16 0v3l-5 2v-3l5-2zm-8 9l-2-4h4l-2 4z"/></svg>
+        </span>
+        <span class="font-extrabold tracking-tight text-lg">AthleteOS <span class="grad-text">AI</span></span>
+      </a>
+      <nav class="hidden md:flex items-center gap-7 text-sm font-semibold" style="color:var(--muted)">
+        <a href="#features" class="hover:text-slate-900">Features</a>
+        <a href="#science" class="hover:text-slate-900">The science</a>
+        <a href="#stack" class="hover:text-slate-900">Tech</a>
+      </nav>
+      <a href="/" class="btn btn-primary px-4 py-2 text-sm">Launch Dashboard →</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="max-w-6xl mx-auto px-5 pt-16 pb-14 text-center">
+      <div class="fade inline-flex items-center gap-2 chip px-3 py-1.5 text-xs font-bold mb-6" style="color:var(--muted)">
+        <span class="w-2 h-2 rounded-full" style="background:#22c55e"></span> Live · FIFA World Cup 2026 · all 48 teams
+      </div>
+      <h1 class="fade text-4xl sm:text-6xl font-black tracking-tight leading-[1.05]" style="animation-delay:.05s">
+        Predict injuries <span class="grad-text">before they happen.</span><br class="hidden sm:block"/>
+        Forecast every match.
+      </h1>
+      <p class="fade mx-auto mt-6 max-w-2xl text-lg" style="color:var(--muted);animation-delay:.12s">
+        An AI platform that turns daily training load into player-level <b class="text-slate-800">injury-risk scores</b>,
+        and projects the entire <b class="text-slate-800">2026 World Cup knockout bracket</b> — with predicted scorelines
+        all the way to the final.
+      </p>
+      <div class="fade mt-9 flex flex-wrap items-center justify-center gap-3" style="animation-delay:.18s">
+        <a href="/" class="btn btn-primary px-6 py-3 text-base">Launch the Dashboard →</a>
+        <a href="#features" class="btn btn-ghost px-6 py-3 text-base">See what it does</a>
+      </div>
+
+      <!-- stats strip -->
+      <div class="fade mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto" style="animation-delay:.24s">
+        <div class="card p-5"><div class="text-3xl font-black">48</div><div class="text-xs font-semibold mt-1" style="color:var(--muted)">Teams · 12 groups</div></div>
+        <div class="card p-5"><div class="text-3xl font-black">1,248</div><div class="text-xs font-semibold mt-1" style="color:var(--muted)">Players monitored</div></div>
+        <div class="card p-5"><div class="text-3xl font-black">112k</div><div class="text-xs font-semibold mt-1" style="color:var(--muted)">Daily load metrics</div></div>
+        <div class="card p-5"><div class="text-3xl font-black">0.96</div><div class="text-xs font-semibold mt-1" style="color:var(--muted)">Injury model R²</div></div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="max-w-6xl mx-auto px-5 py-16">
+      <div class="text-center mb-12">
+        <p class="text-xs font-bold uppercase tracking-widest" style="color:var(--muted)">What it does</p>
+        <h2 class="text-3xl sm:text-4xl font-black mt-2">One platform, from training ground to the final</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <!-- card -->
+        <div class="card p-6">
+          <div class="text-2xl mb-3">🩺</div>
+          <h3 class="font-bold text-lg">Injury-risk prediction</h3>
+          <p class="mt-2 text-sm" style="color:var(--muted)">Per-player risk scores from acute:chronic workload (ACWR), wellness and GPS load — surfaced as low / moderate / high / very-high before injuries occur.</p>
+        </div>
+        <div class="card p-6">
+          <div class="text-2xl mb-3">🏆</div>
+          <h3 class="font-bold text-lg">Live knockout projection</h3>
+          <p class="mt-2 text-sm" style="color:var(--muted)">Real results stream in from the tournament; the model fills the rest of the bracket with predicted opponents and scorelines, round of 32 through the final.</p>
+        </div>
+        <div class="card p-6">
+          <div class="text-2xl mb-3">🛣️</div>
+          <h3 class="font-bold text-lg">Road to the Final</h3>
+          <p class="mt-2 text-sm" style="color:var(--muted)">Pick any team and trace its projected path — opponent and win probability at each stage — stopping the moment it's eliminated (or crowned champion).</p>
+        </div>
+        <div class="card p-6">
+          <div class="text-2xl mb-3">📊</div>
+          <h3 class="font-bold text-lg">Pre-match predictions</h3>
+          <p class="mt-2 text-sm" style="color:var(--muted)">A Dixon-Coles Poisson model gives win / draw / loss probabilities, the most-likely scoreline and player scorer odds for any fixture.</p>
+        </div>
+        <div class="card p-6">
+          <div class="text-2xl mb-3">⚡</div>
+          <h3 class="font-bold text-lg">Readiness & wellness</h3>
+          <p class="mt-2 text-sm" style="color:var(--muted)">Daily readiness from sleep, fatigue, soreness, HRV and hydration — Hooper-index wellness combined with recovery markers to flag under-recovered players.</p>
+        </div>
+        <div class="card p-6">
+          <div class="text-2xl mb-3">🗺️</div>
+          <h3 class="font-bold text-lg">Match heatmaps & live tracking</h3>
+          <p class="mt-2 text-sm" style="color:var(--muted)">Positional heatmaps and live match state, so medical and tactical staff see risk and performance in one place.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCIENCE -->
+    <section id="science" class="max-w-6xl mx-auto px-5 py-16">
+      <div class="card p-8 sm:p-12">
+        <div class="grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest" style="color:var(--muted)">Under the hood</p>
+            <h2 class="text-3xl font-black mt-2">Backed by sports science, not guesswork</h2>
+            <p class="mt-4 text-sm" style="color:var(--muted)">
+              Every score is transparent and grounded in published research — the same load-monitoring
+              methods used by elite performance departments, wired into a live ML pipeline.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="chip px-3 py-1.5 text-xs font-semibold">XGBoost injury model</span>
+              <span class="chip px-3 py-1.5 text-xs font-semibold">Dixon-Coles Poisson</span>
+              <span class="chip px-3 py-1.5 text-xs font-semibold">ACWR · Gabbett 2016</span>
+              <span class="chip px-3 py-1.5 text-xs font-semibold">sRPE · Foster 2001</span>
+              <span class="chip px-3 py-1.5 text-xs font-semibold">HRV · Buchheit 2014</span>
+              <span class="chip px-3 py-1.5 text-xs font-semibold">Hooper wellness 1995</span>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="flex gap-4">
+              <div class="flex-none w-9 h-9 rounded-xl flex items-center justify-center font-black text-white" style="background:var(--grad)">1</div>
+              <div><h4 class="font-bold">Ingest daily load</h4><p class="text-sm mt-0.5" style="color:var(--muted)">Wellness, sRPE training load, GPS distance & sprints, HRV and hydration — one row per player per day.</p></div>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex-none w-9 h-9 rounded-xl flex items-center justify-center font-black text-white" style="background:var(--grad)">2</div>
+              <div><h4 class="font-bold">Compute ACWR & features</h4><p class="text-sm mt-0.5" style="color:var(--muted)">Acute:chronic workload ratios and 40+ engineered features feed a gradient-boosted injury model (R² ≈ 0.96).</p></div>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex-none w-9 h-9 rounded-xl flex items-center justify-center font-black text-white" style="background:var(--grad)">3</div>
+              <div><h4 class="font-bold">Predict & project</h4><p class="text-sm mt-0.5" style="color:var(--muted)">Risk scores per player, plus a Dixon-Coles engine that forecasts every match and projects the bracket to the final.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="max-w-6xl mx-auto px-5 py-14 text-center">
+      <p class="text-xs font-bold uppercase tracking-widest" style="color:var(--muted)">Built with</p>
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <span class="chip px-4 py-2 text-sm font-semibold">FastAPI</span>
+        <span class="chip px-4 py-2 text-sm font-semibold">PostgreSQL · TimescaleDB</span>
+        <span class="chip px-4 py-2 text-sm font-semibold">XGBoost</span>
+        <span class="chip px-4 py-2 text-sm font-semibold">Docker</span>
+        <span class="chip px-4 py-2 text-sm font-semibold">Live football-data.org feed</span>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-6xl mx-auto px-5 pb-20">
+      <div class="card p-10 sm:p-14 text-center" style="background:var(--grad);border:none;">
+        <h2 class="text-3xl sm:text-4xl font-black text-white">See it live</h2>
+        <p class="mt-3 text-slate-300 max-w-xl mx-auto">Pick a team, read its injury risk, and follow its projected road to the World Cup final.</p>
+        <a href="/" class="btn inline-block mt-8 px-7 py-3.5 text-base" style="background:#fff;color:#0f172a">Launch the Dashboard →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t" style="border-color:var(--border)">
+    <div class="max-w-6xl mx-auto px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm" style="color:var(--muted)">
+      <span>AthleteOS AI · Injury Risk & Performance Monitor</span>
+      <span>FIFA World Cup 2026 · data via football-data.org</span>
+    </div>
+  </footer>
+</body>
+</html>

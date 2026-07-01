@@ -54,6 +54,12 @@ async def dashboard():
     return HTMLResponse((_WEB_DIR / "index.html").read_text(encoding="utf-8"))
 
 
+@app.get("/presentation", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/about", response_class=HTMLResponse, include_in_schema=False)
+async def presentation():
+    return HTMLResponse((_WEB_DIR / "presentation.html").read_text(encoding="utf-8"))
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "environment": settings.ENVIRONMENT}
