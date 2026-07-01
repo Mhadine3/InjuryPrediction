@@ -31,7 +31,7 @@ except ImportError:
 
 from app.services.prematch_service import (
     _get_ratings, _apply_conf_factors, _scoreline_matrix, _outcome_probs,
-    INTL_AVG_GOALS, HOME_ADV, DATA_DIR,
+    _most_likely_score, INTL_AVG_GOALS, HOME_ADV, DATA_DIR,
 )
 
 _STAGES = ["LAST_32", "LAST_16", "QUARTER_FINALS", "SEMI_FINALS", "FINAL"]
@@ -40,15 +40,17 @@ _CACHE: dict = {"t": 0.0, "proj": None}
 _TTL = 90  # seconds — short so live knockout results propagate quickly
 
 
-# ── Model-only outcome (no live odds / no network) ─────────────────────────────
-def _model_outcome(home: str, away: str) -> dict:
+# ── Model-only prediction (no live odds / no network) ──────────────────────────
+def _model_predict(home: str, away: str) -> tuple[dict, dict]:
+    """Returns (outcome_probs, most_likely_scoreline) from the Dixon-Coles model."""
     h_r, *_ = _get_ratings(home)
     a_r, *_ = _get_ratings(away)
     h = _apply_conf_factors(h_r, home)
     a = _apply_conf_factors(a_r, away)
     lam_h = max(h["attack_rating"] * a["defence_rating"] * INTL_AVG_GOALS * HOME_ADV, 0.05)
     lam_a = max(a["attack_rating"] * h["defence_rating"] * INTL_AVG_GOALS, 0.05)
-    return _outcome_probs(_scoreline_matrix(lam_h, lam_a))
+    mat = _scoreline_matrix(lam_h, lam_a)
+    return _outcome_probs(mat), _most_likely_score(mat)
 
 
 def _adv_prob(o: dict) -> float:
@@ -133,12 +135,13 @@ def _node(home: Optional[str], away: Optional[str], m: dict,
           home_pred: bool, away_pred: bool) -> dict:
     finished = m.get("status") == "FINISHED"
     awinner = m.get("awinner")
-    p = None
+    p, mls = None, None
+    if home and away:
+        p, mls = _model_predict(home, away)                # always compute the model prediction
     if finished and awinner and home and away:
         winner, winner_predicted = awinner, False          # confirmed result
     elif home and away:
-        p = _model_outcome(home, away)                     # not decided yet → predict
-        winner = home if _adv_prob(p) >= 0.5 else away
+        winner = home if _adv_prob(p) >= 0.5 else away     # not decided yet → predicted advancer
         winner_predicted = True
     else:
         winner, winner_predicted = None, True
@@ -150,6 +153,7 @@ def _node(home: Optional[str], away: Optional[str], m: dict,
         "winner": winner, "winner_predicted": winner_predicted,
         "p_home": (p or {}).get("home_win"), "p_draw": (p or {}).get("draw"),
         "p_away": (p or {}).get("away_win"),
+        "pred_home": (mls or {}).get("home"), "pred_away": (mls or {}).get("away"),
         "id": m.get("id"),
     }
 

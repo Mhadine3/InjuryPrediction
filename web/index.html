@@ -3475,18 +3475,31 @@
 
     function _projCard(n) {
       const finished = n.status === 'FINISHED' && n.hs != null;
+      const hasPred  = n.pred_home != null;
       const hWin = n.winner === n.home, aWin = n.winner === n.away;
-      const row = (tla, pred, score, win) => `<div class="flex items-center justify-between gap-2 ${win?'font-bold':''}" style="color:${tla?'var(--text)':'var(--muted)'};opacity:${(tla && finished && !win)?0.5:1}">
-          <span class="flex items-center gap-1.5 truncate">${tla?flagImg(tla,16):''}<span class="truncate">${NAMES[tla]||tla||'TBD'}</span>${pred?'<span class="opacity-50 text-xs">~</span>':''}</span>
-          <span class="tabular-nums">${score!=null?score:''}</span></div>`;
+      // Score beside each team: the ACTUAL score if played, otherwise the model's predicted scoreline.
+      const predShown = !finished && hasPred;
+      const hScore = finished ? n.hs : (predShown ? n.pred_home : null);
+      const aScore = finished ? n.as : (predShown ? n.pred_away : null);
+      const row = (tla, slotPred, score, win) => `<div class="flex items-center justify-between gap-2 ${win?'font-bold':''}" style="color:${tla?'var(--text)':'var(--muted)'};opacity:${(tla && finished && !win)?0.5:1}">
+          <span class="flex items-center gap-1.5 truncate">${tla?flagImg(tla,16):''}<span class="truncate">${NAMES[tla]||tla||'TBD'}</span>${slotPred?'<span class="opacity-50 text-xs">~</span>':''}</span>
+          <span class="tabular-nums ${predShown?'italic':''}" style="${predShown?'color:var(--muted)':''}">${score!=null?score:''}</span></div>`;
       const clickable = n.home && n.away;
-      const meta = finished ? (n.pen_h!=null ? 'FT · pens' : 'FT') : (n.p_home!=null ? `${Math.round(n.p_home*100)} · ${Math.round(n.p_draw*100)} · ${Math.round(n.p_away*100)}` : 'TBD');
+      const winPct = n.p_home!=null ? `${Math.round(n.p_home*100)} · ${Math.round(n.p_draw*100)} · ${Math.round(n.p_away*100)}%` : '';
+      let footer;
+      if (finished) {
+        footer = `<span>Final${n.pen_h!=null?' · pens':''}</span>${hasPred?`<span style="color:var(--muted)">model&nbsp;${n.pred_home}–${n.pred_away}</span>`:''}`;
+      } else if (hasPred) {
+        footer = `<span style="color:var(--muted)">Predicted</span><span>${winPct}</span>`;
+      } else {
+        footer = `<span style="color:var(--muted)">TBD</span>`;
+      }
       return `<div onclick="${clickable?`selectTeam('${n.home}')`:''}"
         class="rounded-lg p-2.5 text-sm ${clickable?'cursor-pointer hover:border-emerald-400':''}"
-        style="background:var(--card);border:1px solid var(--border);min-width:190px;">
-        ${row(n.home, n.home_predicted, finished?n.hs:null, hWin)}
-        ${row(n.away, n.away_predicted, finished?n.as:null, aWin)}
-        <div class="text-[10px] mt-1 text-right" style="color:var(--muted);">${meta}</div>
+        style="background:var(--card);border:1px solid var(--border);min-width:200px;">
+        ${row(n.home, n.home_predicted, hScore, hWin)}
+        ${row(n.away, n.away_predicted, aScore, aWin)}
+        <div class="text-[10px] mt-1 flex items-center justify-between gap-2" style="color:var(--muted);">${footer}</div>
       </div>`;
     }
 
